@@ -307,7 +307,7 @@
         controls: [
           { key:'particleCount', label:'Count',     min:200,   max:20000,  step:100,  dp:0, onchange: ()=>{ CTRL.rebuildCount(); } },
           { key:'minLen',        label:'Min Length', min:0.02,  max:0.60,  step:0.01, dp:2, onchange: ()=>{ CTRL.rebuildSizes(); } },
-          { key:'maxLen',        label:'Max Length', min:0.05,  max:1.20,  step:0.01, dp:2, onchange: ()=>{ CTRL.rebuildSizes(); } },
+          { key:'maxLen',        label:'Max Length', min:0.05,  max:10.0,  step:0.01, dp:2, onchange: ()=>{ CTRL.rebuildSizes(); } },
           { key:'minWid',        label:'Min Width',  min:0.003, max:0.08,  step:0.001,dp:3, onchange: ()=>{ CTRL.rebuildSizes(); } },
           { key:'maxWid',        label:'Max Width',  min:0.005, max:0.12,  step:0.001,dp:3, onchange: ()=>{ CTRL.rebuildSizes(); } },
         ],
