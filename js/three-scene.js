@@ -16,6 +16,7 @@
   renderer.setClearColor(0x000000, 1);
 
   const scene  = new THREE.Scene();
+  scene.fog    = new THREE.Fog(0x060c24, 2.0, 50.0);
   const camera = new THREE.PerspectiveCamera(55, 1, 0.1, 500);
   camera.position.z = 42;
 
@@ -24,18 +25,22 @@
   ══════════════════════════════════════════════════════════════ */
   const CFG = {
     /* ── sphere / corona ── */
-    sphereR:      2.2,
-    shieldR:      5.0,
+    sphereR:      2.4,
+    shieldR:      6.2,
     lightR:       23.0,
     pulseSpeed:   0.65,
     pulseAmt:     0.075,
+    coronaScale:  1.0,        // Corona overall size scale
+    coronaGlow:   1.50,        // Corona glow opacity
+    coronaRim:    0.60,        // Eclipse rim ring intensity
 
     /* ── rectangles ── */
     particleCount: 20000,      // 500–5000 (requires rebuildCount)
     minLen:        0.60,
-    maxLen:        5.04,
+    maxLen:        7.5,
     minWid:        0.066,
     maxWid:        0.120,
+    stripFlex:     1.0,        // Snake-like bending flexibility (0.0=rigid, 1.0=curved, 2.0=snake)
 
     /* ── flow physics ── */
     upward:        0.0078,
@@ -49,10 +54,23 @@
     shieldK:       0.52,
     slowZone:      3.5,
 
+    /* ── 3D Spreading & Depth (X, Y, Z) ── */
+    xSpread:       90.0,      // X width range
+    ySpread:       52.0,      // Y height range
+    zSpread:       9.0,      // Z depth range
+    zBias:        -0.80,      // Depth bias: negative = more particles at the BACK, fewer in FRONT
+
     /* ── lighting ── */
     briBoost:      0.5,
-    falloffPow:    2.25,       // 1=linear 2=sqr 3=cubic 4=quartic
+    falloffPow:    5.0,       // 1=linear 2=sqr 3=cubic 4=quartic
     colorWarm:     0.0,       // 0=cool blue 1=warm white
+
+    /* ── atmospheric blue fog ── */
+    fogEnable:     1,          // 1 = Enabled, 0 = Disabled
+    fogDensity:    0.45,       // Blue fog intensity (0.0 to 3.0)
+    fogNear:       9.5,        // Depth behind sphere where fog starts
+    fogFar:        10.0,       // Depth behind sphere for max fog
+    fogHue:        0.75,       // 0.55=Cyan, 0.60=Cobalt Blue, 0.70=Indigo
   };
 
   /* ══════════════════════════════════════════════════════════════
@@ -99,6 +117,47 @@
     return new THREE.CanvasTexture(c);
   }
 
+  /* ── Directional Rim Texture for Top-Left & Bottom-Right Eclipse Shine ── */
+  function makeAsymmetricRimTex(res, stops) {
+    const c = document.createElement('canvas');
+    c.width = c.height = res;
+    const ctx = c.getContext('2d');
+    const half = res / 2;
+    ctx.clearRect(0, 0, res, res);
+
+    const g = ctx.createRadialGradient(half, half, 0, half, half, half);
+    stops.forEach(([t, col]) => g.addColorStop(Math.max(0, Math.min(1, t)), col));
+    ctx.fillStyle = g;
+    ctx.fillRect(0, 0, res, res);
+
+    /* Apply angular direction mask: Top-Left (-135°) and Bottom-Right (45°) */
+    const imgData = ctx.getImageData(0, 0, res, res);
+    const data = imgData.data;
+
+    for (let y = 0; y < res; y++) {
+      const dy = y - half;
+      for (let x = 0; x < res; x++) {
+        const dx = x - half;
+        const dist = Math.sqrt(dx*dx + dy*dy);
+        if (dist > 0) {
+          const theta = Math.atan2(dy, dx);
+          // Angle -2.35619 rad (-135° = Top-Left in canvas space where Y grows downwards)
+          // cos^2(theta - (-135°)) equals 1.0 at Top-Left and 1.0 at Bottom-Right, 0.0 at Top-Right & Bottom-Left
+          const angleFactor = Math.pow(Math.abs(Math.cos(theta - (-2.35619))), 1.8);
+          
+          // Soft ambient floor (0.05) on dark sides, 1.0 full bright on Top-Left & Bottom-Right
+          const mask = 0.05 + 0.95 * angleFactor;
+
+          const idx = (y * res + x) * 4;
+          data[idx + 3] = Math.floor(data[idx + 3] * mask); // modulate alpha channel
+        }
+      }
+    }
+
+    ctx.putImageData(imgData, 0, 0);
+    return new THREE.CanvasTexture(c);
+  }
+
   const coronaGroup = new THREE.Group();
   scene.add(coronaGroup);
 
@@ -107,8 +166,8 @@
      inside the texture, so stops before SF must be transparent.   */
   const SR = CFG.sphereR;   // 2.2
 
-  function addCoronaLayer(planeHalf, stops, order) {
-    const tex = makeEclipseTex(1024, stops);
+  function addCoronaLayer(planeHalf, stops, order, isAsymmetric) {
+    const tex = isAsymmetric ? makeAsymmetricRimTex(1024, stops) : makeEclipseTex(1024, stops);
     const m = new THREE.Mesh(
       new THREE.PlaneGeometry(planeHalf * 2, planeHalf * 2),
       new THREE.MeshBasicMaterial({
@@ -132,7 +191,7 @@
   const PH3 = SR * 45,  SF3 = 1 / 45;
 
   const coronaMeshes = [
-    /* 0 — tight bright white rim  (the "diamond ring" of the eclipse) */
+    /* 0 — tight bright white rim (Top-Left & Bottom-Right directional shine) */
     addCoronaLayer(PH0, [
       [0.00,           'rgba(  0,  0,  0, 0.00)'],  // ← dark centre
       [SF0 * 0.82,     'rgba(  0,  0,  0, 0.00)'],  // dark up to just inside rim
@@ -144,9 +203,9 @@
       [SF0 * 2.20,     'rgba( 55,140,255, 0.18)'],
       [SF0 * 3.20,     'rgba( 20, 75,220, 0.06)'],
       [1.00,           'rgba(  0,  0,  0, 0.00)'],
-    ], 4),
+    ], 4, true),
 
-    /* 1 — inner blue corona bloom */
+    /* 1 — inner blue corona bloom (Top-Left & Bottom-Right directional shine) */
     addCoronaLayer(PH1, [
       [0.00,           'rgba(  0,  0,  0, 0.00)'],  // dark centre
       [SF1 * 0.85,     'rgba(  0,  0,  0, 0.00)'],
@@ -156,7 +215,7 @@
       [SF1 * 2.80,     'rgba( 30, 90,220, 0.08)'],
       [SF1 * 4.50,     'rgba( 10, 35,140, 0.02)'],
       [1.00,           'rgba(  0,  0,  0, 0.00)'],
-    ], 3),
+    ], 3, true),
 
     /* 2 — mid corona scatter */
     addCoronaLayer(PH2, [
@@ -166,7 +225,7 @@
       [SF2 * 2.0,      'rgba( 25, 75,180, 0.10)'],
       [SF2 * 4.0,      'rgba( 10, 35,120, 0.04)'],
       [1.00,           'rgba(  0,  0,  0, 0.00)'],
-    ], 2),
+    ], 2, false),
 
     /* 3 — far atmospheric haze */
     addCoronaLayer(PH3, [
@@ -175,7 +234,7 @@
       [SF3,            'rgba( 20, 55,130, 0.08)'],
       [SF3 * 3.0,      'rgba(  8, 22, 70, 0.03)'],
       [1.00,           'rgba(  0,  0,  0, 0.00)'],
-    ], 1),
+    ], 1, false),
   ];
 
   /* ── BLACK SPHERE — the "moon" that covers the sun.
@@ -193,7 +252,7 @@
      RECTANGLE SWARM — filled quads, up to MAX_P particles
   ══════════════════════════════════════════════════════════════ */
   const MAX_P = 35000;
-  const VPR   = 6;  // verts per rect (2 triangles)
+  const VPR   = 24; // verts per strip (4 quad segments = 8 triangles = 24 verts)
 
   const posArr  = new Float32Array(MAX_P * VPR * 3);
   const colArr  = new Float32Array(MAX_P * VPR * 3);
@@ -209,8 +268,13 @@
      with specular reflection from central eclipse and Fresnel rim shine. */
   const rectMat = new THREE.ShaderMaterial({
     uniforms: {
-      uLightPos:  { value: new THREE.Vector3(0, 0, 0) },
-      uCameraPos: { value: camera.position },
+      uLightPos:   { value: new THREE.Vector3(0, 0, 0) },
+      uCameraPos:  { value: camera.position },
+      uFogEnable:  { value: CFG.fogEnable  !== undefined ? CFG.fogEnable  : 1.0 },
+      uFogNear:    { value: CFG.fogNear    || 2.0 },
+      uFogFar:     { value: CFG.fogFar     || 25.0 },
+      uFogDensity: { value: CFG.fogDensity || 0.80 },
+      uFogHue:     { value: CFG.fogHue     || 0.60 },
     },
     vertexShader: `
       attribute vec3 color;
@@ -232,6 +296,16 @@
       varying vec3 vWorldPos;
       uniform vec3 uLightPos;
       uniform vec3 uCameraPos;
+      uniform float uFogEnable;
+      uniform float uFogNear;
+      uniform float uFogFar;
+      uniform float uFogDensity;
+      uniform float uFogHue;
+
+      vec3 hsl2rgb(float h, float s, float l) {
+        vec3 rgb = clamp(abs(mod(h * 6.0 + vec3(0.0, 4.0, 2.0), 6.0) - 3.0) - 1.0, 0.0, 1.0);
+        return l + s * (rgb - 0.5) * (1.0 - abs(2.0 * l - 1.0));
+      }
 
       void main() {
         vec3 N = normalize(vNormal);
@@ -243,27 +317,41 @@
 
         // Overall light intensity from distance falloff (vColor)
         float lightIntensity = max(vColor.r, max(vColor.g, vColor.b));
-
-        // Smooth distance attenuation mask: far-away particles fade to 0.0 (pitch black)
         float atten = smoothstep(0.001, 0.06, lightIntensity);
 
-        // Metallic diffuse & ambient base tone (scaled by distance)
         vec3 ambientMetal = vColor * 0.35;
         float NdotL = max(dot(N, L), 0.0);
         vec3 diffuseMetal = vColor * (0.35 + 0.65 * NdotL);
 
-        // Specular chrome highlight from central solar eclipse
         float NdotH = max(dot(N, H), 0.0);
         float spec = pow(NdotH, 36.0);
         vec3 specColor = vec3(1.0, 0.96, 0.92) * spec * 2.2 * lightIntensity;
 
-        // Metallic Fresnel edge reflection (also fades with distance)
         float NdotV = max(dot(N, V), 0.0);
         float fresnel = pow(1.0 - NdotV, 3.5);
         vec3 fresnelColor = mix(vColor, vec3(0.85, 0.92, 1.0), 0.75) * fresnel * 1.0;
 
-        // Combined SOLID METALLIC color — pitch black when far from sphere!
         vec3 finalColor = (ambientMetal + diffuseMetal + specColor + fresnelColor) * atten;
+
+        // ── LIGHT-ILLUMINATED ATMOSPHERIC BLUE FOG ──
+        if (uFogEnable > 0.5) {
+          float depthBehind = max(0.0, -vWorldPos.z + 1.0);
+          float dFactor = depthBehind / max(0.1, uFogFar);
+          float expFog = 1.0 - exp(-2.5 * uFogDensity * dFactor * dFactor);
+
+          // Distance from central solar eclipse light source
+          float rDist = length(vWorldPos.xyz);
+          float lightScatter = exp(-0.07 * rDist) * (0.3 + 0.7 * lightIntensity);
+
+          // Dual-tone fog palette: Dark Space Navy -> Bright Shining Light Cyan/Blue
+          vec3 darkSpaceFog    = hsl2rgb(uFogHue, 0.70, 0.05);
+          vec3 shiningLightFog = hsl2rgb(uFogHue - 0.05, 0.95, 0.35); // Glowing blue light!
+
+          vec3 activeFogColor = mix(darkSpaceFog, shiningLightFog, clamp(lightScatter * 1.6, 0.0, 1.0));
+          float fogAmount     = clamp(expFog, 0.0, 0.90);
+
+          finalColor = mix(finalColor, activeFogColor, fogAmount);
+        }
 
         // 100% SOLID OPAQUE (no transparency)
         gl_FragColor = vec4(finalColor, 1.0);
@@ -280,6 +368,70 @@
   rectMesh.frustumCulled = false;
   scene.add(rectMesh);
 
+  /* ── Background Volumetric Light-Illuminated Fog Plane ── */
+  const bgFogMat = new THREE.ShaderMaterial({
+    uniforms: {
+      uFogEnable:     { value: CFG.fogEnable  !== undefined ? CFG.fogEnable  : 1.0 },
+      uFogDensity:    { value: CFG.fogDensity || 0.80 },
+      uFogHue:        { value: CFG.fogHue     || 0.60 },
+      uPulse:         { value: 1.0 },
+    },
+    vertexShader: `
+      varying vec2 vUv;
+      varying vec3 vWorldPos;
+      void main() {
+        vUv = uv;
+        vec4 worldPos = modelMatrix * vec4(position, 1.0);
+        vWorldPos = worldPos.xyz;
+        gl_Position = projectionMatrix * viewMatrix * worldPos;
+      }
+    `,
+    fragmentShader: `
+      varying vec2 vUv;
+      varying vec3 vWorldPos;
+      uniform float uFogEnable;
+      uniform float uFogDensity;
+      uniform float uFogHue;
+      uniform float uPulse;
+
+      vec3 hsl2rgb(float h, float s, float l) {
+        vec3 rgb = clamp(abs(mod(h * 6.0 + vec3(0.0, 4.0, 2.0), 6.0) - 3.0) - 1.0, 0.0, 1.0);
+        return l + s * (rgb - 0.5) * (1.0 - abs(2.0 * l - 1.0));
+      }
+
+      void main() {
+        if (uFogEnable < 0.5) discard;
+
+        // Distance from central eclipse light core
+        float rDist = length(vWorldPos.xy);
+        
+        // Volumetric light scattering beam from central eclipse
+        float lightScatter = exp(-0.045 * rDist) * uPulse;
+        float outerHaze    = exp(-0.012 * rDist);
+
+        vec3 darkVoidFog      = hsl2rgb(uFogHue, 0.65, 0.03);
+        vec3 brightShiningFog = hsl2rgb(uFogHue - 0.06, 0.95, 0.38); // Bright blue light shine
+
+        vec3 finalFogColor = mix(darkVoidFog, brightShiningFog, clamp(lightScatter * 1.5, 0.0, 1.0));
+        float alpha   = clamp((outerHaze * 0.35 + lightScatter * 0.65) * uFogDensity, 0.0, 0.88);
+
+        gl_FragColor = vec4(finalFogColor, alpha);
+      }
+    `,
+    transparent: true,
+    depthWrite: false,
+    depthTest: false,
+    blending: THREE.AdditiveBlending,
+  });
+
+  const bgFogMesh = new THREE.Mesh(
+    new THREE.PlaneGeometry(160, 160),
+    bgFogMat
+  );
+  bgFogMesh.position.z = -30.0;
+  bgFogMesh.renderOrder = 0;
+  scene.add(bgFogMesh);
+
   /* Per-particle state (allocated for MAX_P) */
   const px    = new Float32Array(MAX_P);
   const py    = new Float32Array(MAX_P);
@@ -290,32 +442,42 @@
   const pLen  = new Float32Array(MAX_P);
   const pWid  = new Float32Array(MAX_P);
   const pSeed = new Float32Array(MAX_P);
-  /* smoothed orientation direction per particle (avoids flip on shield hit) */
+  /* smoothed velocity & orientation direction per particle (for 0 shaking + 4-joint snake bending) */
+  const svx   = new Float32Array(MAX_P);
+  const svy   = new Float32Array(MAX_P);
   const pdx   = new Float32Array(MAX_P);
   const pdy   = new Float32Array(MAX_P);
+  const ptx   = new Float32Array(MAX_P);
+  const pty   = new Float32Array(MAX_P);
 
   /* Spawn a single particle anywhere across the full screen, starting below.
      On initial fill we distribute across the full height so the screen
      isn't empty at the beginning.                                          */
   function spawn(i, fullHeight) {
-    const { minLen, maxLen, minWid, maxWid } = CFG;
-    /* full viewport width ~±45 world-units, height ~±22 */
-    px[i] = (Math.random() - 0.5) * 90;
+    const { minLen, maxLen, minWid, maxWid, xSpread, ySpread, zSpread, zBias } = CFG;
+    /* full viewport width xSpread */
+    px[i] = (Math.random() - 0.5) * xSpread;
     /* normal respawn: enter from below; initial fill: anywhere on screen */
     py[i] = fullHeight
-      ? -24 + Math.random() * 52          // spread across full height
-      : -24 - Math.random() * 14;         // enter from below viewport
-    pz[i] = (Math.random() - 0.5) * 6;
+      ? -24 + Math.random() * ySpread
+      : -24 - Math.random() * (ySpread * 0.25);
+    /* 3D depth zSpread & zBias: negative zBias shifts particles to the BACK (behind ball) */
+    const zOffset = (zBias || 0.0) * (zSpread * 0.5);
+    pz[i] = (Math.random() - 0.5) * zSpread + zOffset;
 
     pvx[i] = (Math.random() - 0.5) * 0.04;
     pvy[i] =  0.02 + Math.random() * 0.05;   // upward
-    pvz[i] = (Math.random() - 0.5) * 0.01;
+    pvz[i] = (Math.random() - 0.5) * 0.015;
 
     pLen[i]  = minLen + Math.random() * (maxLen - minLen);
     pWid[i]  = minWid + Math.random() * (maxWid - minWid);
     pSeed[i] = Math.random() * 600;
-    pdx[i]   = 0;   // smoothed X direction (starts pointing up)
-    pdy[i]   = 1;   // smoothed Y direction
+    svx[i]   = pvx[i];
+    svy[i]   = pvy[i];
+    pdx[i]   = 0;   // head direction (starts pointing up)
+    pdy[i]   = 1;
+    ptx[i]   = 0;   // tail direction
+    pty[i]   = 1;
   }
   function rebuildSizes() {
     const N = CFG.particleCount;
@@ -346,49 +508,112 @@
   onResize();
   window.addEventListener('resize', onResize);
 
-  /* ── quad writer ── */
-  function writeQuad(base, ax,ay,az, bx,by,bz, cx,cy,cz, dx,dy,dz, r,g,b, td, dnx, dny) {
-    /* tri 1: a(tail-L) b(tail-R) c(head-R) */
-    posArr[base]    =ax; posArr[base+1] =ay; posArr[base+2] =az;
-    posArr[base+3]  =bx; posArr[base+4] =by; posArr[base+5] =bz;
-    posArr[base+6]  =cx; posArr[base+7] =cy; posArr[base+8] =cz;
-    /* tri 2: a(tail-L) c(head-R) d(head-L) */
-    posArr[base+9]  =ax; posArr[base+10]=ay; posArr[base+11]=az;
-    posArr[base+12] =cx; posArr[base+13]=cy; posArr[base+14]=cz;
-    posArr[base+15] =dx; posArr[base+16]=dy; posArr[base+17]=dz;
+  /* ── 4-segment multi-joint ribbon writer for continuous snake-like bending ── */
+  function writeSnakeRibbon(base, n0x,n0y, n1x,n1y, n2x,n2y, n3x,n3y, n4x,n4y, d0x,d0y, d1x,d1y, d2x,d2y, d3x,d3y, d4x,d4y, W, cz, r, g, b, td) {
+    /* Perpendicular vectors at all 5 nodes */
+    const p0x = -d0y * W, p0y =  d0x * W;
+    const p1x = -d1y * W, p1y =  d1x * W;
+    const p2x = -d2y * W, p2y =  d2x * W;
+    const p3x = -d3y * W, p3y =  d3x * W;
+    const p4x = -d4y * W, p4y =  d4x * W;
 
-    // Normal calculation: quad faces camera + tilted along movement direction
-    const rawNx = -dny * 0.40;
-    const rawNy =  dnx * 0.40;
-    const rawNz =  0.91;
-    const invLen = 1.0 / Math.sqrt(rawNx*rawNx + rawNy*rawNy + rawNz*rawNz);
-    const nx = rawNx * invLen;
-    const ny = rawNy * invLen;
-    const nz = rawNz * invLen;
+    /* Left and Right positions at all 5 nodes */
+    const L0x = n0x + p0x, L0y = n0y + p0y, R0x = n0x - p0x, R0y = n0y - p0y;
+    const L1x = n1x + p1x, L1y = n1y + p1y, R1x = n1x - p1x, R1y = n1y - p1y;
+    const L2x = n2x + p2x, L2y = n2y + p2y, R2x = n2x - p2x, R2y = n2y - p2y;
+    const L3x = n3x + p3x, L3y = n3y + p3y, R3x = n3x - p3x, R3y = n3y - p3y;
+    const L4x = n4x + p4x, L4y = n4y + p4y, R4x = n4x - p4x, R4y = n4y - p4y;
 
-    for (let k = 0; k < 6; k++) {
+    /* Segment 1: Node 0 -> Node 1 */
+    posArr[base]    = L0x; posArr[base+1]  = L0y; posArr[base+2]  = cz;
+    posArr[base+3]  = R0x; posArr[base+4]  = R0y; posArr[base+5]  = cz;
+    posArr[base+6]  = R1x; posArr[base+7]  = R1y; posArr[base+8]  = cz;
+
+    posArr[base+9]  = L0x; posArr[base+10] = L0y; posArr[base+11] = cz;
+    posArr[base+12] = R1x; posArr[base+13] = R1y; posArr[base+14] = cz;
+    posArr[base+15] = L1x; posArr[base+16] = L1y; posArr[base+17] = cz;
+
+    /* Segment 2: Node 1 -> Node 2 */
+    posArr[base+18] = L1x; posArr[base+19] = L1y; posArr[base+20] = cz;
+    posArr[base+21] = R1x; posArr[base+22] = R1y; posArr[base+23] = cz;
+    posArr[base+24] = R2x; posArr[base+25] = R2y; posArr[base+26] = cz;
+
+    posArr[base+27] = L1x; posArr[base+28] = L1y; posArr[base+29] = cz;
+    posArr[base+30] = R2x; posArr[base+31] = R2y; posArr[base+32] = cz;
+    posArr[base+33] = L2x; posArr[base+34] = L2y; posArr[base+35] = cz;
+
+    /* Segment 3: Node 2 -> Node 3 */
+    posArr[base+36] = L2x; posArr[base+37] = L2y; posArr[base+38] = cz;
+    posArr[base+39] = R2x; posArr[base+40] = R2y; posArr[base+41] = cz;
+    posArr[base+42] = R3x; posArr[base+43] = R3y; posArr[base+44] = cz;
+
+    posArr[base+45] = L2x; posArr[base+46] = L2y; posArr[base+47] = cz;
+    posArr[base+48] = R3x; posArr[base+49] = R3y; posArr[base+50] = cz;
+    posArr[base+51] = L3x; posArr[base+52] = L3y; posArr[base+53] = cz;
+
+    /* Segment 4: Node 3 -> Node 4 */
+    posArr[base+54] = L3x; posArr[base+55] = L3y; posArr[base+56] = cz;
+    posArr[base+57] = R3x; posArr[base+58] = R3y; posArr[base+59] = cz;
+    posArr[base+60] = R4x; posArr[base+61] = R4y; posArr[base+62] = cz;
+
+    posArr[base+63] = L3x; posArr[base+64] = L3y; posArr[base+65] = cz;
+    posArr[base+66] = R4x; posArr[base+67] = R4y; posArr[base+68] = cz;
+    posArr[base+69] = L4x; posArr[base+70] = L4y; posArr[base+71] = cz;
+
+    /* Normals across the 4 segments */
+    const rNx0 = -d1y * 0.40, rNy0 = d1x * 0.40, inv0 = 1.0 / Math.sqrt(rNx0*rNx0 + rNy0*rNy0 + 0.8281);
+    const nx0 = rNx0 * inv0, ny0 = rNy0 * inv0, nz0 = 0.91 * inv0;
+
+    const rNx1 = -d3y * 0.40, rNy1 = d3x * 0.40, inv1 = 1.0 / Math.sqrt(rNx1*rNx1 + rNy1*rNy1 + 0.8281);
+    const nx1 = rNx1 * inv1, ny1 = rNy1 * inv1, nz1 = 0.91 * inv1;
+
+    for (let k = 0; k < 12; k++) {
       const idx = base + k * 3;
-      normArr[idx]   = nx;
-      normArr[idx+1] = ny;
-      normArr[idx+2] = nz;
+      normArr[idx] = nx0; normArr[idx+1] = ny0; normArr[idx+2] = nz0;
+    }
+    for (let k = 12; k < 24; k++) {
+      const idx = base + k * 3;
+      normArr[idx] = nx1; normArr[idx+1] = ny1; normArr[idx+2] = nz1;
     }
 
-    const tSide = td;           // tail side edges — dark
-    const tSpec = td * 3.0;     // tail specular edge
-    const hOpp  = 0.55;         // head opposing edge
-    const hSpec = 1.00;         // head specular edge
+    /* Metallic colors gradient along the 5 nodes */
+    const tSide = td, tSpec = td * 3.0, hOpp = 0.55, hSpec = 1.00;
 
-    /* a = tail-left */
-    colArr[base]   = r*tSpec; colArr[base+1]  = g*tSpec; colArr[base+2]  = b*tSpec;
-    /* b = tail-right */
-    colArr[base+3] = r*tSide; colArr[base+4]  = g*tSide; colArr[base+5]  = b*tSide;
-    /* c = head-right */
-    colArr[base+6] = r*hOpp;  colArr[base+7]  = g*hOpp;  colArr[base+8]  = b*hOpp;
-    /* tri 2 repeats a and c */
-    colArr[base+9] = r*tSpec; colArr[base+10] = g*tSpec; colArr[base+11] = b*tSpec;
-    colArr[base+12]= r*hOpp;  colArr[base+13] = g*hOpp;  colArr[base+14] = b*hOpp;
-    /* d = head-left */
-    colArr[base+15]= r*hSpec; colArr[base+16] = g*hSpec; colArr[base+17] = b*hSpec;
+    /* Seg 1 (Tail) */
+    colArr[base]    = r*tSpec;     colArr[base+1]  = g*tSpec;     colArr[base+2]  = b*tSpec;
+    colArr[base+3]  = r*tSide;     colArr[base+4]  = g*tSide;     colArr[base+5]  = b*tSide;
+    colArr[base+6]  = r*hOpp*0.4;  colArr[base+7]  = g*hOpp*0.4;  colArr[base+8]  = b*hOpp*0.4;
+
+    colArr[base+9]  = r*tSpec;     colArr[base+10] = g*tSpec;     colArr[base+11] = b*tSpec;
+    colArr[base+12] = r*hOpp*0.4;  colArr[base+13] = g*hOpp*0.4;  colArr[base+14] = b*hOpp*0.4;
+    colArr[base+15] = r*hSpec*0.4; colArr[base+16] = g*hSpec*0.4; colArr[base+17] = b*hSpec*0.4;
+
+    /* Seg 2 */
+    colArr[base+18] = r*hSpec*0.4; colArr[base+19] = g*hSpec*0.4; colArr[base+20] = b*hSpec*0.4;
+    colArr[base+21] = r*hOpp*0.4;  colArr[base+22] = g*hOpp*0.4;  colArr[base+23] = b*hOpp*0.4;
+    colArr[base+24] = r*hOpp*0.65; colArr[base+25] = g*hOpp*0.65; colArr[base+26] = b*hOpp*0.65;
+
+    colArr[base+27] = r*hSpec*0.4; colArr[base+28] = g*hSpec*0.4; colArr[base+29] = b*hSpec*0.4;
+    colArr[base+30] = r*hOpp*0.65; colArr[base+31] = g*hOpp*0.65; colArr[base+32] = b*hOpp*0.65;
+    colArr[base+33] = r*hSpec*0.65;colArr[base+34] = g*hSpec*0.65;colArr[base+35] = b*hSpec*0.65;
+
+    /* Seg 3 */
+    colArr[base+36] = r*hSpec*0.65;colArr[base+37] = g*hSpec*0.65;colArr[base+38] = b*hSpec*0.65;
+    colArr[base+39] = r*hOpp*0.65; colArr[base+40] = g*hOpp*0.65; colArr[base+41] = b*hOpp*0.65;
+    colArr[base+42] = r*hOpp*0.85; colArr[base+43] = g*hOpp*0.85; colArr[base+44] = b*hOpp*0.85;
+
+    colArr[base+45] = r*hSpec*0.65;colArr[base+46] = g*hSpec*0.65;colArr[base+47] = b*hSpec*0.65;
+    colArr[base+48] = r*hOpp*0.85; colArr[base+49] = g*hOpp*0.85; colArr[base+50] = b*hOpp*0.85;
+    colArr[base+51] = r*hSpec*0.85;colArr[base+52] = g*hSpec*0.85;colArr[base+53] = b*hSpec*0.85;
+
+    /* Seg 4 (Head) */
+    colArr[base+54] = r*hSpec*0.85;colArr[base+55] = g*hSpec*0.85;colArr[base+56] = b*hSpec*0.85;
+    colArr[base+57] = r*hOpp*0.85; colArr[base+58] = g*hOpp*0.85; colArr[base+59] = b*hOpp*0.85;
+    colArr[base+60] = r*hOpp;      colArr[base+61] = g*hOpp;      colArr[base+62] = b*hOpp;
+
+    colArr[base+63] = r*hSpec*0.85;colArr[base+64] = g*hSpec*0.85;colArr[base+65] = b*hSpec*0.85;
+    colArr[base+66] = r*hOpp;      colArr[base+67] = g*hOpp;      colArr[base+68] = b*hOpp;
+    colArr[base+69] = r*hSpec;     colArr[base+70] = g*hSpec;     colArr[base+71] = b*hSpec;
   }
 
   /* ══════════════════════════════════════════════════════════════
@@ -414,6 +639,27 @@
     /* draw only live particles */
     rectGeo.setDrawRange(0, particleCount * VPR);
 
+    /* update atmospheric blue fog & shader uniforms */
+    const fOn   = CFG.fogEnable  !== undefined ? CFG.fogEnable  : 1.0;
+    const fNear = CFG.fogNear    !== undefined ? CFG.fogNear    : 2.0;
+    const fFar  = CFG.fogFar     !== undefined ? CFG.fogFar     : 25.0;
+    const fDens = CFG.fogDensity !== undefined ? CFG.fogDensity : 0.80;
+    const fHue  = CFG.fogHue     !== undefined ? CFG.fogHue     : 0.60;
+
+    rectMat.uniforms.uFogEnable.value  = fOn;
+    rectMat.uniforms.uFogNear.value    = fNear;
+    rectMat.uniforms.uFogFar.value     = fFar;
+    rectMat.uniforms.uFogDensity.value = fDens;
+    rectMat.uniforms.uFogHue.value     = fHue;
+
+    /* Full screen background canvas blue fog */
+    if (fOn > 0.5) {
+      const bgFogColor = new THREE.Color().setHSL(fHue, 0.70, 0.05 * Math.min(2.5, fDens));
+      renderer.setClearColor(bgFogColor, 1.0);
+    } else {
+      renderer.setClearColor(0x000000, 1.0);
+    }
+
     /* corona billboard */
     coronaGroup.quaternion.copy(camera.quaternion);
 
@@ -428,8 +674,16 @@
       + Math.sin(clock * pulseSpeed * 6.80) * pulseAmt * 0.13;
 
     coronaMeshes.forEach((m, idx) => {
-      m.scale.setScalar((pulse + idx * 0.010) * sr);
-      m.rotation.z += (idx%2===0?1:-1) * 0.00035 * (idx+1);
+      const isRim = (idx === 0);
+      const cScale = CFG.coronaScale || 1.0;
+      const cGlow  = CFG.coronaGlow !== undefined ? CFG.coronaGlow : 1.0;
+      const cRim   = CFG.coronaRim  !== undefined ? CFG.coronaRim  : 1.0;
+
+      m.scale.setScalar((pulse + idx * 0.010) * sr * cScale);
+      m.material.opacity = isRim ? cRim : cGlow;
+      if (idx >= 2) {
+        m.rotation.z += (idx%2===0?1:-1) * 0.00035 * (idx+1);
+      }
     });
 
     /* alignment accumulator */
@@ -457,38 +711,33 @@
       pvy[i] += (avgVY - pvy[i]) * alignK * 0.5;
 
 
-      /* ── PROACTIVE LOOK-AHEAD AVOIDANCE ──────────────────────────────────
-         Each particle casts a ray along its velocity and checks if the path
-         will intersect the shield sphere.  If yes → steer SIDEWAYS before
-         arriving, like a driver going around a parked car.
-         No crash, no reversal, no flip.
+      /* ── PROACTIVE 3D LOOK-AHEAD AVOIDANCE ──────────────────────────────
+         Each particle casts a 3D ray along its velocity and checks if the path
+         will intersect the 3D shield sphere.
+         If a particle passes IN FRONT (z > shieldR + 0.5) or BEHIND (z < -shieldR - 0.5),
+         its 3D ray NEVER intersects the sphere, so it flows smoothly directly in front
+         or behind the ball without being pushed away!                */
 
-         Ray-sphere math (sphere at origin):
-           L  = vector from particle to sphere centre  = (-x, -y)
-           tc = dot(L, dir)  → param of closest point along the ray
-           d² = |L|² - tc²  → squared perpendicular distance to ray        */
+      const spd3D = Math.sqrt(pvx[i]*pvx[i] + pvy[i]*pvy[i] + pvz[i]*pvz[i]) || 1e-5;
+      const dvx = pvx[i] / spd3D;
+      const dvy = pvy[i] / spd3D;
+      const dvz = pvz[i] / spd3D;
 
-      const spd0 = Math.sqrt(pvx[i]*pvx[i] + pvy[i]*pvy[i]) || 1e-5;
-      const dvx0 = pvx[i] / spd0;
-      const dvy0 = pvy[i] / spd0;
+      const Lx = -x,  Ly = -y,  Lz = -z;             /* particle → sphere (0,0,0) */
+      const tc = Lx*dvx + Ly*dvy + Lz*dvz;          /* 3D closest-approach param */
 
-      const Lx = -x,  Ly = -y;               /* particle → sphere */
-      const tc = Lx*dvx0 + Ly*dvy0;          /* closest-approach param */
-
-      if (tc > 0) {                           /* sphere is AHEAD */
-        const d2c   = Math.max(0, Lx*Lx + Ly*Ly - tc*tc);
-        const AVODR = shieldR + 3.5;          /* begin steering this far out */
+      if (tc > 0) {                                  /* sphere is AHEAD in 3D */
+        const d2c   = Math.max(0, (Lx*Lx + Ly*Ly + Lz*Lz) - tc*tc);
+        const AVODR = shieldR + 2.5;                 /* 3D collision radius */
 
         if (d2c < AVODR * AVODR) {
           const closestD = Math.sqrt(d2c);
-          /* strength: peaks at a dead-centre hit, fades at the avoidance edge */
           const strength = Math.pow((AVODR - closestD) / AVODR, 1.2);
-          /* urgency: the sooner the collision, the harder we steer */
           const urgency  = Math.max(0, 1.0 - tc / 18.0);
 
-          /* lateral direction perpendicular to current velocity */
-          const perpX = -dvy0, perpY = dvx0;
-          /* which side is the sphere on? steer the OTHER way */
+          /* 2D lateral direction perpendicular to current XY velocity */
+          const spd2D = Math.sqrt(pvx[i]*pvx[i] + pvy[i]*pvy[i]) || 1e-5;
+          const perpX = -pvy[i] / spd2D, perpY = pvx[i] / spd2D;
           const Lperp    = Lx*perpX + Ly*perpY;
           const steerDir = Lperp >= 0 ? -1 : 1;
 
@@ -498,11 +747,11 @@
         }
       }
 
-      /* ── last-resort hard boundary (only if look-ahead somehow missed) ── */
+      /* ── 3D hard safety net — only fires if particle's 3D distance < shieldR ── */
       if (dist < shieldR) {
         const nx = x/dist, ny = y/dist, nz = z/dist;
         const vDotN = pvx[i]*nx + pvy[i]*ny + pvz[i]*nz;
-        if (vDotN < 0) {          /* cancel inward component only */
+        if (vDotN < 0) {          /* cancel inward 3D velocity component */
           pvx[i] -= vDotN * nx;
           pvy[i] -= vDotN * ny;
           pvz[i] -= vDotN * nz;
@@ -555,30 +804,54 @@
       const gC = Math.min(1, gamma * (0.65 + closeT * 0.35 + cw * 0.12) + spec * 0.48);
       const bC = Math.min(1, gamma * (0.95 - cw * 0.18)                  + spec * 0.44);
 
-      /* ── smoothed orientation — lerp toward actual velocity direction ──
-         This prevents the rectangle from snapping/flipping when the shield
-         deflects the velocity.  Rate 0.12 = gradual turn, never a flip.   */
-      const vx = pvx[i], vy = pvy[i];
-      const spd = Math.sqrt(vx*vx + vy*vy) || 1e-5;
-      const tvx = vx / spd, tvy = vy / spd;   // target (actual) direction
+      /* ── 0 SHAKING VELOCITY & MULTI-JOINT SNAKE BENDING ── */
+      /* Filter out high-frequency noise from velocity direction */
+      svx[i] = svx[i] * 0.88 + pvx[i] * 0.12;
+      svy[i] = svy[i] * 0.88 + pvy[i] * 0.12;
 
-      /* lerp smoothed direction toward target */
-      pdx[i] += (tvx - pdx[i]) * 0.12;
-      pdy[i] += (tvy - pdy[i]) * 0.12;
+      const sSpd = Math.sqrt(svx[i]*svx[i] + svy[i]*svy[i]) || 1e-5;
+      const tvx = svx[i] / sSpd, tvy = svy[i] / sSpd;
 
-      /* re-normalise smoothed dir */
+      /* Low-pass filter for head direction (eliminates shaking/jitter 100%) */
+      pdx[i] += (tvx - pdx[i]) * 0.045;
+      pdy[i] += (tvy - pdy[i]) * 0.045;
+
       const dMag = Math.sqrt(pdx[i]*pdx[i] + pdy[i]*pdy[i]) || 1e-5;
-      const dnx = pdx[i] / dMag,  dny = pdy[i] / dMag;
-      const pnx = -dny,            pny =  dnx;   // perpendicular
+      const d4x = pdx[i] / dMag, d4y = pdy[i] / dMag; // Head direction (Node 4)
 
-      const L = pLen[i], W = pWid[i], cz = pz[i];
+      /* Tail direction (Node 0) lags behind head direction */
+      const sFlex = (CFG.stripFlex !== undefined ? CFG.stripFlex : 1.0);
+      const flexRate = 0.035 * sFlex;
+      ptx[i] += (d4x - ptx[i]) * flexRate;
+      pty[i] += (d4y - pty[i]) * flexRate;
+
+      const tMag = Math.sqrt(ptx[i]*ptx[i] + pty[i]*pty[i]) || 1e-5;
+      const d0x = ptx[i] / tMag, d0y = pty[i] / tMag; // Tail direction (Node 0)
+
+      /* Smooth slerp interpolation across the 5 nodes (Nodes 0, 1, 2, 3, 4) */
+      const u1x = d0x * 0.75 + d4x * 0.25, u1y = d0y * 0.75 + d4y * 0.25, m1 = Math.sqrt(u1x*u1x + u1y*u1y)||1e-5;
+      const d1x = u1x / m1, d1y = u1y / m1; // Quarter direction (Node 1)
+
+      const u2x = d0x * 0.50 + d4x * 0.50, u2y = d0y * 0.50 + d4y * 0.50, m2 = Math.sqrt(u2x*u2x + u2y*u2y)||1e-5;
+      const d2x = u2x / m2, d2y = u2y / m2; // Mid direction (Node 2)
+
+      const u3x = d0x * 0.25 + d4x * 0.75, u3y = d0y * 0.25 + d4y * 0.75, m3 = Math.sqrt(u3x*u3x + u3y*u3y)||1e-5;
+      const d3x = u3x / m3, d3y = u3y / m3; // Three-Quarter direction (Node 3)
+
+      /* Compute 5 node positions along the curved spine */
+      const totalL = pLen[i], segL = totalL * 0.25, W = pWid[i], cz = pz[i];
+      const n2x = px[i], n2y = py[i];                // Center Node 2
+      const n1x = n2x - d1x * segL, n1y = n2y - d1y * segL; // Node 1
+      const n0x = n1x - d0x * segL, n0y = n1y - d0y * segL; // Tail Node 0
+      const n3x = n2x + d3x * segL, n3y = n2y + d3y * segL; // Node 3
+      const n4x = n3x + d4x * segL, n4y = n3y + d4y * segL; // Head Node 4
+
       const base = i * VPR * 3;
-      writeQuad(base,
-        px[i]-dnx*L+pnx*W, py[i]-dny*L+pny*W, cz,
-        px[i]-dnx*L-pnx*W, py[i]-dny*L-pny*W, cz,
-        px[i]+dnx*L-pnx*W, py[i]+dny*L-pny*W, cz,
-        px[i]+dnx*L+pnx*W, py[i]+dny*L+pny*W, cz,
-        rC, gC, bC, 0.022, dnx, dny
+      writeSnakeRibbon(
+        base,
+        n0x,n0y, n1x,n1y, n2x,n2y, n3x,n3y, n4x,n4y,
+        d0x,d0y, d1x,d1y, d2x,d2y, d3x,d3y, d4x,d4y,
+        W, cz, rC, gC, bC, 0.022
       );
     }
 
@@ -599,12 +872,15 @@
       return {
         sphereR:2.2, shieldR:6.2, lightR:15.0,
         pulseSpeed:0.65, pulseAmt:0.075,
+        coronaScale:1.0, coronaGlow:1.0, coronaRim:1.0,
         particleCount:3000,
         minLen:0.30, maxLen:0.70, minWid:0.010, maxWid:0.025,
         upward:0.0048, damping:0.92, swirlK:0.009, noiseF:0.0065,
         noiseS:0.048, noiseT:0.09, alignK:0.012, cohereK:0.018,
         shieldK:0.52, slowZone:3.5,
+        xSpread:90.0, ySpread:52.0, zSpread:16.0, zBias:-0.45,
         falloffPow:3.0, briBoost:1.0, colorWarm:0.0,
+        fogEnable:1, fogDensity:0.80, fogNear:2.0, fogFar:25.0, fogHue:0.60,
       };
     },
   };

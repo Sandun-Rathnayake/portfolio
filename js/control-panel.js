@@ -310,16 +310,29 @@
           { key:'maxLen',        label:'Max Length', min:0.05,  max:10.0,  step:0.01, dp:2, onchange: ()=>{ CTRL.rebuildSizes(); } },
           { key:'minWid',        label:'Min Width',  min:0.003, max:0.08,  step:0.001,dp:3, onchange: ()=>{ CTRL.rebuildSizes(); } },
           { key:'maxWid',        label:'Max Width',  min:0.005, max:0.12,  step:0.001,dp:3, onchange: ()=>{ CTRL.rebuildSizes(); } },
+          { key:'stripFlex',     label:'Snake Bending',min:0.0,  max:2.5,   step:0.05, dp:2, tooltip:'Curvature flexibility along the strip (0=rigid, 1=curved, 2=snake)' },
         ],
       },
       {
         id: 'sphere', icon: '◉', label: 'Eclipse Sphere', open: true,
         controls: [
-          { key:'sphereR',    label:'Sphere Radius',  min:0.5,  max:5.0,  step:0.1,   dp:1 },
-          { key:'shieldR',    label:'Shield Radius',  min:3.0,  max:12.0, step:0.2,   dp:1 },
-          { key:'lightR',     label:'Light Radius',   min:6.0,  max:28.0, step:0.5,   dp:1 },
-          { key:'pulseSpeed', label:'Pulse Speed',    min:0.10, max:3.0,  step:0.05,  dp:2 },
-          { key:'pulseAmt',   label:'Pulse Intensity',min:0.00, max:0.30, step:0.005, dp:3 },
+          { key:'sphereR',      label:'Sphere Radius',  min:0.5,  max:5.0,  step:0.1,   dp:1 },
+          { key:'shieldR',      label:'Shield Radius',  min:3.0,  max:12.0, step:0.2,   dp:1 },
+          { key:'lightR',       label:'Light Radius',   min:6.0,  max:28.0, step:0.5,   dp:1 },
+          { key:'pulseSpeed',   label:'Pulse Speed',    min:0.10, max:3.0,  step:0.05,  dp:2 },
+          { key:'pulseAmt',     label:'Pulse Intensity',min:0.00, max:0.30, step:0.005, dp:3 },
+          { key:'coronaScale',  label:'Corona Scale',   min:0.40, max:3.0,  step:0.05,  dp:2 },
+          { key:'coronaGlow',   label:'Corona Glow',    min:0.00, max:3.0,  step:0.05,  dp:2 },
+          { key:'coronaRim',    label:'Eclipse Rim',    min:0.00, max:3.0,  step:0.05,  dp:2 },
+        ],
+      },
+      {
+        id: 'spread', icon: '⤢', label: '3D Spreading (X, Y, Z)', open: true,
+        controls: [
+          { key:'xSpread', label:'X Width Spread',     min:10.0, max:180.0, step:2.0, dp:1, onchange: ()=>{ CTRL.rebuildCount(); } },
+          { key:'ySpread', label:'Y Height Spread',    min:10.0, max:120.0, step:2.0, dp:1, onchange: ()=>{ CTRL.rebuildCount(); } },
+          { key:'zSpread', label:'Z Depth Spread',     min:0.0,  max:50.0,  step:1.0, dp:1, onchange: ()=>{ CTRL.rebuildCount(); }, tooltip:'Controls 3D thickness in front & behind the ball' },
+          { key:'zBias',   label:'Depth Bias (Front/Back)', min:-0.90, max:0.90, step:0.05, dp:2, onchange: ()=>{ CTRL.rebuildCount(); }, tooltip:'Negative = more particles BEHIND ball, Positive = IN FRONT' },
         ],
       },
       {
@@ -341,6 +354,16 @@
           { key:'briBoost',   label:'Brightness',     min:0.2, max:4.0, step:0.1,  dp:1 },
           { key:'falloffPow', label:'Falloff Curve',  min:1.0, max:5.0, step:0.25, dp:2, tooltip:'1=linear  3=cubic  5=sharp' },
           { key:'colorWarm',  label:'Warm ← Cool →',  min:0.0, max:1.0, step:0.01, dp:2, cls:'cp-warm' },
+        ],
+      },
+      {
+        id: 'fog', icon: '🌫', label: 'Atmospheric Blue Fog', open: true,
+        controls: [
+          { key:'fogEnable',  label:'Enable Fog',       min:0,    max:1,    step:1,    dp:0, tooltip:'1=On, 0=Off' },
+          { key:'fogDensity', label:'Fog Intensity',    min:0.00, max:3.00, step:0.05, dp:2, tooltip:'Blue space mist density' },
+          { key:'fogNear',    label:'Fog Start Depth',  min:0.0,  max:20.0, step:0.5,  dp:1, tooltip:'Depth behind sphere where blue fog begins' },
+          { key:'fogFar',     label:'Fog Limit Depth',  min:5.0,  max:60.0, step:1.0,  dp:1, tooltip:'Depth behind sphere for max blue fog' },
+          { key:'fogHue',     label:'Blue Fog Hue',     min:0.50, max:0.75, step:0.01, dp:2, tooltip:'0.55=Cyan, 0.60=Cobalt, 0.70=Indigo' },
         ],
       },
     ];
@@ -380,7 +403,9 @@
 
         const val = document.createElement('span');
         val.className = 'cp-val';
-        val.textContent = CFG[ctrl.key].toFixed(ctrl.dp);
+        const rawVal = CFG[ctrl.key];
+        const initialVal = typeof rawVal === 'number' ? rawVal : 0;
+        val.textContent = initialVal.toFixed(ctrl.dp);
         valEls[ctrl.key] = val;
 
         const wrap = document.createElement('div');
@@ -392,7 +417,7 @@
         range.min   = ctrl.min;
         range.max   = ctrl.max;
         range.step  = ctrl.step;
-        range.value = CFG[ctrl.key];
+        range.value = initialVal;
         rangeEls[ctrl.key] = range;
 
         range.addEventListener('input', () => {
