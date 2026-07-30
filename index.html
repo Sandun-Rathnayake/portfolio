@@ -1,326 +1,436 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>SANDUN — Full Stack Software Engineer</title>
-    <meta
-      name="description"
-      content="Full Stack Software Engineer crafting beautiful, performant digital experiences. © 2026 Sandun Rathnayake."
-    />
-    <meta name="author" content="Sandun Rathnayake" />
 
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap"
-      rel="stylesheet"
-    />
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SANDUN — Full Stack Software Engineer</title>
+  <meta name="description"
+    content="Full Stack Software Engineer crafting beautiful, performant digital experiences. © 2026 Sandun Rathnayake." />
+  <meta name="author" content="Sandun Rathnayake" />
 
-    <!-- Three.js CDN -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap"
+    rel="stylesheet" />
 
-    <!-- Styles -->
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.15.1/devicon.min.css"
-    />
-    <link rel="stylesheet" href="css/style.css" />
-  </head>
-  <body data-theme="dark">
-    <!-- ─── LOADING SCREEN ─────────────────────────────────── -->
-    <div id="loader" class="loader" aria-hidden="true">
-      <div class="loader__bar-wrap">
-        <div class="loader__bar" id="loader-bar"></div>
+
+
+  <!-- Three.js Local -->
+  <script src="js/three.min.js"></script>
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.15.1/devicon.min.css" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+
+<body data-theme="dark">
+  <!-- ─── LOADING SCREEN ─────────────────────────────────── -->
+  <div id="loader" class="loader" aria-hidden="true">
+    <div class="loader__bar-wrap">
+      <div class="loader__bar" id="loader-bar"></div>
+    </div>
+    <span class="loader__label" id="loader-label">00</span>
+  </div>
+
+  <!-- ─── CURSOR ─────────────────────────────────────────── -->
+  <div id="cursor" class="cursor" aria-hidden="true">
+    <div class="cursor__dot"></div>
+    <div class="cursor__ring"></div>
+  </div>
+
+
+
+  <!-- ─── CANVAS OVERLAY (pointer events layer) ─────────── -->
+  <div id="canvas-overlay" class="canvas-overlay" aria-hidden="true">
+    <canvas id="three-canvas"></canvas>
+  </div>
+
+  <!-- ─── NAVIGATION ─────────────────────────────────────── -->
+  <header class="nav" id="nav">
+    <div class="nav__left">
+      <a href="#hero" class="nav__logo" id="nav-logo" aria-label="Sandun Rathnayake — Home">
+        <span class="nav__logo-name">sandun</span><span class="nav__logo-dot">.dev</span>
+      </a>
+    </div>
+    <nav class="nav__links" aria-label="Main navigation">
+      <button class="nav__link" data-scroll-to="skills" id="nav-skills">
+        Skills
+      </button>
+      <button class="nav__link" data-scroll-to="experience" id="nav-experience">
+        Experience
+      </button>
+      <button class="nav__link" data-scroll-to="work" id="nav-work">
+        Work
+      </button>
+      <button class="nav__link" data-scroll-to="contact" id="nav-contact">
+        Contact
+      </button>
+      <button class="nav__link nav__theme-toggle" id="theme-toggle" aria-label="Toggle theme">
+        <span class="nav__theme-label">THEME[D]</span>
+      </button>
+    </nav>
+  </header>
+
+  <!-- ─── BOTTOM STATUS BAR ──────────────────────────────── -->
+  <div class="status-bar" id="status-bar" aria-hidden="true">
+    <span class="status-bar__time" id="live-clock">--:--:--</span>
+    <span class="status-bar__coords" id="mouse-coords">0000 X / 0000 Y</span>
+    <span class="status-bar__tz">GMT+5:30 LK</span>
+  </div>
+
+  <!-- ══ PROJECT DETAIL DRAWER ═══════════════════════════════════════ -->
+  <div class="project-drawer" id="project-drawer" aria-hidden="true">
+    <div class="project-drawer__backdrop"></div>
+    <div class="project-drawer__content">
+      <button class="project-drawer__close" id="drawer-close">CLOSE [ESC]</button>
+      <div class="project-drawer__body" id="drawer-body"></div>
+    </div>
+  </div>
+
+  <!-- ─── MAIN CONTENT ───────────────────────────────────── -->
+  <main id="scroll-container">
+    <!-- ══ HERO SECTION ══════════════════════════════════════ -->
+    <section id="hero" class="hero section">
+      <div class="hero__meta">
+        <span class="hero__meta-item reveal-text">Full Stack Engineer</span>
+        <span class="hero__meta-item reveal-text">Thinking in systems.</span>
       </div>
-      <span class="loader__label" id="loader-label">00</span>
-    </div>
 
-    <!-- ─── CURSOR ─────────────────────────────────────────── -->
-    <div id="cursor" class="cursor" aria-hidden="true">
-      <div class="cursor__dot"></div>
-      <div class="cursor__ring"></div>
-    </div>
-
-    <!-- ─── CANVAS OVERLAY (pointer events layer) ─────────── -->
-    <div id="canvas-overlay" class="canvas-overlay" aria-hidden="true">
-      <canvas id="three-canvas"></canvas>
-    </div>
-
-    <!-- ─── NAVIGATION ─────────────────────────────────────── -->
-    <header class="nav" id="nav">
-      <div class="nav__left">
-        <a
-          href="#hero"
-          class="nav__logo"
-          id="nav-logo"
-          aria-label="Sandun Rathnayake — Home"
-        >
-          <span class="nav__logo-name">sandun</span
-          ><span class="nav__logo-dot">.dev</span>
-        </a>
+      <div class="hero__headline">
+        <div class="hero__line reveal-line"><span>I build things</span></div>
+        <div class="hero__line reveal-line">
+          <span>that matter &amp;</span>
+        </div>
+        <div class="hero__line reveal-line">
+          <span>scale beautifully</span>
+        </div>
       </div>
-      <nav class="nav__links" aria-label="Main navigation">
-        <button class="nav__link" data-scroll-to="skills" id="nav-skills">
-          Skills
-        </button>
-        <button
-          class="nav__link"
-          data-scroll-to="experience"
-          id="nav-experience"
-        >
-          Experience
-        </button>
-        <button class="nav__link" data-scroll-to="work" id="nav-work">
-          Work
-        </button>
-        <button class="nav__link" data-scroll-to="contact" id="nav-contact">
-          Contact
-        </button>
-        <button
-          class="nav__link nav__theme-toggle"
-          id="theme-toggle"
-          aria-label="Toggle theme"
-        >
-          <span class="nav__theme-label">THEME[D]</span>
-        </button>
-      </nav>
-    </header>
 
-    <!-- ─── BOTTOM STATUS BAR ──────────────────────────────── -->
-    <div class="status-bar" id="status-bar" aria-hidden="true">
-      <span class="status-bar__time" id="live-clock">--:--:--</span>
-      <span class="status-bar__coords" id="mouse-coords">0000 X / 0000 Y</span>
-      <span class="status-bar__tz">GMT+5:30 LK</span>
-    </div>
-
-    <!-- ══ PROJECT DETAIL DRAWER ═══════════════════════════════════════ -->
-    <div class="project-drawer" id="project-drawer" aria-hidden="true">
-      <div class="project-drawer__backdrop"></div>
-      <div class="project-drawer__content">
-        <button class="project-drawer__close" id="drawer-close">CLOSE [ESC]</button>
-        <div class="project-drawer__body" id="drawer-body"></div>
+      <div class="hero__bio reveal-text">
+        <p>
+          I'm <strong>Sandun Rathnayake</strong>, a Full Stack Software
+          Engineer engineering end-to-end solutions that are fast, elegant,
+          and built to last. I care deeply about the details — from system
+          architecture to pixel-perfect UI.
+        </p>
       </div>
-    </div>
 
-    <!-- ─── MAIN CONTENT ───────────────────────────────────── -->
-    <main id="scroll-container">
-      <!-- ══ HERO SECTION ══════════════════════════════════════ -->
-      <section id="hero" class="hero section">
-        <div class="hero__meta">
-          <span class="hero__meta-item reveal-text">Full Stack Engineer</span>
-          <span class="hero__meta-item reveal-text">Thinking in systems.</span>
+      <div class="hero__scroll-hint reveal-text" aria-hidden="true">
+        <span class="hero__scroll-line"></span>
+        <span>scroll</span>
+      </div>
+    </section>
+
+    <!-- ══ ABOUT SECTION ══════════════════════════════════════ -->
+    <section id="about" class="about section">
+      <div class="about__signature-wrap" aria-hidden="true">
+        <!-- SVG animated signature -->
+        <svg class="svg-sign" viewBox="0 0 320 154" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path class="svg-sign__path"
+            d="M20 80 C40 20, 80 20, 100 80 C120 140, 160 140, 180 80 C200 20, 240 20, 260 80" stroke="var(--accent)"
+            stroke-width="3" fill="none" />
+          <path class="svg-sign__path" d="M50 100 C80 60, 140 110, 200 70 C240 45, 270 75, 300 60"
+            stroke="var(--accent)" stroke-width="3" fill="none" />
+          <path class="svg-sign__path" d="M260 55 L265 70" stroke="var(--accent)" stroke-width="4" fill="none" />
+        </svg>
+      </div>
+      <div class="about__content">
+        <p class="about__statement reveal-text">
+          I explore how to shape the future of web applications with craft and
+          precision — building the next generation of digital products at
+          scale.
+        </p>
+        <p class="about__sub reveal-text">
+          Currently architecting high-performance apps at
+          <a href="#" class="link" target="_blank" rel="noopener">NexaTech Solutions</a>, and previously engineered
+          systems at
+          <a href="#" class="link" target="_blank" rel="noopener">CloudBase</a>,
+          <a href="#" class="link" target="_blank" rel="noopener">DevForge Labs</a>, and Startify.
+        </p>
+      </div>
+    </section>
+
+    <!-- ══ SKILLS SECTION ══════════════════════════════════════ -->
+    <section id="skills" class="skills section">
+      <!-- Center-aligned top container icon -->
+      <div class="skills__icon-wrapper reveal-text" aria-hidden="true">
+        <svg class="skills__icon" viewBox="0 0 100 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <!-- Connection Lines -->
+          <path class="skills__icon-line" d="M15 30 H85" stroke="var(--border)" stroke-width="1.5"
+            stroke-dasharray="4 4" />
+          <path class="skills__icon-branch" d="M50 15 V45" stroke="var(--border)" stroke-width="1.5"
+            stroke-dasharray="4 4" />
+          <!-- Node Connections Glow -->
+          <line class="skills__icon-glow-line" x1="15" y1="30" x2="50" y2="15" stroke="var(--accent)" stroke-width="1.5"
+            stroke-linecap="round" stroke-dasharray="3 30" />
+          <line class="skills__icon-glow-line" x1="50" y1="15" x2="85" y2="30" stroke="var(--accent)" stroke-width="1.5"
+            stroke-linecap="round" stroke-dasharray="3 30" />
+          <line class="skills__icon-glow-line" x1="85" y1="30" x2="50" y2="45" stroke="var(--accent)" stroke-width="1.5"
+            stroke-linecap="round" stroke-dasharray="3 30" />
+          <line class="skills__icon-glow-line" x1="50" y1="45" x2="15" y2="30" stroke="var(--accent)" stroke-width="1.5"
+            stroke-linecap="round" stroke-dasharray="3 30" />
+
+          <!-- Nodes -->
+          <!-- Top Node: System Architecture -->
+          <circle class="skills__icon-node skills__icon-node--1" cx="50" cy="15" r="4.5" fill="var(--bg)"
+            stroke="var(--accent)" stroke-width="2" />
+          <!-- Left Node: Frontend -->
+          <circle class="skills__icon-node skills__icon-node--2" cx="15" cy="30" r="4.5" fill="var(--bg)"
+            stroke="var(--accent)" stroke-width="2" />
+          <!-- Right Node: Backend -->
+          <circle class="skills__icon-node skills__icon-node--3" cx="85" cy="30" r="4.5" fill="var(--bg)"
+            stroke="var(--accent)" stroke-width="2" />
+          <!-- Bottom Node: Databases -->
+          <circle class="skills__icon-node skills__icon-node--4" cx="50" cy="45" r="4.5" fill="var(--bg)"
+            stroke="var(--accent)" stroke-width="2" />
+        </svg>
+      </div>
+
+      <h2 class="section-label reveal-text skills__header">
+        Technical Competence
+      </h2>
+
+      <!-- Desktop/Tablet Triangular Pyramid Layout (8 rows, 36 items) -->
+      <div class="skills__pyramid reveal-text" aria-label="Skills Pyramid">
+        <!-- Row 1: 8 items — Architecture & Strategy -->
+        <div class="skills__row reveal-row">
+          <span class="skills__badge">
+            <svg class="skills__badge-icon" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+              <rect x="2" y="2" width="12" height="4" rx="1" />
+              <rect x="2" y="10" width="12" height="4" rx="1" />
+              <path d="M6 4h.01M10 4h.01M6 12h.01M10 12h.01M8 6v4" />
+            </svg>
+            System Architecture
+          </span>
+          <span class="skills__badge">
+            <svg class="skills__badge-icon" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+              <path d="M8 2 L14 5 L14 11 L8 14 L2 11 L2 5 Z" />
+              <path d="M2 5 L8 8 L14 5" />
+              <path d="M8 8 L8 14" />
+            </svg>
+            Platform Architecture
+          </span>
+          <span class="skills__badge">
+            <svg class="skills__badge-icon" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+              <path d="M5 4 L2 8 L5 12" />
+              <path d="M11 4 L14 8 L11 12" />
+              <path d="M9.5 3 L6.5 13" />
+            </svg>
+            Software Engineering
+          </span>
+          <span class="skills__badge">
+            <svg class="skills__badge-icon" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+              <path
+                d="M8 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4zM2 14s1-3 6-3 6 3 6 3M3 8a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zM1 14s.5-2 2-2 2 2 2 2" />
+            </svg>
+            Team Leadership
+          </span>
+          <span class="skills__badge">
+            <svg class="skills__badge-icon" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+              <path d="M2 5l6 3 6-3-6-3-6 3z" />
+              <path d="M2 9.5l6 3 6-3" />
+              <path d="M2 12.5l6 3 6-3" />
+            </svg>
+            Full-Stack Dev
+          </span>
+          <span class="skills__badge">
+            <svg class="skills__badge-icon" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+              <path
+                d="M12 2a5 5 0 0 1 1 9.5l-.5 2.5a1 1 0 0 1-1 1H8.5a1 1 0 0 1-1-1v-.5c0-.8-.7-1.5-1.5-1.5H5a4 4 0 0 1 0-8c2 0 4 1 7 2z" />
+              <circle cx="5" cy="5" r="1" fill="currentColor" />
+              <circle cx="8" cy="4" r="1" fill="currentColor" />
+              <circle cx="10" cy="7" r="1" fill="currentColor" />
+            </svg>
+            Web Design
+          </span>
+          <span class="skills__badge">
+            <svg class="skills__badge-icon" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+              <rect x="6" y="2" width="4" height="12" rx="1" />
+              <rect x="2" y="6" width="12" height="4" rx="1" />
+              <circle cx="8" cy="8" r="1.5" fill="currentColor" />
+            </svg>
+            Hospital IS
+          </span>
+          <span class="skills__badge">
+            <svg class="skills__badge-icon" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+              <ellipse cx="8" cy="4" rx="6" ry="2" />
+              <path d="M2 4v8c0 1.1 2.7 2 6 2s6-.9 6-2V4" />
+              <path d="M2 8c0 1.1 2.7 2 6 2s6-.9 6-2" />
+            </svg>
+            DBMS
+          </span>
+        </div>
+        <!-- Row 2: 7 items — Core Languages -->
+        <div class="skills__row reveal-row">
+          <span class="skills__badge">
+            <i class="devicon-java-plain colored"></i>
+            Java
+          </span>
+          <span class="skills__badge">
+            <i class="devicon-php-plain colored"></i>
+            PHP
+          </span>
+          <span class="skills__badge">
+            <i class="devicon-python-plain colored"></i>
+            Python
+          </span>
+          <span class="skills__badge">
+            <i class="devicon-cplusplus-plain colored"></i>
+            C++
+          </span>
+          <span class="skills__badge">
+            <i class="devicon-javascript-plain colored"></i>
+            JavaScript
+          </span>
+          <span class="skills__badge">
+            <i class="devicon-typescript-plain colored"></i>
+            TypeScript
+          </span>
+          <span class="skills__badge">
+            <svg class="skills__badge-icon" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+              <ellipse cx="8" cy="3" rx="5" ry="1.5" />
+              <path d="M3 3v6c0 .8 2.2 1.5 5 1.5s5-.7 5-1.5V3" />
+              <path d="M3 6c0 .8 2.2 1.5 5 1.5s5-.7 5-1.5" />
+              <circle cx="11" cy="11" r="2.5" />
+              <path d="M13 13l2 2" />
+            </svg>
+            SQL
+          </span>
         </div>
 
-        <div class="hero__headline">
-          <div class="hero__line reveal-line"><span>I build things</span></div>
-          <div class="hero__line reveal-line">
-            <span>that matter &amp;</span>
-          </div>
-          <div class="hero__line reveal-line">
-            <span>scale beautifully</span>
-          </div>
+        <!-- Row 3: 6 items — Web & Mobile Frameworks -->
+        <div class="skills__row reveal-row">
+          <span class="skills__badge">
+            <i class="devicon-react-original colored"></i>
+            React.js
+          </span>
+          <span class="skills__badge">
+            <i class="devicon-react-original colored"></i>
+            React Native
+          </span>
+          <span class="skills__badge">
+            <i class="devicon-android-plain colored"></i>
+            Android Dev
+          </span>
+          <span class="skills__badge">
+            <i class="devicon-codeigniter-plain colored"></i>
+            CodeIgniter
+          </span>
+          <span class="skills__badge">
+            <i class="devicon-java-plain colored"></i>
+            Jakarta EE
+          </span>
+          <span class="skills__badge">
+            <svg class="skills__badge-icon" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+              <path d="M8 2L1 13h14L8 2zM8 2v11M1 13l7-5.5M15 13L8 7.5" />
+            </svg>
+            Three.js
+          </span>
         </div>
-
-        <div class="hero__bio reveal-text">
-          <p>
-            I'm <strong>Sandun Rathnayake</strong>, a Full Stack Software
-            Engineer engineering end-to-end solutions that are fast, elegant,
-            and built to last. I care deeply about the details — from system
-            architecture to pixel-perfect UI.
-          </p>
+        <!-- Row 4: 5 items — Middleware & Web APIs -->
+        <div class="skills__row reveal-row">
+          <span class="skills__badge">
+            <svg class="skills__badge-icon" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="3" cy="8" r="2" />
+              <circle cx="13" cy="4" r="2" />
+              <circle cx="13" cy="12" r="2" />
+              <path d="M5 8h4M9 8V5c0-.6.4-1 1-1h1M9 8v3c0 .6.4 1 1 1h1" />
+            </svg>
+            REST APIs
+          </span>
+          <span class="skills__badge">
+            <svg class="skills__badge-icon" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="8" cy="8" r="4" />
+              <circle cx="8" cy="8" r="7" stroke-dasharray="3 3" />
+            </svg>
+            Open API
+          </span>
+          <span class="skills__badge">
+            <i class="devicon-java-plain colored"></i>
+            J2EE Services
+          </span>
+          <span class="skills__badge">
+            <i class="devicon-hibernate-plain colored"></i>
+            Hibernate
+          </span>
+          <span class="skills__badge">
+            <i class="devicon-html5-plain colored"></i>
+            HTML/CSS
+          </span>
         </div>
-
-        <div class="hero__scroll-hint reveal-text" aria-hidden="true">
-          <span class="hero__scroll-line"></span>
-          <span>scroll</span>
+        <!-- Row 5: 4 items — Database Engines -->
+        <div class="skills__row reveal-row">
+          <span class="skills__badge">
+            <i class="devicon-mysql-plain colored"></i>
+            MySQL
+          </span>
+          <span class="skills__badge">
+            <i class="devicon-postgresql-plain colored"></i>
+            PgSQL
+          </span>
+          <span class="skills__badge">
+            <i class="devicon-sqlite-plain colored"></i>
+            SQLite
+          </span>
+          <span class="skills__badge">
+            <svg class="skills__badge-icon" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+              <rect x="3" y="2" width="10" height="12" rx="1.5" />
+              <path d="M6 5h4M6 8h4M6 11h2" />
+            </svg>
+            NoSQL
+          </span>
         </div>
-      </section>
-
-      <!-- ══ ABOUT SECTION ══════════════════════════════════════ -->
-      <section id="about" class="about section">
-        <div class="about__signature-wrap" aria-hidden="true">
-          <!-- SVG animated signature -->
-          <svg
-            class="svg-sign"
-            viewBox="0 0 320 154"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-            aria-hidden="true"
-          >
-            <path
-              class="svg-sign__path"
-              d="M20 80 C40 20, 80 20, 100 80 C120 140, 160 140, 180 80 C200 20, 240 20, 260 80"
-              stroke="var(--accent)"
-              stroke-width="3"
-              fill="none"
-            />
-            <path
-              class="svg-sign__path"
-              d="M50 100 C80 60, 140 110, 200 70 C240 45, 270 75, 300 60"
-              stroke="var(--accent)"
-              stroke-width="3"
-              fill="none"
-            />
-            <path
-              class="svg-sign__path"
-              d="M260 55 L265 70"
-              stroke="var(--accent)"
-              stroke-width="4"
-              fill="none"
-            />
-          </svg>
+        <!-- Row 6: 3 items — DevSecOps & Cloud -->
+        <div class="skills__row reveal-row">
+          <span class="skills__badge">
+            <i class="devicon-git-plain colored"></i>
+            Git
+          </span>
+          <span class="skills__badge">
+            <i class="devicon-github-original"></i>
+            GitHub
+          </span>
+          <span class="skills__badge">
+            <i class="devicon-firebase-plain colored"></i>
+            Firebase
+          </span>
         </div>
-        <div class="about__content">
-          <p class="about__statement reveal-text">
-            I explore how to shape the future of web applications with craft and
-            precision — building the next generation of digital products at
-            scale.
-          </p>
-          <p class="about__sub reveal-text">
-            Currently architecting high-performance apps at
-            <a href="#" class="link" target="_blank" rel="noopener"
-              >NexaTech Solutions</a
-            >, and previously engineered systems at
-            <a href="#" class="link" target="_blank" rel="noopener">CloudBase</a
-            >,
-            <a href="#" class="link" target="_blank" rel="noopener"
-              >DevForge Labs</a
-            >, and Startify.
-          </p>
+        <!-- Row 7: 2 items — Creative Media & 3D -->
+        <div class="skills__row reveal-row">
+          <span class="skills__badge">
+            <i class="devicon-blender-original colored"></i>
+            Blender
+          </span>
+          <span class="skills__badge">
+            <svg class="skills__badge-icon" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+              <path d="M8 2L3 10c0 0 1 .5 2 .5s2-1 3-1 3 1 3 1L8 2zM8 6v3" />
+            </svg>
+            Graphic Design
+          </span>
         </div>
-      </section>
-
-      <!-- ══ SKILLS SECTION ══════════════════════════════════════ -->
-      <section id="skills" class="skills section">
-        <!-- Center-aligned top container icon -->
-        <div class="skills__icon-wrapper reveal-text" aria-hidden="true">
-          <svg
-            class="skills__icon"
-            viewBox="0 0 100 60"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <!-- Connection Lines -->
-            <path
-              class="skills__icon-line"
-              d="M15 30 H85"
-              stroke="var(--border)"
-              stroke-width="1.5"
-              stroke-dasharray="4 4"
-            />
-            <path
-              class="skills__icon-branch"
-              d="M50 15 V45"
-              stroke="var(--border)"
-              stroke-width="1.5"
-              stroke-dasharray="4 4"
-            />
-            <!-- Node Connections Glow -->
-            <line
-              class="skills__icon-glow-line"
-              x1="15"
-              y1="30"
-              x2="50"
-              y2="15"
-              stroke="var(--accent)"
-              stroke-width="1.5"
-              stroke-linecap="round"
-              stroke-dasharray="3 30"
-            />
-            <line
-              class="skills__icon-glow-line"
-              x1="50"
-              y1="15"
-              x2="85"
-              y2="30"
-              stroke="var(--accent)"
-              stroke-width="1.5"
-              stroke-linecap="round"
-              stroke-dasharray="3 30"
-            />
-            <line
-              class="skills__icon-glow-line"
-              x1="85"
-              y1="30"
-              x2="50"
-              y2="45"
-              stroke="var(--accent)"
-              stroke-width="1.5"
-              stroke-linecap="round"
-              stroke-dasharray="3 30"
-            />
-            <line
-              class="skills__icon-glow-line"
-              x1="50"
-              y1="45"
-              x2="15"
-              y2="30"
-              stroke="var(--accent)"
-              stroke-width="1.5"
-              stroke-linecap="round"
-              stroke-dasharray="3 30"
-            />
-
-            <!-- Nodes -->
-            <!-- Top Node: System Architecture -->
-            <circle
-              class="skills__icon-node skills__icon-node--1"
-              cx="50"
-              cy="15"
-              r="4.5"
-              fill="var(--bg)"
-              stroke="var(--accent)"
-              stroke-width="2"
-            />
-            <!-- Left Node: Frontend -->
-            <circle
-              class="skills__icon-node skills__icon-node--2"
-              cx="15"
-              cy="30"
-              r="4.5"
-              fill="var(--bg)"
-              stroke="var(--accent)"
-              stroke-width="2"
-            />
-            <!-- Right Node: Backend -->
-            <circle
-              class="skills__icon-node skills__icon-node--3"
-              cx="85"
-              cy="30"
-              r="4.5"
-              fill="var(--bg)"
-              stroke="var(--accent)"
-              stroke-width="2"
-            />
-            <!-- Bottom Node: Databases -->
-            <circle
-              class="skills__icon-node skills__icon-node--4"
-              cx="50"
-              cy="45"
-              r="4.5"
-              fill="var(--bg)"
-              stroke="var(--accent)"
-              stroke-width="2"
-            />
-          </svg>
+        <!-- Row 8: 1 item — Foundation -->
+        <div class="skills__row reveal-row">
+          <span class="skills__badge">
+            <svg class="skills__badge-icon" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+              <rect x="4" y="1" width="8" height="14" rx="1.5" />
+              <path d="M4 4h8M4 11h8M8 13h.01" />
+            </svg>
+            UI Prototyping
+          </span>
         </div>
+      </div>
 
-        <h2 class="section-label reveal-text skills__header">
-          Technical Competence
-        </h2>
-
-        <!-- Desktop/Tablet Triangular Pyramid Layout (8 rows, 36 items) -->
-        <div class="skills__pyramid reveal-text" aria-label="Skills Pyramid">
-          <!-- Row 1: 8 items — Architecture & Strategy -->
-          <div class="skills__row reveal-row">
+      <!-- Mobile-friendly Categorized Groups -->
+      <div class="skills__mobile" aria-label="Skills Categories">
+        <!-- Category 1 -->
+        <div class="skills__card reveal-text">
+          <h3 class="skills__card-title">01 — Architecture &amp; Strategy</h3>
+          <div class="skills__card-tags">
             <span class="skills__badge">
-              <svg
-                class="skills__badge-icon"
-                viewBox="0 0 16 16"
-                xmlns="http://www.w3.org/2000/svg"
-              >
+              <svg class="skills__badge-icon" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
                 <rect x="2" y="2" width="12" height="4" rx="1" />
                 <rect x="2" y="10" width="12" height="4" rx="1" />
                 <path d="M6 4h.01M10 4h.01M6 12h.01M10 12h.01M8 6v4" />
@@ -328,11 +438,7 @@
               System Architecture
             </span>
             <span class="skills__badge">
-              <svg
-                class="skills__badge-icon"
-                viewBox="0 0 16 16"
-                xmlns="http://www.w3.org/2000/svg"
-              >
+              <svg class="skills__badge-icon" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
                 <path d="M8 2 L14 5 L14 11 L8 14 L2 11 L2 5 Z" />
                 <path d="M2 5 L8 8 L14 5" />
                 <path d="M8 8 L8 14" />
@@ -340,11 +446,7 @@
               Platform Architecture
             </span>
             <span class="skills__badge">
-              <svg
-                class="skills__badge-icon"
-                viewBox="0 0 16 16"
-                xmlns="http://www.w3.org/2000/svg"
-              >
+              <svg class="skills__badge-icon" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
                 <path d="M5 4 L2 8 L5 12" />
                 <path d="M11 4 L14 8 L11 12" />
                 <path d="M9.5 3 L6.5 13" />
@@ -352,23 +454,14 @@
               Software Engineering
             </span>
             <span class="skills__badge">
-              <svg
-                class="skills__badge-icon"
-                viewBox="0 0 16 16"
-                xmlns="http://www.w3.org/2000/svg"
-              >
+              <svg class="skills__badge-icon" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
                 <path
-                  d="M8 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4zM2 14s1-3 6-3 6 3 6 3M3 8a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zM1 14s.5-2 2-2 2 2 2 2"
-                />
+                  d="M8 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4zM2 14s1-3 6-3 6 3 6 3M3 8a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zM1 14s.5-2 2-2 2 2 2 2" />
               </svg>
               Team Leadership
             </span>
             <span class="skills__badge">
-              <svg
-                class="skills__badge-icon"
-                viewBox="0 0 16 16"
-                xmlns="http://www.w3.org/2000/svg"
-              >
+              <svg class="skills__badge-icon" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
                 <path d="M2 5l6 3 6-3-6-3-6 3z" />
                 <path d="M2 9.5l6 3 6-3" />
                 <path d="M2 12.5l6 3 6-3" />
@@ -376,14 +469,9 @@
               Full-Stack Dev
             </span>
             <span class="skills__badge">
-              <svg
-                class="skills__badge-icon"
-                viewBox="0 0 16 16"
-                xmlns="http://www.w3.org/2000/svg"
-              >
+              <svg class="skills__badge-icon" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
                 <path
-                  d="M12 2a5 5 0 0 1 1 9.5l-.5 2.5a1 1 0 0 1-1 1H8.5a1 1 0 0 1-1-1v-.5c0-.8-.7-1.5-1.5-1.5H5a4 4 0 0 1 0-8c2 0 4 1 7 2z"
-                />
+                  d="M12 2a5 5 0 0 1 1 9.5l-.5 2.5a1 1 0 0 1-1 1H8.5a1 1 0 0 1-1-1v-.5c0-.8-.7-1.5-1.5-1.5H5a4 4 0 0 1 0-8c2 0 4 1 7 2z" />
                 <circle cx="5" cy="5" r="1" fill="currentColor" />
                 <circle cx="8" cy="4" r="1" fill="currentColor" />
                 <circle cx="10" cy="7" r="1" fill="currentColor" />
@@ -391,11 +479,7 @@
               Web Design
             </span>
             <span class="skills__badge">
-              <svg
-                class="skills__badge-icon"
-                viewBox="0 0 16 16"
-                xmlns="http://www.w3.org/2000/svg"
-              >
+              <svg class="skills__badge-icon" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
                 <rect x="6" y="2" width="4" height="12" rx="1" />
                 <rect x="2" y="6" width="12" height="4" rx="1" />
                 <circle cx="8" cy="8" r="1.5" fill="currentColor" />
@@ -403,20 +487,28 @@
               Hospital IS
             </span>
             <span class="skills__badge">
-              <svg
-                class="skills__badge-icon"
-                viewBox="0 0 16 16"
-                xmlns="http://www.w3.org/2000/svg"
-              >
+              <svg class="skills__badge-icon" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
                 <ellipse cx="8" cy="4" rx="6" ry="2" />
                 <path d="M2 4v8c0 1.1 2.7 2 6 2s6-.9 6-2V4" />
                 <path d="M2 8c0 1.1 2.7 2 6 2s6-.9 6-2" />
               </svg>
               DBMS
             </span>
+            <span class="skills__badge">
+              <svg class="skills__badge-icon" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+                <rect x="4" y="1" width="8" height="14" rx="1.5" />
+                <path d="M4 4h8M4 11h8M8 13h.01" />
+              </svg>
+              UI Prototyping
+            </span>
           </div>
-          <!-- Row 2: 7 items — Core Languages -->
-          <div class="skills__row reveal-row">
+        </div>
+        <!-- Category 2 -->
+        <div class="skills__card reveal-text">
+          <h3 class="skills__card-title">
+            02 — Programming &amp; Frameworks
+          </h3>
+          <div class="skills__card-tags">
             <span class="skills__badge">
               <i class="devicon-java-plain colored"></i>
               Java
@@ -442,24 +534,6 @@
               TypeScript
             </span>
             <span class="skills__badge">
-              <svg
-                class="skills__badge-icon"
-                viewBox="0 0 16 16"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <ellipse cx="8" cy="3" rx="5" ry="1.5" />
-                <path d="M3 3v6c0 .8 2.2 1.5 5 1.5s5-.7 5-1.5V3" />
-                <path d="M3 6c0 .8 2.2 1.5 5 1.5s5-.7 5-1.5" />
-                <circle cx="11" cy="11" r="2.5" />
-                <path d="M13 13l2 2" />
-              </svg>
-              SQL
-            </span>
-          </div>
-
-          <!-- Row 3: 6 items — Web & Mobile Frameworks -->
-          <div class="skills__row reveal-row">
-            <span class="skills__badge">
               <i class="devicon-react-original colored"></i>
               React.js
             </span>
@@ -480,24 +554,19 @@
               Jakarta EE
             </span>
             <span class="skills__badge">
-              <svg
-                class="skills__badge-icon"
-                viewBox="0 0 16 16"
-                xmlns="http://www.w3.org/2000/svg"
-              >
+              <svg class="skills__badge-icon" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
                 <path d="M8 2L1 13h14L8 2zM8 2v11M1 13l7-5.5M15 13L8 7.5" />
               </svg>
               Three.js
             </span>
           </div>
-          <!-- Row 4: 5 items — Middleware & Web APIs -->
-          <div class="skills__row reveal-row">
+        </div>
+        <!-- Category 3 -->
+        <div class="skills__card reveal-text">
+          <h3 class="skills__card-title">03 — APIs, Databases &amp; Cloud</h3>
+          <div class="skills__card-tags">
             <span class="skills__badge">
-              <svg
-                class="skills__badge-icon"
-                viewBox="0 0 16 16"
-                xmlns="http://www.w3.org/2000/svg"
-              >
+              <svg class="skills__badge-icon" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
                 <circle cx="3" cy="8" r="2" />
                 <circle cx="13" cy="4" r="2" />
                 <circle cx="13" cy="12" r="2" />
@@ -506,11 +575,7 @@
               REST APIs
             </span>
             <span class="skills__badge">
-              <svg
-                class="skills__badge-icon"
-                viewBox="0 0 16 16"
-                xmlns="http://www.w3.org/2000/svg"
-              >
+              <svg class="skills__badge-icon" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
                 <circle cx="8" cy="8" r="4" />
                 <circle cx="8" cy="8" r="7" stroke-dasharray="3 3" />
               </svg>
@@ -528,9 +593,16 @@
               <i class="devicon-html5-plain colored"></i>
               HTML/CSS
             </span>
-          </div>
-          <!-- Row 5: 4 items — Database Engines -->
-          <div class="skills__row reveal-row">
+            <span class="skills__badge">
+              <svg class="skills__badge-icon" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+                <ellipse cx="8" cy="3" rx="5" ry="1.5" />
+                <path d="M3 3v6c0 .8 2.2 1.5 5 1.5s5-.7 5-1.5V3" />
+                <path d="M3 6c0 .8 2.2 1.5 5 1.5s5-.7 5-1.5" />
+                <circle cx="11" cy="11" r="2.5" />
+                <path d="M13 13l2 2" />
+              </svg>
+              SQL
+            </span>
             <span class="skills__badge">
               <i class="devicon-mysql-plain colored"></i>
               MySQL
@@ -544,19 +616,12 @@
               SQLite
             </span>
             <span class="skills__badge">
-              <svg
-                class="skills__badge-icon"
-                viewBox="0 0 16 16"
-                xmlns="http://www.w3.org/2000/svg"
-              >
+              <svg class="skills__badge-icon" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
                 <rect x="3" y="2" width="10" height="12" rx="1.5" />
                 <path d="M6 5h4M6 8h4M6 11h2" />
               </svg>
               NoSQL
             </span>
-          </div>
-          <!-- Row 6: 3 items — DevSecOps & Cloud -->
-          <div class="skills__row reveal-row">
             <span class="skills__badge">
               <i class="devicon-git-plain colored"></i>
               Git
@@ -567,941 +632,382 @@
             </span>
             <span class="skills__badge">
               <i class="devicon-firebase-plain colored"></i>
-              Firebase
-            </span>
-          </div>
-          <!-- Row 7: 2 items — Creative Media & 3D -->
-          <div class="skills__row reveal-row">
-            <span class="skills__badge">
-              <i class="devicon-blender-original colored"></i>
-              Blender
-            </span>
-            <span class="skills__badge">
-              <svg
-                class="skills__badge-icon"
-                viewBox="0 0 16 16"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path d="M8 2L3 10c0 0 1 .5 2 .5s2-1 3-1 3 1 3 1L8 2zM8 6v3" />
+              d="M8 2L3 10c0 0 1 .5 2 .5s2-1 3-1 3 1 3 1L8 2zM8 6v3"
+              />
               </svg>
               Graphic Design
             </span>
           </div>
-          <!-- Row 8: 1 item — Foundation -->
-          <div class="skills__row reveal-row">
-            <span class="skills__badge">
-              <svg
-                class="skills__badge-icon"
-                viewBox="0 0 16 16"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <rect x="4" y="1" width="8" height="14" rx="1.5" />
-                <path d="M4 4h8M4 11h8M8 13h.01" />
-              </svg>
-              UI Prototyping
-            </span>
-          </div>
-        </div>
-
-        <!-- Mobile-friendly Categorized Groups -->
-        <div class="skills__mobile" aria-label="Skills Categories">
-          <!-- Category 1 -->
-          <div class="skills__card reveal-text">
-            <h3 class="skills__card-title">01 — Architecture &amp; Strategy</h3>
-            <div class="skills__card-tags">
-              <span class="skills__badge">
-                <svg
-                  class="skills__badge-icon"
-                  viewBox="0 0 16 16"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <rect x="2" y="2" width="12" height="4" rx="1" />
-                  <rect x="2" y="10" width="12" height="4" rx="1" />
-                  <path d="M6 4h.01M10 4h.01M6 12h.01M10 12h.01M8 6v4" />
-                </svg>
-                System Architecture
-              </span>
-              <span class="skills__badge">
-                <svg
-                  class="skills__badge-icon"
-                  viewBox="0 0 16 16"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path d="M8 2 L14 5 L14 11 L8 14 L2 11 L2 5 Z" />
-                  <path d="M2 5 L8 8 L14 5" />
-                  <path d="M8 8 L8 14" />
-                </svg>
-                Platform Architecture
-              </span>
-              <span class="skills__badge">
-                <svg
-                  class="skills__badge-icon"
-                  viewBox="0 0 16 16"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path d="M5 4 L2 8 L5 12" />
-                  <path d="M11 4 L14 8 L11 12" />
-                  <path d="M9.5 3 L6.5 13" />
-                </svg>
-                Software Engineering
-              </span>
-              <span class="skills__badge">
-                <svg
-                  class="skills__badge-icon"
-                  viewBox="0 0 16 16"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M8 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4zM2 14s1-3 6-3 6 3 6 3M3 8a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zM1 14s.5-2 2-2 2 2 2 2"
-                  />
-                </svg>
-                Team Leadership
-              </span>
-              <span class="skills__badge">
-                <svg
-                  class="skills__badge-icon"
-                  viewBox="0 0 16 16"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path d="M2 5l6 3 6-3-6-3-6 3z" />
-                  <path d="M2 9.5l6 3 6-3" />
-                  <path d="M2 12.5l6 3 6-3" />
-                </svg>
-                Full-Stack Dev
-              </span>
-              <span class="skills__badge">
-                <svg
-                  class="skills__badge-icon"
-                  viewBox="0 0 16 16"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M12 2a5 5 0 0 1 1 9.5l-.5 2.5a1 1 0 0 1-1 1H8.5a1 1 0 0 1-1-1v-.5c0-.8-.7-1.5-1.5-1.5H5a4 4 0 0 1 0-8c2 0 4 1 7 2z"
-                  />
-                  <circle cx="5" cy="5" r="1" fill="currentColor" />
-                  <circle cx="8" cy="4" r="1" fill="currentColor" />
-                  <circle cx="10" cy="7" r="1" fill="currentColor" />
-                </svg>
-                Web Design
-              </span>
-              <span class="skills__badge">
-                <svg
-                  class="skills__badge-icon"
-                  viewBox="0 0 16 16"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <rect x="6" y="2" width="4" height="12" rx="1" />
-                  <rect x="2" y="6" width="12" height="4" rx="1" />
-                  <circle cx="8" cy="8" r="1.5" fill="currentColor" />
-                </svg>
-                Hospital IS
-              </span>
-              <span class="skills__badge">
-                <svg
-                  class="skills__badge-icon"
-                  viewBox="0 0 16 16"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <ellipse cx="8" cy="4" rx="6" ry="2" />
-                  <path d="M2 4v8c0 1.1 2.7 2 6 2s6-.9 6-2V4" />
-                  <path d="M2 8c0 1.1 2.7 2 6 2s6-.9 6-2" />
-                </svg>
-                DBMS
-              </span>
-              <span class="skills__badge">
-                <svg
-                  class="skills__badge-icon"
-                  viewBox="0 0 16 16"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <rect x="4" y="1" width="8" height="14" rx="1.5" />
-                  <path d="M4 4h8M4 11h8M8 13h.01" />
-                </svg>
-                UI Prototyping
-              </span>
-            </div>
-          </div>
-          <!-- Category 2 -->
-          <div class="skills__card reveal-text">
-            <h3 class="skills__card-title">
-              02 — Programming &amp; Frameworks
-            </h3>
-            <div class="skills__card-tags">
-              <span class="skills__badge">
-                <i class="devicon-java-plain colored"></i>
-                Java
-              </span>
-              <span class="skills__badge">
-                <i class="devicon-php-plain colored"></i>
-                PHP
-              </span>
-              <span class="skills__badge">
-                <i class="devicon-python-plain colored"></i>
-                Python
-              </span>
-              <span class="skills__badge">
-                <i class="devicon-cplusplus-plain colored"></i>
-                C++
-              </span>
-              <span class="skills__badge">
-                <i class="devicon-javascript-plain colored"></i>
-                JavaScript
-              </span>
-              <span class="skills__badge">
-                <i class="devicon-typescript-plain colored"></i>
-                TypeScript
-              </span>
-              <span class="skills__badge">
-                <i class="devicon-react-original colored"></i>
-                React.js
-              </span>
-              <span class="skills__badge">
-                <i class="devicon-react-original colored"></i>
-                React Native
-              </span>
-              <span class="skills__badge">
-                <i class="devicon-android-plain colored"></i>
-                Android Dev
-              </span>
-              <span class="skills__badge">
-                <i class="devicon-codeigniter-plain colored"></i>
-                CodeIgniter
-              </span>
-              <span class="skills__badge">
-                <i class="devicon-java-plain colored"></i>
-                Jakarta EE
-              </span>
-              <span class="skills__badge">
-                <svg
-                  class="skills__badge-icon"
-                  viewBox="0 0 16 16"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path d="M8 2L1 13h14L8 2zM8 2v11M1 13l7-5.5M15 13L8 7.5" />
-                </svg>
-                Three.js
-              </span>
-            </div>
-          </div>
-          <!-- Category 3 -->
-          <div class="skills__card reveal-text">
-            <h3 class="skills__card-title">03 — APIs, Databases &amp; Cloud</h3>
-            <div class="skills__card-tags">
-              <span class="skills__badge">
-                <svg
-                  class="skills__badge-icon"
-                  viewBox="0 0 16 16"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <circle cx="3" cy="8" r="2" />
-                  <circle cx="13" cy="4" r="2" />
-                  <circle cx="13" cy="12" r="2" />
-                  <path d="M5 8h4M9 8V5c0-.6.4-1 1-1h1M9 8v3c0 .6.4 1 1 1h1" />
-                </svg>
-                REST APIs
-              </span>
-              <span class="skills__badge">
-                <svg
-                  class="skills__badge-icon"
-                  viewBox="0 0 16 16"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <circle cx="8" cy="8" r="4" />
-                  <circle cx="8" cy="8" r="7" stroke-dasharray="3 3" />
-                </svg>
-                Open API
-              </span>
-              <span class="skills__badge">
-                <i class="devicon-java-plain colored"></i>
-                J2EE Services
-              </span>
-              <span class="skills__badge">
-                <i class="devicon-hibernate-plain colored"></i>
-                Hibernate
-              </span>
-              <span class="skills__badge">
-                <i class="devicon-html5-plain colored"></i>
-                HTML/CSS
-              </span>
-              <span class="skills__badge">
-                <svg
-                  class="skills__badge-icon"
-                  viewBox="0 0 16 16"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <ellipse cx="8" cy="3" rx="5" ry="1.5" />
-                  <path d="M3 3v6c0 .8 2.2 1.5 5 1.5s5-.7 5-1.5V3" />
-                  <path d="M3 6c0 .8 2.2 1.5 5 1.5s5-.7 5-1.5" />
-                  <circle cx="11" cy="11" r="2.5" />
-                  <path d="M13 13l2 2" />
-                </svg>
-                SQL
-              </span>
-              <span class="skills__badge">
-                <i class="devicon-mysql-plain colored"></i>
-                MySQL
-              </span>
-              <span class="skills__badge">
-                <i class="devicon-postgresql-plain colored"></i>
-                PgSQL
-              </span>
-              <span class="skills__badge">
-                <i class="devicon-sqlite-plain colored"></i>
-                SQLite
-              </span>
-              <span class="skills__badge">
-                <svg
-                  class="skills__badge-icon"
-                  viewBox="0 0 16 16"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <rect x="3" y="2" width="10" height="12" rx="1.5" />
-                  <path d="M6 5h4M6 8h4M6 11h2" />
-                </svg>
-                NoSQL
-              </span>
-              <span class="skills__badge">
-                <i class="devicon-git-plain colored"></i>
-                Git
-              </span>
-              <span class="skills__badge">
-                <i class="devicon-github-original"></i>
-                GitHub
-              </span>
-              <span class="skills__badge">
-                <i class="devicon-firebase-plain colored"></i>
-                Firebase
-              </span>
-            </div>
-          </div>
-          <!-- Category 4 -->
-          <div class="skills__card reveal-text">
-            <h3 class="skills__card-title">04 — Creative Media &amp; 3D</h3>
-            <div class="skills__card-tags">
-              <span class="skills__badge">
-                <i class="devicon-blender-original colored"></i>
-                Blender
-              </span>
-              <span class="skills__badge">
-                <svg
-                  class="skills__badge-icon"
-                  viewBox="0 0 16 16"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M8 2L3 10c0 0 1 .5 2 .5s2-1 3-1 3 1 3 1L8 2zM8 6v3"
-                  />
-                </svg>
-                Graphic Design
-              </span>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- ══ CAREER & EXPERIENCE SECTION ═══════════════════════════════════════ -->
-      <section id="experience" class="experience section">
-        <h2 class="section-label reveal-text">Career & Experience</h2>
-
-        <div class="experience__timeline">
-          <!-- 01 — Senior Full Stack Engineer @ NexaTech Solutions -->
-          <div class="experience__item reveal-text" data-period="2024–Present">
-            <div class="experience__header">
-              <span class="experience__company">
-                <svg
-                  class="experience__icon"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M12 2L2 7L12 12L22 7L12 2Z"
-                    stroke="var(--accent)"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                  <path
-                    d="M2 17L12 22L22 17"
-                    stroke="var(--accent)"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                  <path
-                    d="M2 12L12 17L22 12"
-                    stroke="var(--accent)"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                </svg>
-                Lakmini International pvt
-              </span>
-              <span class="experience__period">2024–Present</span>
-            </div>
-            <div class="experience__role">
-              <span class="experience__title">Full Stack Engineer</span>
-              <span class="experience__location">On-Site • GMT+5:30</span>
-            </div>
-            <ul class="experience__details">
-              <li>
-                Architecting scalable microservices using NestJS, Kafka, and
-                Redis for high-traffic e-commerce platform
-              </li>
-              <li>
-                Leading a team of 6 engineers, conducting code reviews, and
-                establishing best practices for CI/CD pipelines
-              </li>
-              <li>
-                Designed real-time analytics dashboard processing 1M+ events/day
-                with ClickHouse and WebSocket streaming
-              </li>
-              <li>
-                Reduced API latency by 40% through query optimization and
-                strategic caching strategies
-              </li>
-            </ul>
-            <div class="experience__tech">
-              <span class="experience__badge"
-                ><i class="devicon-java-plain colored"></i>Java</span
-              >
-              <span class="experience__badge"
-                ><i class="devicon-react-original colored"></i>React</span
-              >
-              <span class="experience__badge"
-                ><i class="devicon-nodejs-plain colored"></i>Node.js</span
-              >
-              <span class="experience__badge"
-                ><i class="devicon-kafka-plain colored"></i>Kafka</span
-              >
-              <span class="experience__badge"
-                ><i class="devicon-redis-plain colored"></i>Redis</span
-              >
-              <span class="experience__badge"
-                ><i class="devicon-docker-plain colored"></i>Docker</span
-              >
-            </div>
-          </div>
-
-          <!-- 02 — Full Stack Developer @ CloudBase -->
-          <div class="experience__item reveal-text" data-period="2022–2024">
-            <div class="experience__header">
-              <span class="experience__company">
-                <svg
-                  class="experience__icon"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M12 2L2 7L12 12L22 7L12 2Z"
-                    stroke="var(--accent)"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                  <path
-                    d="M2 17L12 22L22 17"
-                    stroke="var(--accent)"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                  <path
-                    d="M2 12L12 17L22 12"
-                    stroke="var(--accent)"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                </svg>
-                CloudBase
-              </span>
-              <span class="experience__period">2022–2024</span>
-            </div>
-            <div class="experience__role">
-              <span class="experience__title">Full Stack Developer</span>
-              <span class="experience__location">Colombo, Sri Lanka</span>
-            </div>
-            <ul class="experience__details">
-              <li>
-                Built multi-tenant SaaS platform serving 500+ businesses with
-                Next.js, AWS Lambda, and PostgreSQL
-              </li>
-              <li>
-                Implemented secure payment gateway integration with Stripe and
-                PayPal handling $2M+ monthly transactions
-              </li>
-              <li>
-                Developed automated testing suite achieving 90% code coverage
-                using Jest, Cypress, and Playwright
-              </li>
-              <li>
-                Migrated legacy monolith to serverless architecture reducing
-                infrastructure costs by 35%
-              </li>
-            </ul>
-            <div class="experience__tech">
-              <span class="experience__badge"
-                ><i class="devicon-typescript-plain colored"></i
-                >TypeScript</span
-              >
-              <span class="experience__badge"
-                ><i class="devicon-react-original colored"></i>Next.js</span
-              >
-              <span class="experience__badge"
-                ><i class="devicon-python-plain colored"></i>Python</span
-              >
-              <span class="experience__badge"
-                ><i class="devicon-postgresql-plain colored"></i
-                >PostgreSQL</span
-              >
-              <span class="experience__badge">AWS Lambda</span>
-              <span class="experience__badge"
-                ><i class="devicon-firebase-plain colored"></i>Firebase</span
-              >
-            </div>
-          </div>
-
-          <!-- 03 — Software Engineer @ DevForge Labs -->
-          <div class="experience__item reveal-text" data-period="2020–2022">
-            <div class="experience__header">
-              <span class="experience__company">
-                <svg
-                  class="experience__icon"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M12 2L2 7L12 12L22 7L12 2Z"
-                    stroke="var(--accent)"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                  <path
-                    d="M2 17L12 22L22 17"
-                    stroke="var(--accent)"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                  <path
-                    d="M2 12L12 17L22 12"
-                    stroke="var(--accent)"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                </svg>
-                DevForge Labs
-              </span>
-              <span class="experience__period">2020–2022</span>
-            </div>
-            <div class="experience__role">
-              <span class="experience__title">Software Engineer</span>
-              <span class="experience__location">Hybrid • Sri Lanka</span>
-            </div>
-            <ul class="experience__details">
-              <li>
-                Developed RESTful APIs and microservices using Jakarta EE,
-                Hibernate, and MySQL for enterprise clients
-              </li>
-              <li>
-                Created responsive front-end applications with React, Redux, and
-                Material-UI for fintech solutions
-              </li>
-              <li>
-                Implemented OAuth 2.0 authentication system with JWT tokens for
-                secure multi-platform access
-              </li>
-              <li>
-                Collaborated with UX designers to deliver WCAG 2.1 AA accessible
-                interfaces for government projects
-              </li>
-            </ul>
-            <div class="experience__tech">
-              <span class="experience__badge"
-                ><i class="devicon-java-plain colored"></i>Java</span
-              >
-              <span class="experience__badge"
-                ><i class="devicon-react-original colored"></i>React</span
-              >
-              <span class="experience__badge"
-                ><i class="devicon-mysql-plain colored"></i>MySQL</span
-              >
-              <span class="experience__badge"
-                ><i class="devicon-spring-plain colored"></i>Spring Boot</span
-              >
-              <span class="experience__badge">OAuth 2.0</span>
-              <span class="experience__badge"
-                ><i class="devicon-git-plain colored"></i>Git</span
-              >
-            </div>
-          </div>
-
-          <!-- 04 — Junior Developer @ Startify -->
-          <div class="experience__item reveal-text" data-period="2019–2020">
-            <div class="experience__header">
-              <span class="experience__company">
-                <svg
-                  class="experience__icon"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M12 2L2 7L12 12L22 7L12 2Z"
-                    stroke="var(--accent)"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                  <path
-                    d="M2 17L12 22L22 17"
-                    stroke="var(--accent)"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                  <path
-                    d="M2 12L12 17L22 12"
-                    stroke="var(--accent)"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                </svg>
-                Startify
-              </span>
-              <span class="experience__period">2019–2020</span>
-            </div>
-            <div class="experience__role">
-              <span class="experience__title">Junior Developer</span>
-              <span class="experience__location">Colombo, Sri Lanka</span>
-            </div>
-            <ul class="experience__details">
-              <li>
-                Built custom WordPress themes and plugins using PHP, JavaScript,
-                and MySQL for SMB clients
-              </li>
-              <li>
-                Developed mobile applications with React Native for iOS and
-                Android platforms
-              </li>
-              <li>
-                Maintained and enhanced legacy CodeIgniter applications with
-                10K+ daily active users
-              </li>
-              <li>
-                Participated in agile sprints, daily standups, and bi-weekly
-                deployment cycles
-              </li>
-            </ul>
-            <div class="experience__tech">
-              <span class="experience__badge"
-                ><i class="devicon-php-plain colored"></i>PHP</span
-              >
-              <span class="experience__badge"
-                ><i class="devicon-javascript-plain colored"></i
-                >JavaScript</span
-              >
-              <span class="experience__badge"
-                ><i class="devicon-react-original colored"></i>React
-                Native</span
-              >
-              <span class="experience__badge"
-                ><i class="devicon-codeigniter-plain colored"></i
-                >CodeIgniter</span
-              >
-              <span class="experience__badge"
-                ><i class="devicon-mysql-plain colored"></i>MySQL</span
-              >
-              <span class="experience__badge">WordPress</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Education -->
-        <div class="experience__education">
-          <h3 class="experience__education-title reveal-text">Education</h3>
-          <div class="experience__edu-item reveal-text">
-            <span class="experience__degree"
-              >BSc (Hons) in Computer Science</span
-            >
-            <span class="experience__university"
-              >University of Colombo School of Computing</span
-            >
-            <span class="experience__year">2016–2020</span>
-          </div>
-        </div>
-      </section>
-
-      <!-- ══ WORK SECTION ═══════════════════════════════════════ -->
-      <section id="work" class="work section">
-        <h2 class="section-label reveal-text">Selected Work</h2>
-
-        <div class="work__grid">
-          <!-- 01 — NexaCommerce -->
-          <article
-            class="work__item work__item--large reveal-card"
-            data-index="1"
-          >
-            <a
-              href="#"
-              class="work__link"
-              aria-label="NexaCommerce — 2025-2026"
-            >
-              <div class="work__thumb">
-                <span class="work__tag">Full Stack</span>
-                <div class="work__thumb-bg work__thumb-bg--1"></div>
-                <div class="work__thumb-overlay">
-                  <span class="work__view">View Project ↗</span>
-                </div>
-              </div>
-              <div class="work__info">
-                <span class="work__title">NexaCommerce</span>
-                <div class="work__meta">
-                  <span class="work__year">2025–2026</span>
-                  <span class="work__type">Platform</span>
-                </div>
-              </div>
-            </a>
-          </article>
-
-          <!-- 02 — PulseAnalytics -->
-          <article class="work__item reveal-card" data-index="2">
-            <a href="#" class="work__link" aria-label="PulseAnalytics — 2025">
-              <div class="work__thumb">
-                <span class="work__tag">Backend</span>
-                <div class="work__thumb-bg work__thumb-bg--2"></div>
-                <div class="work__thumb-overlay">
-                  <span class="work__view">View Project ↗</span>
-                </div>
-              </div>
-              <div class="work__info">
-                <span class="work__title">PulseAnalytics</span>
-                <div class="work__meta">
-                  <span class="work__year">2025</span>
-                  <span class="work__type">SaaS</span>
-                </div>
-              </div>
-            </a>
-          </article>
-
-          <!-- 03 — Archway CMS -->
-          <article class="work__item reveal-card" data-index="3">
-            <a href="#" class="work__link" aria-label="Archway CMS — 2024">
-              <div class="work__thumb">
-                <span class="work__tag">React / Node</span>
-                <div class="work__thumb-bg work__thumb-bg--3"></div>
-                <div class="work__thumb-overlay">
-                  <span class="work__view">View Project ↗</span>
-                </div>
-              </div>
-              <div class="work__info">
-                <span class="work__title">Archway CMS</span>
-                <div class="work__meta">
-                  <span class="work__year">2024</span>
-                  <span class="work__type">Web App</span>
-                </div>
-              </div>
-            </a>
-          </article>
-
-          <!-- 04 — FlowSync API -->
-          <article
-            class="work__item work__item--wide reveal-card"
-            data-index="4"
-          >
-            <a href="#" class="work__link" aria-label="FlowSync API — 2024">
-              <div class="work__thumb">
-                <span class="work__tag">API Design</span>
-                <div class="work__thumb-bg work__thumb-bg--4"></div>
-                <div class="work__thumb-overlay">
-                  <span class="work__view">View Project ↗</span>
-                </div>
-              </div>
-              <div class="work__info">
-                <span class="work__title">FlowSync API</span>
-                <div class="work__meta">
-                  <span class="work__year">2024</span>
-                  <span class="work__type">Backend</span>
-                </div>
-              </div>
-            </a>
-          </article>
-
-          <!-- 05 — OrbUI Design System -->
-          <article class="work__item reveal-card" data-index="5">
-            <a
-              href="#"
-              class="work__link"
-              aria-label="OrbUI Design System — 2023"
-            >
-              <div class="work__thumb">
-                <span class="work__tag">Design Systems</span>
-                <div class="work__thumb-bg work__thumb-bg--5"></div>
-                <div class="work__thumb-overlay">
-                  <span class="work__view">View Project ↗</span>
-                </div>
-              </div>
-              <div class="work__info">
-                <span class="work__title">OrbUI Design System</span>
-                <div class="work__meta">
-                  <span class="work__year">2023</span>
-                  <span class="work__type">Open Source</span>
-                </div>
-              </div>
-            </a>
-          </article>
-
-          <!-- 06 — VaultDB -->
-          <article class="work__item reveal-card" data-index="6">
-            <a href="#" class="work__link" aria-label="VaultDB — 2023">
-              <div class="work__thumb">
-                <span class="work__tag">Database</span>
-                <div class="work__thumb-bg work__thumb-bg--6"></div>
-                <div class="work__thumb-overlay">
-                  <span class="work__view">View Project ↗</span>
-                </div>
-              </div>
-              <div class="work__info">
-                <span class="work__title">VaultDB</span>
-                <div class="work__meta">
-                  <span class="work__year">2023</span>
-                  <span class="work__type">Tool</span>
-                </div>
-              </div>
-            </a>
-          </article>
-        </div>
-      </section>
-
-      <!-- ══ MANIFESTO SECTION ══════════════════════════════════ -->
-      <section id="manifesto" class="manifesto section">
-        <div class="manifesto__sticky">
-          <div class="manifesto__lines">
-            <span class="manifesto__word reveal-manifesto">Engineer</span>
-            <span class="manifesto__word reveal-manifesto">with</span>
-            <span class="manifesto__word reveal-manifesto">purpose.</span>
-          </div>
-        </div>
-      </section>
-
-      <!-- ══ CONTACT / FOOTER ═══════════════════════════════════ -->
-      <footer id="contact" class="contact section">
-        <div class="contact__cta">
-          <div class="contact__line reveal-line"><span>Let's</span></div>
-          <div class="contact__line reveal-line contact__line--right">
-            <span>Build</span>
-          </div>
-          <div class="contact__line reveal-line"><span>Something</span></div>
-          <div class="contact__line reveal-line contact__line--right">
-            <span>Great.</span>
-          </div>
-        </div>
-
-        <!-- Interactive Command Shell Terminal -->
-        <div class="contact__terminal-wrap reveal-text">
-          <div class="terminal" id="contact-terminal">
-            <div class="terminal__header">
-              <div class="terminal__buttons">
-                <span class="terminal__btn terminal__btn--close"></span>
-                <span class="terminal__btn terminal__btn--minimize"></span>
-                <span class="terminal__btn terminal__btn--maximize"></span>
-              </div>
-              <span class="terminal__title"
-                >bash — guest@sandun.dev — 80×24</span
-              >
-            </div>
-            <div class="terminal__body">
-              <div id="terminal-logs"></div>
-              <div class="terminal__prompt-line">
-                <span class="terminal__prompt" id="terminal-prompt"
-                  >guest@sandun.dev:~$
-                </span>
-                <input
-                  type="text"
-                  class="terminal__input"
-                  id="terminal-input"
-                  autocomplete="off"
-                />
-                <span class="terminal__cursor"></span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="contact__links">
-          <a
-            href="mailto:sandun.rathnayake@example.dev"
-            class="contact__email dotted-border"
-            id="contact-email"
-          >
-            sandun.rathnayake@example.dev
-          </a>
-          <div class="contact__socials">
-            <a
-              href="https://github.com/sandunrathnayake"
-              target="_blank"
-              rel="noopener noreferrer"
-              class="contact__social dotted-border"
-              >GitHub</a
-            >
-            <a
-              href="https://linkedin.com/in/sandunrathnayake"
-              target="_blank"
-              rel="noopener noreferrer"
-              class="contact__social dotted-border"
-              >LinkedIn</a
-            >
-            <a
-              href="https://twitter.com/sandundev"
-              target="_blank"
-              rel="noopener noreferrer"
-              class="contact__social dotted-border"
-              >Twitter/X</a
-            >
-          </div>
-        </div>
-
-        <div class="contact__footer-bar">
-          <span>© 2026 Sandun Rathnayake</span>
-          <span>Crafted with Three.js + Vanilla JS</span>
-        </div>
-      </footer>
-    </main>
-
-    <!-- ─── PROJECT DETAIL DRAWER ────────────────────────── -->
-    <div class="project-drawer" id="project-drawer" aria-hidden="true">
-      <div class="project-drawer__backdrop" id="project-drawer-backdrop"></div>
-      <div class="project-drawer__content">
-        <button
-          class="project-drawer__close"
-          id="project-drawer-close"
-          aria-label="Close project"
-        >
-          <span>[ESC] CLOSE ×</span>
-        </button>
-        <div class="project-drawer__scroll" id="project-drawer-scroll">
-          <!-- Injected dynamically via js/projects.js -->
         </div>
       </div>
-    </div>
+    </section>
 
-    <!-- ─── SCRIPTS ────────────────────────────────────────── -->
-    <script src="https://cdn.jsdelivr.net/npm/lil-gui@0.19"></script>
-    <script src="js/mouse-fluid.js"></script>
-    <script src="js/nebula-particles.js"></script>
-    <script src="js/three-scene.js"></script>
-    <script src="js/pincushion-scroll.js"></script>
-    <script src="js/animations.js"></script>
-    <script src="js/ui.js"></script>
-    <script src="js/projects.js"></script>
-    <script src="js/terminal.js"></script>
-    <script src="js/main.js"></script>
-  </body>
+    <!-- ══ CAREER & EXPERIENCE SECTION ═══════════════════════════════════════ -->
+    <section id="experience" class="experience section">
+      <h2 class="section-label reveal-text">Career &amp; Experience</h2>
+
+      <div class="experience__cards">
+
+        <!-- 01 — Full Stack Engineer @ Lakmini International -->
+        <div class="exp-card reveal-cloth" style="--delay:0s">
+          <div class="exp-card__num">01</div>
+          <div class="exp-card__body">
+            <div class="exp-card__top">
+              <div class="exp-card__meta">
+                <span class="exp-card__period">2024 — Present</span>
+                <span class="exp-card__location">On-Site · GMT+5:30</span>
+              </div>
+              <div class="exp-card__titles">
+                <h3 class="exp-card__role">Full Stack Engineer</h3>
+                <span class="exp-card__company">Lakmini International pvt</span>
+              </div>
+            </div>
+            <ul class="exp-card__details">
+              <li>Architecting scalable microservices using NestJS, Kafka, and Redis for high-traffic e-commerce
+                platform</li>
+              <li>Leading a team of 6 engineers, conducting code reviews, and establishing best practices for CI/CD
+                pipelines</li>
+              <li>Designed real-time analytics dashboard processing 1M+ events/day with ClickHouse and WebSocket
+                streaming</li>
+              <li>Reduced API latency by 40% through query optimization and strategic caching strategies</li>
+            </ul>
+            <div class="exp-card__tech">
+              <span class="exp-card__badge"><i class="devicon-java-plain colored"></i>Java</span>
+              <span class="exp-card__badge"><i class="devicon-react-original colored"></i>React</span>
+              <span class="exp-card__badge"><i class="devicon-nodejs-plain colored"></i>Node.js</span>
+              <span class="exp-card__badge">Kafka</span>
+              <span class="exp-card__badge"><i class="devicon-redis-plain colored"></i>Redis</span>
+              <span class="exp-card__badge"><i class="devicon-docker-plain colored"></i>Docker</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 02 — Full Stack Developer @ CloudBase -->
+        <div class="exp-card reveal-cloth" style="--delay:0.12s">
+          <div class="exp-card__num">02</div>
+          <div class="exp-card__body">
+            <div class="exp-card__top">
+              <div class="exp-card__meta">
+                <span class="exp-card__period">2022 — 2024</span>
+                <span class="exp-card__location">Colombo, Sri Lanka</span>
+              </div>
+              <div class="exp-card__titles">
+                <h3 class="exp-card__role">Full Stack Developer</h3>
+                <span class="exp-card__company">CloudBase</span>
+              </div>
+            </div>
+            <ul class="exp-card__details">
+              <li>Built multi-tenant SaaS platform serving 500+ businesses with Next.js, AWS Lambda, and PostgreSQL</li>
+              <li>Implemented secure payment gateway integration with Stripe and PayPal handling $2M+ monthly
+                transactions</li>
+              <li>Developed automated testing suite achieving 90% code coverage using Jest, Cypress, and Playwright</li>
+              <li>Migrated legacy monolith to serverless architecture reducing infrastructure costs by 35%</li>
+            </ul>
+            <div class="exp-card__tech">
+              <span class="exp-card__badge"><i class="devicon-typescript-plain colored"></i>TypeScript</span>
+              <span class="exp-card__badge"><i class="devicon-react-original colored"></i>Next.js</span>
+              <span class="exp-card__badge"><i class="devicon-python-plain colored"></i>Python</span>
+              <span class="exp-card__badge"><i class="devicon-postgresql-plain colored"></i>PostgreSQL</span>
+              <span class="exp-card__badge">AWS Lambda</span>
+              <span class="exp-card__badge"><i class="devicon-firebase-plain colored"></i>Firebase</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 03 — Software Engineer @ DevForge Labs -->
+        <div class="exp-card reveal-cloth" style="--delay:0.24s">
+          <div class="exp-card__num">03</div>
+          <div class="exp-card__body">
+            <div class="exp-card__top">
+              <div class="exp-card__meta">
+                <span class="exp-card__period">2020 — 2022</span>
+                <span class="exp-card__location">Hybrid · Sri Lanka</span>
+              </div>
+              <div class="exp-card__titles">
+                <h3 class="exp-card__role">Software Engineer</h3>
+                <span class="exp-card__company">DevForge Labs</span>
+              </div>
+            </div>
+            <ul class="exp-card__details">
+              <li>Developed RESTful APIs and microservices using Jakarta EE, Hibernate, and MySQL for enterprise clients
+              </li>
+              <li>Created responsive front-end applications with React, Redux, and Material-UI for fintech solutions
+              </li>
+              <li>Implemented OAuth 2.0 authentication system with JWT tokens for secure multi-platform access</li>
+              <li>Collaborated with UX designers to deliver WCAG 2.1 AA accessible interfaces for government projects
+              </li>
+            </ul>
+            <div class="exp-card__tech">
+              <span class="exp-card__badge"><i class="devicon-java-plain colored"></i>Java</span>
+              <span class="exp-card__badge"><i class="devicon-react-original colored"></i>React</span>
+              <span class="exp-card__badge"><i class="devicon-mysql-plain colored"></i>MySQL</span>
+              <span class="exp-card__badge"><i class="devicon-spring-plain colored"></i>Spring Boot</span>
+              <span class="exp-card__badge">OAuth 2.0</span>
+              <span class="exp-card__badge"><i class="devicon-git-plain colored"></i>Git</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 04 — Junior Developer @ Startify -->
+        <div class="exp-card reveal-cloth" style="--delay:0.36s">
+          <div class="exp-card__num">04</div>
+          <div class="exp-card__body">
+            <div class="exp-card__top">
+              <div class="exp-card__meta">
+                <span class="exp-card__period">2019 — 2020</span>
+                <span class="exp-card__location">Colombo, Sri Lanka</span>
+              </div>
+              <div class="exp-card__titles">
+                <h3 class="exp-card__role">Junior Developer</h3>
+                <span class="exp-card__company">Startify</span>
+              </div>
+            </div>
+            <ul class="exp-card__details">
+              <li>Built custom WordPress themes and plugins using PHP, JavaScript, and MySQL for SMB clients</li>
+              <li>Developed mobile applications with React Native for iOS and Android platforms</li>
+              <li>Maintained and enhanced legacy CodeIgniter applications with 10K+ daily active users</li>
+              <li>Participated in agile sprints, daily standups, and bi-weekly deployment cycles</li>
+            </ul>
+            <div class="exp-card__tech">
+              <span class="exp-card__badge"><i class="devicon-php-plain colored"></i>PHP</span>
+              <span class="exp-card__badge"><i class="devicon-javascript-plain colored"></i>JavaScript</span>
+              <span class="exp-card__badge"><i class="devicon-react-original colored"></i>React Native</span>
+              <span class="exp-card__badge"><i class="devicon-codeigniter-plain colored"></i>CodeIgniter</span>
+              <span class="exp-card__badge"><i class="devicon-mysql-plain colored"></i>MySQL</span>
+              <span class="exp-card__badge">WordPress</span>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /.experience__cards -->
+
+      <!-- Education -->
+      <div class="experience__education">
+        <h3 class="experience__education-title reveal-text">Education</h3>
+        <div class="experience__edu-item reveal-text">
+          <span class="experience__degree">BSc (Hons) in Computer Science</span>
+          <span class="experience__university">University of Colombo School of Computing</span>
+          <span class="experience__year">2016–2020</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══ WORK SECTION ═══════════════════════════════════════ -->
+    <section id="work" class="work section">
+      <h2 class="section-label reveal-text">Selected Work</h2>
+
+      <div class="work__grid">
+        <!-- 01 — NexaCommerce -->
+        <article class="work__item work__item--large reveal-card" data-index="1">
+          <a href="#" class="work__link" aria-label="NexaCommerce — 2025-2026">
+            <div class="work__thumb">
+              <span class="work__tag">Full Stack</span>
+              <div class="work__thumb-bg work__thumb-bg--1"></div>
+              <div class="work__thumb-overlay">
+                <span class="work__view">View Project ↗</span>
+              </div>
+            </div>
+            <div class="work__info">
+              <span class="work__title">NexaCommerce</span>
+              <div class="work__meta">
+                <span class="work__year">2025–2026</span>
+                <span class="work__type">Platform</span>
+              </div>
+            </div>
+          </a>
+        </article>
+
+        <!-- 02 — PulseAnalytics -->
+        <article class="work__item reveal-card" data-index="2">
+          <a href="#" class="work__link" aria-label="PulseAnalytics — 2025">
+            <div class="work__thumb">
+              <span class="work__tag">Backend</span>
+              <div class="work__thumb-bg work__thumb-bg--2"></div>
+              <div class="work__thumb-overlay">
+                <span class="work__view">View Project ↗</span>
+              </div>
+            </div>
+            <div class="work__info">
+              <span class="work__title">PulseAnalytics</span>
+              <div class="work__meta">
+                <span class="work__year">2025</span>
+                <span class="work__type">SaaS</span>
+              </div>
+            </div>
+          </a>
+        </article>
+
+        <!-- 03 — Archway CMS -->
+        <article class="work__item reveal-card" data-index="3">
+          <a href="#" class="work__link" aria-label="Archway CMS — 2024">
+            <div class="work__thumb">
+              <span class="work__tag">React / Node</span>
+              <div class="work__thumb-bg work__thumb-bg--3"></div>
+              <div class="work__thumb-overlay">
+                <span class="work__view">View Project ↗</span>
+              </div>
+            </div>
+            <div class="work__info">
+              <span class="work__title">Archway CMS</span>
+              <div class="work__meta">
+                <span class="work__year">2024</span>
+                <span class="work__type">Web App</span>
+              </div>
+            </div>
+          </a>
+        </article>
+
+        <!-- 04 — FlowSync API -->
+        <article class="work__item work__item--wide reveal-card" data-index="4">
+          <a href="#" class="work__link" aria-label="FlowSync API — 2024">
+            <div class="work__thumb">
+              <span class="work__tag">API Design</span>
+              <div class="work__thumb-bg work__thumb-bg--4"></div>
+              <div class="work__thumb-overlay">
+                <span class="work__view">View Project ↗</span>
+              </div>
+            </div>
+            <div class="work__info">
+              <span class="work__title">FlowSync API</span>
+              <div class="work__meta">
+                <span class="work__year">2024</span>
+                <span class="work__type">Backend</span>
+              </div>
+            </div>
+          </a>
+        </article>
+
+        <!-- 05 — OrbUI Design System -->
+        <article class="work__item reveal-card" data-index="5">
+          <a href="#" class="work__link" aria-label="OrbUI Design System — 2023">
+            <div class="work__thumb">
+              <span class="work__tag">Design Systems</span>
+              <div class="work__thumb-bg work__thumb-bg--5"></div>
+              <div class="work__thumb-overlay">
+                <span class="work__view">View Project ↗</span>
+              </div>
+            </div>
+            <div class="work__info">
+              <span class="work__title">OrbUI Design System</span>
+              <div class="work__meta">
+                <span class="work__year">2023</span>
+                <span class="work__type">Open Source</span>
+              </div>
+            </div>
+          </a>
+        </article>
+
+        <!-- 06 — VaultDB -->
+        <article class="work__item reveal-card" data-index="6">
+          <a href="#" class="work__link" aria-label="VaultDB — 2023">
+            <div class="work__thumb">
+              <span class="work__tag">Database</span>
+              <div class="work__thumb-bg work__thumb-bg--6"></div>
+              <div class="work__thumb-overlay">
+                <span class="work__view">View Project ↗</span>
+              </div>
+            </div>
+            <div class="work__info">
+              <span class="work__title">VaultDB</span>
+              <div class="work__meta">
+                <span class="work__year">2023</span>
+                <span class="work__type">Tool</span>
+              </div>
+            </div>
+          </a>
+        </article>
+      </div>
+    </section>
+
+    <!-- ══ MANIFESTO SECTION ══════════════════════════════════ -->
+    <section id="manifesto" class="manifesto section">
+      <div class="manifesto__sticky">
+        <div class="manifesto__lines">
+          <span class="manifesto__word reveal-manifesto">Engineer</span>
+          <span class="manifesto__word reveal-manifesto">with</span>
+          <span class="manifesto__word reveal-manifesto">purpose.</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══ CONTACT / FOOTER ═══════════════════════════════════ -->
+    <footer id="contact" class="contact section">
+      <div class="contact__cta">
+        <div class="contact__line reveal-line"><span>Let's</span></div>
+        <div class="contact__line reveal-line contact__line--right">
+          <span>Build</span>
+        </div>
+        <div class="contact__line reveal-line"><span>Something</span></div>
+        <div class="contact__line reveal-line contact__line--right">
+          <span>Great.</span>
+        </div>
+      </div>
+
+      <!-- Interactive Command Shell Terminal -->
+      <div class="contact__terminal-wrap reveal-text">
+        <div class="terminal" id="contact-terminal">
+          <div class="terminal__header">
+            <div class="terminal__buttons">
+              <span class="terminal__btn terminal__btn--close"></span>
+              <span class="terminal__btn terminal__btn--minimize"></span>
+              <span class="terminal__btn terminal__btn--maximize"></span>
+            </div>
+            <span class="terminal__title">bash — guest@sandun.dev — 80×24</span>
+          </div>
+          <div class="terminal__body">
+            <div id="terminal-logs"></div>
+            <div class="terminal__prompt-line">
+              <span class="terminal__prompt" id="terminal-prompt">guest@sandun.dev:~$
+              </span>
+              <input type="text" class="terminal__input" id="terminal-input" autocomplete="off" />
+              <span class="terminal__cursor"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="contact__links">
+        <a href="mailto:sandun.rathnayake@example.dev" class="contact__email dotted-border" id="contact-email">
+          sandun.rathnayake@example.dev
+        </a>
+        <div class="contact__socials">
+          <a href="https://github.com/sandunrathnayake" target="_blank" rel="noopener noreferrer"
+            class="contact__social dotted-border">GitHub</a>
+          <a href="https://linkedin.com/in/sandunrathnayake" target="_blank" rel="noopener noreferrer"
+            class="contact__social dotted-border">LinkedIn</a>
+          <a href="https://twitter.com/sandundev" target="_blank" rel="noopener noreferrer"
+            class="contact__social dotted-border">Twitter/X</a>
+        </div>
+      </div>
+
+      <div class="contact__footer-bar">
+        <span>© 2026 Sandun Rathnayake</span>
+        <span>Crafted with Three.js + Vanilla JS</span>
+      </div>
+    </footer>
+  </main>
+
+  <!-- ─── PROJECT DETAIL DRAWER ────────────────────────── -->
+  <div class="project-drawer" id="project-drawer" aria-hidden="true">
+    <div class="project-drawer__backdrop" id="project-drawer-backdrop"></div>
+    <div class="project-drawer__content">
+      <button class="project-drawer__close" id="project-drawer-close" aria-label="Close project">
+        <span>[ESC] CLOSE ×</span>
+      </button>
+      <div class="project-drawer__scroll" id="project-drawer-scroll">
+        <!-- Injected dynamically via js/projects.js -->
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── SCRIPTS ────────────────────────────────────────── -->
+  <script src="js/three-scene.js"></script>
+  <script src="js/control-panel.js"></script>
+  <script src="js/animations.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/projects.js"></script>
+  <script src="js/terminal.js"></script>
+  <script src="js/main.js"></script>
+</body>
+
 </html>

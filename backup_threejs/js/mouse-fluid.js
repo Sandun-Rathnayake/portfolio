@@ -13,9 +13,8 @@
  *
  * Sandun Rathnayake Portfolio
  */
-
 (function () {
-  'use strict';
+  "use strict";
 
   class MouseFluidEffect {
     /**
@@ -27,8 +26,6 @@
       this.renderer = renderer;
       this.scene = scene;
       this.camera = camera;
-
-      // ── Lusion.co Original Settings ────────────────────────
       this.settings = {
         pointer: {
           ease: 0.2,
@@ -60,35 +57,68 @@
         },
       };
 
-      const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+      const isMobile =
+        /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+          navigator.userAgent,
+        );
       this.resolution = isMobile ? 256 : 512;
 
-      // ── WebGL Setup ──────────────────────────────────────
       const screenW = window.innerWidth;
       const screenH = window.innerHeight;
       this.aspectRatio = screenW / screenH;
 
-      // Main Scene Render Target
       this.sceneRenderTarget = new THREE.WebGLRenderTarget(screenW, screenH, {
         minFilter: THREE.LinearFilter,
         magFilter: THREE.LinearFilter,
         format: THREE.RGBAFormat,
       });
 
-      // Load noise texture
-      this.noiseTexture = new THREE.TextureLoader().load('HDR_LA_0.png');
-      this.noiseTexture.wrapS = THREE.RepeatWrapping;
-      this.noiseTexture.wrapT = THREE.RepeatWrapping;
+      // Procedural noise texture fallback to prevent CORS file:// protocol errors
+      function createNoiseDataTexture() {
+        const width = 128;
+        const height = 128;
+        const size = width * height;
+        const data = new Uint8Array(4 * size);
+        for (let i = 0; i < size; i++) {
+          const stride = i * 4;
+          data[stride]     = Math.floor(Math.random() * 255);
+          data[stride + 1] = Math.floor(Math.random() * 255);
+          data[stride + 2] = Math.floor(Math.random() * 255);
+          data[stride + 3] = 255;
+        }
+        const texture = new THREE.DataTexture(data, width, height, THREE.RGBAFormat);
+        texture.wrapS = THREE.RepeatWrapping;
+        texture.wrapT = THREE.RepeatWrapping;
+        texture.needsUpdate = true;
+        return texture;
+      }
 
-      // ── FBO Setups ───────────────────────────────────────
-      // Check WebGL context capabilities for float/half-float texture rendering support
+      if (window.location.protocol === "file:") {
+        this.noiseTexture = createNoiseDataTexture();
+      } else {
+        this.noiseTexture = new THREE.TextureLoader().load(
+          "HDR_LA_0.png",
+          undefined,
+          undefined,
+          () => {
+            this.noiseTexture = createNoiseDataTexture();
+          }
+        );
+        this.noiseTexture.wrapS = THREE.RepeatWrapping;
+        this.noiseTexture.wrapT = THREE.RepeatWrapping;
+      }
+
       let textureType = THREE.HalfFloatType;
       try {
         const gl = renderer.getContext();
         const isWebGL2 = renderer.capabilities.isWebGL2;
         if (!isWebGL2) {
-          const hasHalfFloat = gl.getExtension('OES_texture_half_float') && gl.getExtension('OES_texture_half_float_linear');
-          const hasFloat = gl.getExtension('OES_texture_float') && gl.getExtension('OES_texture_float_linear');
+          const hasHalfFloat =
+            gl.getExtension("OES_texture_half_float") &&
+            gl.getExtension("OES_texture_half_float_linear");
+          const hasFloat =
+            gl.getExtension("OES_texture_float") &&
+            gl.getExtension("OES_texture_float_linear");
           if (hasHalfFloat) {
             textureType = THREE.HalfFloatType;
           } else if (hasFloat) {
@@ -101,7 +131,6 @@
         textureType = THREE.UnsignedByteType;
       }
 
-      // ping-pong velocity buffers
       const fboOptions = {
         depthBuffer: false,
         stencilBuffer: false,
@@ -111,18 +140,30 @@
         format: THREE.RGBAFormat,
       };
 
-      this.velocityFBO1 = new THREE.WebGLRenderTarget(this.resolution, this.resolution, fboOptions);
-      this.velocityFBO2 = new THREE.WebGLRenderTarget(this.resolution, this.resolution, fboOptions);
+      this.velocityFBO1 = new THREE.WebGLRenderTarget(
+        this.resolution,
+        this.resolution,
+        fboOptions,
+      );
+      this.velocityFBO2 = new THREE.WebGLRenderTarget(
+        this.resolution,
+        this.resolution,
+        fboOptions,
+      );
       this.readVelocity = this.velocityFBO1;
       this.writeVelocity = this.velocityFBO2;
 
       // blur buffer
-      this.blurFBO = new THREE.WebGLRenderTarget(this.resolution / 2, this.resolution / 2, fboOptions);
+      this.blurFBO = new THREE.WebGLRenderTarget(
+        this.resolution / 2,
+        this.resolution / 2,
+        fboOptions,
+      );
 
       // ── Post Processing full screen setup ───────────────
       this.fboScene = new THREE.Scene();
       this.fboCamera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
-      
+
       this.fboQuad = new THREE.Mesh(new THREE.PlaneGeometry(2, 2));
       this.fboScene.add(this.fboQuad);
 
@@ -254,7 +295,7 @@
       // 3. Final Compositing Shader (refraction + chromatic aberration + liquid rgb tint)
       this.postScene = new THREE.Scene();
       this.postCamera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
-      
+
       this.postQuad = new THREE.Mesh(
         new THREE.PlaneGeometry(2, 2),
         new THREE.ShaderMaterial({
@@ -305,17 +346,19 @@
               float r = texture2D(tDiffuse, sceneUV + caOffset).r;
               float g = texture2D(tDiffuse, sceneUV - caOffset).g;
               float b = texture2D(tDiffuse, sceneUV - caOffset).b;
+              float a = texture2D(tDiffuse, sceneUV).a;
 
               vec3 caColor = vec3(r, g, b);
               vec3 finalColor = mix(caColor, liquidColor, rgbStrength);
 
-              gl_FragColor = vec4(finalColor, 1.0);
+              // Output alpha channel of the scene so empty background is transparent
+              gl_FragColor = vec4(finalColor, a);
             }
           `,
           depthWrite: false,
           depthTest: false,
           transparent: true,
-        })
+        }),
       );
       this.postScene.add(this.postQuad);
     }
@@ -333,7 +376,7 @@
     _setupEventListeners() {
       const handleMove = (clientX, clientY) => {
         const rect = this.renderer.domElement.getBoundingClientRect();
-        
+
         // Remap to UV space [0, 1]
         const x = (clientX - rect.left) / rect.width;
         const y = 1.0 - (clientY - rect.top) / rect.height; // Flip y for WebGL bottom-up UV coords
@@ -347,20 +390,20 @@
         }
       };
 
-      window.addEventListener('mousemove', (e) => {
+      window.addEventListener("mousemove", (e) => {
         handleMove(e.clientX, e.clientY);
       });
 
-      window.addEventListener('touchmove', (e) => {
+      window.addEventListener("touchmove", (e) => {
         if (e.touches.length > 0) {
           handleMove(e.touches[0].clientX, e.touches[0].clientY);
         }
       });
 
-      window.addEventListener('touchend', () => {
+      window.addEventListener("touchend", () => {
         this.pointer.isActive = false;
       });
-      document.body.addEventListener('mouseleave', () => {
+      document.body.addEventListener("mouseleave", () => {
         this.pointer.isActive = false;
       });
     }
@@ -395,8 +438,9 @@
 
       if (p.isActive && p.lastTime > 0) {
         const dt = now - p.lastTime;
-        const lerpFactor = 1.0 - Math.pow(1.0 - this.settings.pointer.ease, dt / 16.66);
-        
+        const lerpFactor =
+          1.0 - Math.pow(1.0 - this.settings.pointer.ease, dt / 16.66);
+
         const prevX = p.current.x;
         const prevY = p.current.y;
 
@@ -404,7 +448,10 @@
         p.current.y = p.current.y + (p.target.y - p.current.y) * lerpFactor;
 
         const vdt = Math.max(dt / 1000, 1e-6);
-        p.velocity.set((p.current.x - prevX) / vdt, (p.current.y - prevY) / vdt);
+        p.velocity.set(
+          (p.current.x - prevX) / vdt,
+          (p.current.y - prevY) / vdt,
+        );
       } else {
         p.velocity.set(0, 0);
       }
@@ -414,7 +461,7 @@
       const blurRadius = this.settings.flow.blurRadius;
       const blurDir = new THREE.Vector2(
         blurRadius / this.resolution,
-        (blurRadius * this.aspectRatio) / this.resolution
+        (blurRadius * this.aspectRatio) / this.resolution,
       );
 
       // Diagonal blur pass (bi-directional isotropic diffusion)
@@ -453,12 +500,21 @@
 
       // Render actual scene to texture
       this.renderer.setRenderTarget(this.sceneRenderTarget);
+
+      // Clear with alpha 0.0 so background of the texture is transparent
+      const prevClearAlpha = this.renderer.getClearAlpha();
+      this.renderer.setClearAlpha(0.0);
+      this.renderer.clear();
+      this.renderer.setClearAlpha(prevClearAlpha);
+
       this.renderer.render(this.scene, this.camera);
       this.renderer.setRenderTarget(null);
 
       // Render post processing quad with flow mapping
-      this.postQuad.material.uniforms.tDiffuse.value = this.sceneRenderTarget.texture;
-      this.postQuad.material.uniforms.tVelocity.value = this.readVelocity.texture;
+      this.postQuad.material.uniforms.tDiffuse.value =
+        this.sceneRenderTarget.texture;
+      this.postQuad.material.uniforms.tVelocity.value =
+        this.readVelocity.texture;
       this.renderer.render(this.postScene, this.postCamera);
     }
 
@@ -467,14 +523,18 @@
      * @param {string|THREE.Color} color
      */
     setLiquidColor(color) {
-      if (typeof color === 'string') {
+      if (typeof color === "string") {
         this.settings.liquid.color.set(color);
       } else {
         this.settings.liquid.color.copy(color);
       }
-      this.postQuad.material.uniforms.uLiquidColor.value.copy(this.settings.liquid.color);
+      this.postQuad.material.uniforms.uLiquidColor.value.copy(
+        this.settings.liquid.color,
+      );
       if (this.guiLiquidColorController) {
-        this.guiLiquidColorController.setValue('#' + this.settings.liquid.color.getHexString());
+        this.guiLiquidColorController.setValue(
+          "#" + this.settings.liquid.color.getHexString(),
+        );
       }
     }
 
@@ -485,73 +545,114 @@
       const GUI = window.lil?.GUI;
       if (!GUI) return;
 
-      const gui = new GUI({ title: 'Fluid Controls' });
+      const gui = new GUI({ title: "Fluid Controls" });
 
       // Styling GUI to fit neatly
-      gui.domElement.style.position = 'fixed';
-      gui.domElement.style.top = '80px';
-      gui.domElement.style.right = '20px';
-      gui.domElement.style.zIndex = '9999';
+      gui.domElement.style.position = "fixed";
+      gui.domElement.style.top = "80px";
+      gui.domElement.style.right = "20px";
+      gui.domElement.style.zIndex = "9999";
 
       const s = this.settings;
 
       // Interaction Folder
-      const fPointer = gui.addFolder('Interaction');
-      fPointer.add(s.pointer, 'ease', 0.05, 0.4, 0.01).name('Cursor Easing');
+      const fPointer = gui.addFolder("Interaction");
+      fPointer.add(s.pointer, "ease", 0.05, 0.4, 0.01).name("Cursor Easing");
 
       // Simulation Folder
-      const fFlow = gui.addFolder('Simulation');
-      fFlow.add(s.flow, 'radius', 0.005, 0.08, 0.001).name('Splat Radius').onChange(v => {
-        this.velocityMaterial.uniforms.uRadius.value = v;
-      });
-      fFlow.add(s.flow, 'strength', 0.1, 4.0, 0.1).name('Flow Strength').onChange(v => {
-        this.velocityMaterial.uniforms.uStrength.value = v;
-      });
-      fFlow.add(s.flow, 'decay', 0.0, 0.02, 0.0001).name('Velocity Decay').onChange(v => {
-        this.velocityMaterial.uniforms.uDecay.value = v;
-      });
-      fFlow.add(s.flow, 'advectionStrength', 0.0, 0.05, 0.001).name('Advection').onChange(v => {
-        this.velocityMaterial.uniforms.uAdvectionStrength.value = v;
-      });
-      fFlow.add(s.flow, 'blurStrength', 0.0, 1.0, 0.05).name('Blur Intensity').onChange(v => {
-        this.velocityMaterial.uniforms.uBlurStrength.value = v;
-      });
-      fFlow.add(s.flow, 'blurRadius', 0.0, 5.0, 0.1).name('Blur Radius');
-      fFlow.add(s.flow, 'noiseStrength', 0.0, 0.02, 0.0001).name('Turbulence').onChange(v => {
-        this.velocityMaterial.uniforms.uNoiseStrength.value = v;
-      });
-      fFlow.add(s.flow, 'noiseScale', 0.5, 10.0, 0.1).name('Noise Scale').onChange(v => {
-        this.velocityMaterial.uniforms.uNoiseScale.value = v;
-      });
+      const fFlow = gui.addFolder("Simulation");
+      fFlow
+        .add(s.flow, "radius", 0.005, 0.08, 0.001)
+        .name("Splat Radius")
+        .onChange((v) => {
+          this.velocityMaterial.uniforms.uRadius.value = v;
+        });
+      fFlow
+        .add(s.flow, "strength", 0.1, 4.0, 0.1)
+        .name("Flow Strength")
+        .onChange((v) => {
+          this.velocityMaterial.uniforms.uStrength.value = v;
+        });
+      fFlow
+        .add(s.flow, "decay", 0.0, 0.02, 0.0001)
+        .name("Velocity Decay")
+        .onChange((v) => {
+          this.velocityMaterial.uniforms.uDecay.value = v;
+        });
+      fFlow
+        .add(s.flow, "advectionStrength", 0.0, 0.05, 0.001)
+        .name("Advection")
+        .onChange((v) => {
+          this.velocityMaterial.uniforms.uAdvectionStrength.value = v;
+        });
+      fFlow
+        .add(s.flow, "blurStrength", 0.0, 1.0, 0.05)
+        .name("Blur Intensity")
+        .onChange((v) => {
+          this.velocityMaterial.uniforms.uBlurStrength.value = v;
+        });
+      fFlow.add(s.flow, "blurRadius", 0.0, 5.0, 0.1).name("Blur Radius");
+      fFlow
+        .add(s.flow, "noiseStrength", 0.0, 0.02, 0.0001)
+        .name("Turbulence")
+        .onChange((v) => {
+          this.velocityMaterial.uniforms.uNoiseStrength.value = v;
+        });
+      fFlow
+        .add(s.flow, "noiseScale", 0.5, 10.0, 0.1)
+        .name("Noise Scale")
+        .onChange((v) => {
+          this.velocityMaterial.uniforms.uNoiseScale.value = v;
+        });
 
       // Chromatic Effects Folder
-      const fRgb = gui.addFolder('Chromatic Effects');
-      fRgb.add(s.rgb, 'frequency', 0.0, 30.0, 0.5).name('Color Shift Freq').onChange(v => {
-        this.postQuad.material.uniforms.uRgbFrequency.value = v;
-      });
-      fRgb.add(s.rgb, 'strength', 0.0, 3.0, 0.05).name('Color Intensity').onChange(v => {
-        this.postQuad.material.uniforms.uRgbStrength.value = v;
-      });
-      fRgb.add(s.rgb, 'mix', 0.0, 1.0, 0.01).name('Blend Factor').onChange(v => {
-        this.postQuad.material.uniforms.uRgbMix.value = v;
-      });
+      const fRgb = gui.addFolder("Chromatic Effects");
+      fRgb
+        .add(s.rgb, "frequency", 0.0, 30.0, 0.5)
+        .name("Color Shift Freq")
+        .onChange((v) => {
+          this.postQuad.material.uniforms.uRgbFrequency.value = v;
+        });
+      fRgb
+        .add(s.rgb, "strength", 0.0, 3.0, 0.05)
+        .name("Color Intensity")
+        .onChange((v) => {
+          this.postQuad.material.uniforms.uRgbStrength.value = v;
+        });
+      fRgb
+        .add(s.rgb, "mix", 0.0, 1.0, 0.01)
+        .name("Blend Factor")
+        .onChange((v) => {
+          this.postQuad.material.uniforms.uRgbMix.value = v;
+        });
 
       // Material Folder
-      const fLiquid = gui.addFolder('Material');
-      const liquidColorHelper = { color: '#' + s.liquid.color.getHexString() };
-      this.guiLiquidColorController = fLiquid.addColor(liquidColorHelper, 'color').name('Liquid Tint').onChange(v => {
-        s.liquid.color.set(v);
-        this.postQuad.material.uniforms.uLiquidColor.value.copy(s.liquid.color);
-      });
+      const fLiquid = gui.addFolder("Material");
+      const liquidColorHelper = { color: "#" + s.liquid.color.getHexString() };
+      this.guiLiquidColorController = fLiquid
+        .addColor(liquidColorHelper, "color")
+        .name("Liquid Tint")
+        .onChange((v) => {
+          s.liquid.color.set(v);
+          this.postQuad.material.uniforms.uLiquidColor.value.copy(
+            s.liquid.color,
+          );
+        });
 
       // Environment Folder
-      const fEnv = gui.addFolder('Environment');
-      fEnv.add(s.scene, 'distortion', 0.0, 0.1, 0.001).name('Refraction').onChange(v => {
-        this.postQuad.material.uniforms.uDistortionStrength.value = v;
-      });
-      fEnv.add(s.aberration, 'strength', 0.0, 0.2, 0.001).name('Aberration').onChange(v => {
-        this.postQuad.material.uniforms.uAberrationStrength.value = v;
-      });
+      const fEnv = gui.addFolder("Environment");
+      fEnv
+        .add(s.scene, "distortion", 0.0, 0.1, 0.001)
+        .name("Refraction")
+        .onChange((v) => {
+          this.postQuad.material.uniforms.uDistortionStrength.value = v;
+        });
+      fEnv
+        .add(s.aberration, "strength", 0.0, 0.2, 0.001)
+        .name("Aberration")
+        .onChange((v) => {
+          this.postQuad.material.uniforms.uAberrationStrength.value = v;
+        });
 
       gui.close();
       this.gui = gui;
