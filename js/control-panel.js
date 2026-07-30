@@ -303,7 +303,7 @@
     ══════════════════════════════════════════════════════════ */
     const sections = [
       {
-        id: 'rects', icon: '▬', label: 'Rectangles', open: true,
+        id: 'rects', icon: '▬', label: 'Rectangles', open: false,
         controls: [
           { key:'particleCount', label:'Count',     min:200,   max:20000,  step:100,  dp:0, onchange: ()=>{ CTRL.rebuildCount(); } },
           { key:'minLen',        label:'Min Length', min:0.02,  max:0.60,  step:0.01, dp:2, onchange: ()=>{ CTRL.rebuildSizes(); } },
@@ -314,7 +314,7 @@
         ],
       },
       {
-        id: 'sphere', icon: '◉', label: 'Eclipse Sphere', open: true,
+        id: 'sphere', icon: '◉', label: 'Eclipse Sphere', open: false,
         controls: [
           { key:'sphereR',      label:'Sphere Radius',  min:0.5,  max:5.0,  step:0.1,   dp:1 },
           { key:'shieldR',      label:'Shield Radius',  min:3.0,  max:12.0, step:0.2,   dp:1 },
@@ -327,7 +327,7 @@
         ],
       },
       {
-        id: 'spread', icon: '⤢', label: '3D Spreading (X, Y, Z)', open: true,
+        id: 'spread', icon: '⤢', label: '3D Spreading (X, Y, Z)', open: false,
         controls: [
           { key:'xSpread', label:'X Width Spread',     min:10.0, max:180.0, step:2.0, dp:1, onchange: ()=>{ CTRL.rebuildCount(); } },
           { key:'ySpread', label:'Y Height Spread',    min:10.0, max:120.0, step:2.0, dp:1, onchange: ()=>{ CTRL.rebuildCount(); } },
@@ -357,13 +357,14 @@
         ],
       },
       {
-        id: 'fog', icon: '🌫', label: 'Atmospheric Blue Fog', open: true,
+        id: 'fog', icon: '🌫', label: 'Atmospheric Fog & Background', open: false,
         controls: [
           { key:'fogEnable',  label:'Enable Fog',       min:0,    max:1,    step:1,    dp:0, tooltip:'1=On, 0=Off' },
-          { key:'fogDensity', label:'Fog Intensity',    min:0.00, max:3.00, step:0.05, dp:2, tooltip:'Blue space mist density' },
-          { key:'fogNear',    label:'Fog Start Depth',  min:0.0,  max:20.0, step:0.5,  dp:1, tooltip:'Depth behind sphere where blue fog begins' },
-          { key:'fogFar',     label:'Fog Limit Depth',  min:5.0,  max:60.0, step:1.0,  dp:1, tooltip:'Depth behind sphere for max blue fog' },
-          { key:'fogHue',     label:'Blue Fog Hue',     min:0.50, max:0.75, step:0.01, dp:2, tooltip:'0.55=Cyan, 0.60=Cobalt, 0.70=Indigo' },
+          { key:'fogDensity', label:'Fog Intensity',    min:0.00, max:3.00, step:0.05, dp:2, tooltip:'Space mist density' },
+          { key:'fogNear',    label:'Fog Start Depth',  min:0.0,  max:20.0, step:0.5,  dp:1, tooltip:'Depth behind sphere where fog begins' },
+          { key:'fogFar',     label:'Fog Limit Depth',  min:5.0,  max:60.0, step:1.0,  dp:1, tooltip:'Depth behind sphere for max fog' },
+          { key:'fogColor',   label:'Fog Color',        type:'color', tooltip:'Pick color for atmospheric fog mist' },
+          { key:'bgColor',    label:'Background Color', type:'color', tooltip:'Pick color for full screen space background' },
         ],
       },
     ];
@@ -404,33 +405,62 @@
         const val = document.createElement('span');
         val.className = 'cp-val';
         const rawVal = CFG[ctrl.key];
-        const initialVal = typeof rawVal === 'number' ? rawVal : 0;
-        val.textContent = initialVal.toFixed(ctrl.dp);
-        valEls[ctrl.key] = val;
 
-        const wrap = document.createElement('div');
-        wrap.className = 'cp-slider-wrap';
+        if (ctrl.type === 'color') {
+          const initialColor = typeof rawVal === 'string' ? rawVal : '#0e1b40';
+          val.textContent = initialColor;
+          valEls[ctrl.key] = val;
 
-        const range = document.createElement('input');
-        range.type  = 'range';
-        range.className = 'cp-range' + (ctrl.cls ? ' ' + ctrl.cls : '');
-        range.min   = ctrl.min;
-        range.max   = ctrl.max;
-        range.step  = ctrl.step;
-        range.value = initialVal;
-        rangeEls[ctrl.key] = range;
+          const wrap = document.createElement('div');
+          wrap.className = 'cp-slider-wrap';
 
-        range.addEventListener('input', () => {
-          const v = parseFloat(range.value);
-          CFG[ctrl.key] = v;
-          val.textContent = v.toFixed(ctrl.dp);
-          if (ctrl.onchange) ctrl.onchange(v);
-        });
+          const colorInput = document.createElement('input');
+          colorInput.type = 'color';
+          colorInput.className = 'cp-color-picker';
+          colorInput.value = initialColor;
+          colorInput.style.cssText = 'width:32px; height:24px; border:none; border-radius:4px; cursor:pointer; background:none;';
+          rangeEls[ctrl.key] = colorInput;
 
-        wrap.appendChild(range);
-        row.appendChild(label);
-        row.appendChild(val);
-        row.appendChild(wrap);
+          colorInput.addEventListener('input', () => {
+            const hex = colorInput.value;
+            CFG[ctrl.key] = hex;
+            val.textContent = hex;
+            if (ctrl.onchange) ctrl.onchange(hex);
+          });
+
+          wrap.appendChild(colorInput);
+          row.appendChild(label);
+          row.appendChild(val);
+          row.appendChild(wrap);
+        } else {
+          const initialVal = typeof rawVal === 'number' ? rawVal : 0;
+          val.textContent = initialVal.toFixed(ctrl.dp);
+          valEls[ctrl.key] = val;
+
+          const wrap = document.createElement('div');
+          wrap.className = 'cp-slider-wrap';
+
+          const range = document.createElement('input');
+          range.type  = 'range';
+          range.className = 'cp-range' + (ctrl.cls ? ' ' + ctrl.cls : '');
+          range.min   = ctrl.min;
+          range.max   = ctrl.max;
+          range.step  = ctrl.step;
+          range.value = initialVal;
+          rangeEls[ctrl.key] = range;
+
+          range.addEventListener('input', () => {
+            const v = parseFloat(range.value);
+            CFG[ctrl.key] = v;
+            val.textContent = v.toFixed(ctrl.dp);
+            if (ctrl.onchange) ctrl.onchange(v);
+          });
+
+          wrap.appendChild(range);
+          row.appendChild(label);
+          row.appendChild(val);
+          row.appendChild(wrap);
+        }
         body.appendChild(row);
       });
 

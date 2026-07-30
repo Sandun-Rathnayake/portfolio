@@ -30,9 +30,9 @@
     lightR:       23.0,
     pulseSpeed:   0.65,
     pulseAmt:     0.075,
-    coronaScale:  1.0,        // Corona overall size scale
-    coronaGlow:   1.50,        // Corona glow opacity
-    coronaRim:    0.60,        // Eclipse rim ring intensity
+    coronaScale:  .95,        // Corona overall size scale
+    coronaGlow:   3.0,        // Corona glow opacity
+    coronaRim:    3.0,        // Eclipse rim ring intensity
 
     /* ── rectangles ── */
     particleCount: 20000,      // 500–5000 (requires rebuildCount)
@@ -65,12 +65,13 @@
     falloffPow:    5.0,       // 1=linear 2=sqr 3=cubic 4=quartic
     colorWarm:     0.0,       // 0=cool blue 1=warm white
 
-    /* ── atmospheric blue fog ── */
+    /* ── atmospheric fog & background colors ── */
     fogEnable:     1,          // 1 = Enabled, 0 = Disabled
-    fogDensity:    0.45,       // Blue fog intensity (0.0 to 3.0)
-    fogNear:       9.0,        // Depth behind sphere where fog starts
-    fogFar:        12.0,       // Depth behind sphere for max fog
-    fogHue:        0.75,       // 0.55=Cyan, 0.60=Cobalt Blue, 0.70=Indigo
+    fogDensity:    0.50,       // Fog intensity (0.0 to 3.0)
+    fogNear:       2.0,        // Depth behind sphere where fog starts
+    fogFar:        25.0,       // Depth behind sphere for max fog
+    fogColor:      '#0b009e',  // Fog color (customizable from control panel)
+    bgColor:       '#040714',  // Full screen background color (customizable)
   };
 
   /* ══════════════════════════════════════════════════════════════
@@ -117,7 +118,7 @@
     return new THREE.CanvasTexture(c);
   }
 
-  /* ── Directional Rim Texture for Top-Left & Bottom-Right Eclipse Shine ── */
+  /* ── Directional Rim Texture for Top-Left (-135°) & Bottom-Right (45°) Crescent Shine ── */
   function makeAsymmetricRimTex(res, stops) {
     const c = document.createElement('canvas');
     c.width = c.height = res;
@@ -130,7 +131,7 @@
     ctx.fillStyle = g;
     ctx.fillRect(0, 0, res, res);
 
-    /* Apply angular direction mask: Top-Left (-135°) and Bottom-Right (45°) */
+    /* Crescent directional mask: Top-Left (-135°) and Bottom-Right (45°) */
     const imgData = ctx.getImageData(0, 0, res, res);
     const data = imgData.data;
 
@@ -141,15 +142,11 @@
         const dist = Math.sqrt(dx*dx + dy*dy);
         if (dist > 0) {
           const theta = Math.atan2(dy, dx);
-          // Angle -2.35619 rad (-135° = Top-Left in canvas space where Y grows downwards)
-          // cos^2(theta - (-135°)) equals 1.0 at Top-Left and 1.0 at Bottom-Right, 0.0 at Top-Right & Bottom-Left
-          const angleFactor = Math.pow(Math.abs(Math.cos(theta - (-2.35619))), 1.8);
-          
-          // Soft ambient floor (0.05) on dark sides, 1.0 full bright on Top-Left & Bottom-Right
-          const mask = 0.05 + 0.95 * angleFactor;
+          // Angle -135° (Top-Left) & 45° (Bottom-Right) crescent arc
+          const angleFactor = Math.pow(Math.abs(Math.cos(theta - (-2.35619))), 2.2);
 
           const idx = (y * res + x) * 4;
-          data[idx + 3] = Math.floor(data[idx + 3] * mask); // modulate alpha channel
+          data[idx + 3] = Math.floor(data[idx + 3] * angleFactor);
         }
       }
     }
@@ -161,10 +158,7 @@
   const coronaGroup = new THREE.Group();
   scene.add(coronaGroup);
 
-  /* Each plane has a different world-space half-size.
-     The sphere edge sits at fraction  SF = SPHERE_R / planeHalf
-     inside the texture, so stops before SF must be transparent.   */
-  const SR = CFG.sphereR;   // 2.2
+  const SR = CFG.sphereR; // 2.4
 
   function addCoronaLayer(planeHalf, stops, order, isAsymmetric) {
     const tex = isAsymmetric ? makeAsymmetricRimTex(1024, stops) : makeEclipseTex(1024, stops);
@@ -180,69 +174,95 @@
     return m;
   }
 
-  /* ── Layer 0: sharp white-blue RIM ring  (tight plane = SR*4.5)
-       SF = 1/4.5 ≈ 0.222  →  transparent from 0–0.20, bright at 0.222   */
-  const PH0 = SR * 4.5, SF0 = 1 / 4.5;
-  /* ── Layer 1: inner blue corona bloom    (SR*10)   SF = 0.100           */
-  const PH1 = SR * 10,  SF1 = 1 / 10;
-  /* ── Layer 2: mid corona scatter         (SR*22)   SF = 0.045           */
-  const PH2 = SR * 22,  SF2 = 1 / 22;
-  /* ── Layer 3: far atmospheric haze       (SR*45)   SF = 0.022           */
-  const PH3 = SR * 45,  SF3 = 1 / 45;
+  const PH0 = SR * 3.2, SF0 = 1 / 3.2;  // Thin bright white-cyan rim
+  const PH1 = SR * 7.5, SF1 = 1 / 7.5;  // Inner soft blue bloom
+  const PH2 = SR * 18.0, SF2 = 1 / 18.0; // Outer atmosphere haze
 
   const coronaMeshes = [
-    /* 0 — tight bright white rim (Top-Left & Bottom-Right directional shine) */
+    /* 0 — Tight bright white-cyan crescent rim ring (Top-Left & Bottom-Right) */
     addCoronaLayer(PH0, [
-      [0.00,           'rgba(  0,  0,  0, 0.00)'],  // ← dark centre
-      [SF0 * 0.82,     'rgba(  0,  0,  0, 0.00)'],  // dark up to just inside rim
-      [SF0 * 0.95,     'rgba(200,230,255, 0.35)'],   // soft approach glow
-      [SF0,            'rgba(255,255,255, 1.00)'],   // ← BRIGHT white ring at sphere edge
-      [SF0 * 1.10,     'rgba(220,240,255, 0.92)'],   // inner corona
-      [SF0 * 1.30,     'rgba(170,215,255, 0.70)'],
-      [SF0 * 1.65,     'rgba(110,185,255, 0.42)'],
-      [SF0 * 2.20,     'rgba( 55,140,255, 0.18)'],
-      [SF0 * 3.20,     'rgba( 20, 75,220, 0.06)'],
+      [0.00,           'rgba(  0,  0,  0, 0.00)'],
+      [SF0 * 0.88,     'rgba(  0,  0,  0, 0.00)'],
+      [SF0 * 0.96,     'rgba(215,240,255, 0.40)'],
+      [SF0,            'rgba(255,255,255, 1.00)'],  // ← BRIGHT pure white crescent rim at sphere edge
+      [SF0 * 1.08,     'rgba(195,230,255, 0.82)'],
+      [SF0 * 1.25,     'rgba(145,200,255, 0.50)'],
+      [SF0 * 1.55,     'rgba( 85,160,255, 0.22)'],
+      [SF0 * 2.20,     'rgba( 40,110,230, 0.06)'],
       [1.00,           'rgba(  0,  0,  0, 0.00)'],
     ], 4, true),
 
-    /* 1 — inner blue corona bloom (Top-Left & Bottom-Right directional shine) */
+    /* 1 — Inner soft violet-blue crescent bloom (Top-Left & Bottom-Right) */
     addCoronaLayer(PH1, [
-      [0.00,           'rgba(  0,  0,  0, 0.00)'],  // dark centre
-      [SF1 * 0.85,     'rgba(  0,  0,  0, 0.00)'],
-      [SF1,            'rgba(160,210,255, 0.55)'],   // ring glow at sphere edge
-      [SF1 * 1.20,     'rgba(120,190,255, 0.38)'],
-      [SF1 * 1.70,     'rgba( 70,155,255, 0.20)'],
-      [SF1 * 2.80,     'rgba( 30, 90,220, 0.08)'],
-      [SF1 * 4.50,     'rgba( 10, 35,140, 0.02)'],
+      [0.00,           'rgba(  0,  0,  0, 0.00)'],
+      [SF1 * 0.88,     'rgba(  0,  0,  0, 0.00)'],
+      [SF1,            'rgba(165,200,255, 0.45)'],
+      [SF1 * 1.35,     'rgba(125,170,255, 0.28)'],
+      [SF1 * 2.00,     'rgba( 75,130,240, 0.12)'],
+      [SF1 * 3.20,     'rgba( 35, 80,200, 0.04)'],
       [1.00,           'rgba(  0,  0,  0, 0.00)'],
     ], 3, true),
 
-    /* 2 — mid corona scatter */
+    /* 2 — Outer atmosphere haze */
     addCoronaLayer(PH2, [
-      [0.00,           'rgba(  0,  0,  0, 0.00)'],  // dark centre
-      [SF2 * 0.80,     'rgba(  0,  0,  0, 0.00)'],
-      [SF2,            'rgba( 60,130,220, 0.20)'],
-      [SF2 * 2.0,      'rgba( 25, 75,180, 0.10)'],
-      [SF2 * 4.0,      'rgba( 10, 35,120, 0.04)'],
+      [0.00,           'rgba(  0,  0,  0, 0.00)'],
+      [SF2 * 0.85,     'rgba(  0,  0,  0, 0.00)'],
+      [SF2,            'rgba(110,150,240, 0.18)'],
+      [SF2 * 2.0,      'rgba( 45, 90,200, 0.08)'],
+      [SF2 * 4.0,      'rgba( 18, 45,140, 0.02)'],
       [1.00,           'rgba(  0,  0,  0, 0.00)'],
     ], 2, false),
-
-    /* 3 — far atmospheric haze */
-    addCoronaLayer(PH3, [
-      [0.00,           'rgba(  0,  0,  0, 0.00)'],  // dark centre
-      [SF3 * 0.80,     'rgba(  0,  0,  0, 0.00)'],
-      [SF3,            'rgba( 20, 55,130, 0.08)'],
-      [SF3 * 3.0,      'rgba(  8, 22, 70, 0.03)'],
-      [1.00,           'rgba(  0,  0,  0, 0.00)'],
-    ], 1, false),
   ];
 
-  /* ── BLACK SPHERE — the "moon" that covers the sun.
-     Must render AFTER all corona planes (renderOrder 10)
-     so it cuts a perfectly dark circle through the glow.          */
+  /* ── 2. DARK NAVY SPHERE WITH RADIAL GRADIENT & FRESNEL ── */
+  const sphereMat = new THREE.ShaderMaterial({
+    uniforms: {
+      uCameraPos: { value: camera.position },
+    },
+    vertexShader: `
+      varying vec3 vNormal;
+      varying vec3 vWorldPos;
+      varying vec3 vViewPosition;
+
+      void main() {
+        vNormal = normalize(normalMatrix * normal);
+        vec4 worldPos = modelMatrix * vec4(position, 1.0);
+        vWorldPos = worldPos.xyz;
+        vec4 mvPosition = viewMatrix * worldPos;
+        vViewPosition = -mvPosition.xyz;
+        gl_Position = projectionMatrix * mvPosition;
+      }
+    `,
+    fragmentShader: `
+      varying vec3 vNormal;
+      varying vec3 vWorldPos;
+      varying vec3 vViewPosition;
+
+      void main() {
+        vec3 N = normalize(vNormal);
+        vec3 V = normalize(vViewPosition);
+
+        // 1. Radial Gradient (#060B2A center -> #101E50 edge) exactly like the image!
+        float rFrac = length(vWorldPos.xy) / 2.4;
+        vec3 centerColor = vec3(0.024, 0.043, 0.165); // #060B2A dark navy center
+        vec3 edgeColor   = vec3(0.063, 0.118, 0.314); // #101E50 edge navy
+        vec3 baseColor   = mix(centerColor, edgeColor, clamp(rFrac * rFrac, 0.0, 1.0));
+
+        // 2. Subtle White-Blue Fresnel Rim (#F0F6FF, power 4.5, intensity 0.16)
+        float NdotV = max(0.0, dot(N, V));
+        float fresnel = pow(1.0 - NdotV, 4.5);
+        vec3 fresnelColor = vec3(0.94, 0.96, 1.0) * fresnel * 0.16;
+
+        vec3 finalColor = baseColor + fresnelColor;
+        gl_FragColor = vec4(finalColor, 1.0);
+      }
+    `,
+    side: THREE.FrontSide,
+  });
+
   const sphereMesh = new THREE.Mesh(
-    new THREE.SphereGeometry(SR, 64, 64),
-    new THREE.MeshBasicMaterial({ color: 0x000000 })
+    new THREE.SphereGeometry(SR, 128, 128),
+    sphereMat
   );
   sphereMesh.renderOrder = 10;
   scene.add(sphereMesh);
@@ -274,7 +294,7 @@
       uFogNear:    { value: CFG.fogNear    || 2.0 },
       uFogFar:     { value: CFG.fogFar     || 25.0 },
       uFogDensity: { value: CFG.fogDensity || 0.80 },
-      uFogHue:     { value: CFG.fogHue     || 0.60 },
+      uFogColor:   { value: new THREE.Color(CFG.fogColor || '#0e1b40') },
     },
     vertexShader: `
       attribute vec3 color;
@@ -300,12 +320,7 @@
       uniform float uFogNear;
       uniform float uFogFar;
       uniform float uFogDensity;
-      uniform float uFogHue;
-
-      vec3 hsl2rgb(float h, float s, float l) {
-        vec3 rgb = clamp(abs(mod(h * 6.0 + vec3(0.0, 4.0, 2.0), 6.0) - 3.0) - 1.0, 0.0, 1.0);
-        return l + s * (rgb - 0.5) * (1.0 - abs(2.0 * l - 1.0));
-      }
+      uniform vec3 uFogColor;
 
       void main() {
         vec3 N = normalize(vNormal);
@@ -333,7 +348,7 @@
 
         vec3 finalColor = (ambientMetal + diffuseMetal + specColor + fresnelColor) * atten;
 
-        // ── LIGHT-ILLUMINATED ATMOSPHERIC BLUE FOG ──
+        // ── LIGHT-ILLUMINATED ATMOSPHERIC FOG ──
         if (uFogEnable > 0.5) {
           float depthBehind = max(0.0, -vWorldPos.z + 1.0);
           float dFactor = depthBehind / max(0.1, uFogFar);
@@ -343,9 +358,8 @@
           float rDist = length(vWorldPos.xyz);
           float lightScatter = exp(-0.07 * rDist) * (0.3 + 0.7 * lightIntensity);
 
-          // Dual-tone fog palette: Dark Space Navy -> Bright Shining Light Cyan/Blue
-          vec3 darkSpaceFog    = hsl2rgb(uFogHue, 0.70, 0.05);
-          vec3 shiningLightFog = hsl2rgb(uFogHue - 0.05, 0.95, 0.35); // Glowing blue light!
+          vec3 darkSpaceFog    = uFogColor * 0.45;
+          vec3 shiningLightFog = mix(uFogColor * 1.8, vec3(0.85, 0.94, 1.0), 0.45); // Glowing light!
 
           vec3 activeFogColor = mix(darkSpaceFog, shiningLightFog, clamp(lightScatter * 1.6, 0.0, 1.0));
           float fogAmount     = clamp(expFog, 0.0, 0.90);
@@ -373,7 +387,7 @@
     uniforms: {
       uFogEnable:     { value: CFG.fogEnable  !== undefined ? CFG.fogEnable  : 1.0 },
       uFogDensity:    { value: CFG.fogDensity || 0.80 },
-      uFogHue:        { value: CFG.fogHue     || 0.60 },
+      uFogColor:      { value: new THREE.Color(CFG.fogColor || '#0e1b40') },
       uPulse:         { value: 1.0 },
     },
     vertexShader: `
@@ -391,13 +405,8 @@
       varying vec3 vWorldPos;
       uniform float uFogEnable;
       uniform float uFogDensity;
-      uniform float uFogHue;
+      uniform vec3 uFogColor;
       uniform float uPulse;
-
-      vec3 hsl2rgb(float h, float s, float l) {
-        vec3 rgb = clamp(abs(mod(h * 6.0 + vec3(0.0, 4.0, 2.0), 6.0) - 3.0) - 1.0, 0.0, 1.0);
-        return l + s * (rgb - 0.5) * (1.0 - abs(2.0 * l - 1.0));
-      }
 
       void main() {
         if (uFogEnable < 0.5) discard;
@@ -409,8 +418,8 @@
         float lightScatter = exp(-0.045 * rDist) * uPulse;
         float outerHaze    = exp(-0.012 * rDist);
 
-        vec3 darkVoidFog      = hsl2rgb(uFogHue, 0.65, 0.03);
-        vec3 brightShiningFog = hsl2rgb(uFogHue - 0.06, 0.95, 0.38); // Bright blue light shine
+        vec3 darkVoidFog      = uFogColor * 0.35;
+        vec3 brightShiningFog = mix(uFogColor * 2.0, vec3(0.88, 0.95, 1.0), 0.50);
 
         vec3 finalFogColor = mix(darkVoidFog, brightShiningFog, clamp(lightScatter * 1.5, 0.0, 1.0));
         float alpha   = clamp((outerHaze * 0.35 + lightScatter * 0.65) * uFogDensity, 0.0, 0.88);
@@ -639,44 +648,44 @@
     /* draw only live particles */
     rectGeo.setDrawRange(0, particleCount * VPR);
 
-    /* update atmospheric blue fog & shader uniforms */
+    /* update atmospheric fog & background color uniforms from Control Panel */
     const fOn   = CFG.fogEnable  !== undefined ? CFG.fogEnable  : 1.0;
     const fNear = CFG.fogNear    !== undefined ? CFG.fogNear    : 2.0;
     const fFar  = CFG.fogFar     !== undefined ? CFG.fogFar     : 25.0;
     const fDens = CFG.fogDensity !== undefined ? CFG.fogDensity : 0.80;
-    const fHue  = CFG.fogHue     !== undefined ? CFG.fogHue     : 0.60;
+    const fColorHex = CFG.fogColor || '#0e1b40';
+    const bColorHex = CFG.bgColor  || '#040714';
 
+    const fogColorObj = new THREE.Color(fColorHex);
     rectMat.uniforms.uFogEnable.value  = fOn;
     rectMat.uniforms.uFogNear.value    = fNear;
     rectMat.uniforms.uFogFar.value     = fFar;
     rectMat.uniforms.uFogDensity.value = fDens;
-    rectMat.uniforms.uFogHue.value     = fHue;
+    rectMat.uniforms.uFogColor.value.copy(fogColorObj);
 
-    /* Full screen background canvas blue fog */
-    if (fOn > 0.5) {
-      const bgFogColor = new THREE.Color().setHSL(fHue, 0.70, 0.05 * Math.min(2.5, fDens));
-      renderer.setClearColor(bgFogColor, 1.0);
-    } else {
-      renderer.setClearColor(0x000000, 1.0);
-    }
+    bgFogMat.uniforms.uFogEnable.value  = fOn;
+    bgFogMat.uniforms.uFogDensity.value = fDens;
+    bgFogMat.uniforms.uFogColor.value.copy(fogColorObj);
+
+    /* Full screen background canvas clear color */
+    renderer.setClearColor(new THREE.Color(bColorHex), 1.0);
 
     /* corona billboard */
     coronaGroup.quaternion.copy(camera.quaternion);
 
-    /* scale sphere mesh if sphereR changed */
-    const sr = sphereR / 2.2;
-    sphereMesh.scale.setScalar(sr);
-
-    /* pulse */
+    /* pulse calculation */
     const pulse = 1.0
       + Math.sin(clock * pulseSpeed)        * pulseAmt
       + Math.sin(clock * pulseSpeed * 2.92) * pulseAmt * 0.4
       + Math.sin(clock * pulseSpeed * 6.80) * pulseAmt * 0.13;
 
+    /* scale both central ball sphere & corona glow in 100% synchronized pulse */
+    const sr = sphereR / 2.2;
+    sphereMesh.scale.setScalar(pulse * sr);
+
     /* update background volumetric light-illuminated fog plane */
     bgFogMat.uniforms.uFogEnable.value  = fOn;
     bgFogMat.uniforms.uFogDensity.value = fDens;
-    bgFogMat.uniforms.uFogHue.value     = fHue;
     bgFogMat.uniforms.uPulse.value      = pulse;
 
     coronaMeshes.forEach((m, idx) => {
