@@ -68,8 +68,8 @@
     /* ── atmospheric blue fog ── */
     fogEnable:     1,          // 1 = Enabled, 0 = Disabled
     fogDensity:    0.45,       // Blue fog intensity (0.0 to 3.0)
-    fogNear:       9.5,        // Depth behind sphere where fog starts
-    fogFar:        10.0,       // Depth behind sphere for max fog
+    fogNear:       9.0,        // Depth behind sphere where fog starts
+    fogFar:        12.0,       // Depth behind sphere for max fog
     fogHue:        0.75,       // 0.55=Cyan, 0.60=Cobalt Blue, 0.70=Indigo
   };
 
@@ -672,6 +672,12 @@
       + Math.sin(clock * pulseSpeed)        * pulseAmt
       + Math.sin(clock * pulseSpeed * 2.92) * pulseAmt * 0.4
       + Math.sin(clock * pulseSpeed * 6.80) * pulseAmt * 0.13;
+
+    /* update background volumetric light-illuminated fog plane */
+    bgFogMat.uniforms.uFogEnable.value  = fOn;
+    bgFogMat.uniforms.uFogDensity.value = fDens;
+    bgFogMat.uniforms.uFogHue.value     = fHue;
+    bgFogMat.uniforms.uPulse.value      = pulse;
 
     coronaMeshes.forEach((m, idx) => {
       const isRim = (idx === 0);
