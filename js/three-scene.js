@@ -950,7 +950,7 @@
 
         /* HDR white-blue core */
         vec3 coreCol  = mix(vec3(0.30,0.62,1.00), vec3(0.92,0.97,1.00), pow(NdotV,0.45));
-        coreCol      *= (1.8 + energy * 0.65) * uPulse;
+        coreCol      *= (0.95 + energy * 0.30) * uPulse;
 
         /* Cyan + violet Fresnel rim */
         float fres    = pow(1.0 - NdotV, 2.8);
@@ -993,13 +993,13 @@
         float mid   = exp(-0.018 * r);
         float outer = exp(-0.008 * r);
 
-        vec3 coreGlow  = vec3(0.70,0.90,1.00) * inner  * 2.5 * uPulse;
-        vec3 midGlow   = vec3(0.35,0.60,1.00) * mid    * 1.1;
-        vec3 outerGlow = vec3(0.25,0.30,0.80) * outer  * 0.55;
-        vec3 violetRim = vec3(0.60,0.20,1.00) * exp(-0.035*r) * 0.65;
+        vec3 coreGlow  = vec3(0.60,0.80,1.00) * inner  * 0.85 * uPulse;
+        vec3 midGlow   = vec3(0.25,0.45,0.90) * mid    * 0.35;
+        vec3 outerGlow = vec3(0.15,0.20,0.60) * outer  * 0.15;
+        vec3 violetRim = vec3(0.45,0.12,0.80) * exp(-0.035*r) * 0.18;
 
         vec3 col   = coreGlow + midGlow + outerGlow + violetRim;
-        float alpha = clamp((inner*0.7 + mid*0.3) * uT, 0.0, 0.95);
+        float alpha = clamp((inner*0.55 + mid*0.15) * uT, 0.0, 0.45);
         gl_FragColor = vec4(col, alpha);
       }
     `,
@@ -1350,7 +1350,7 @@
     bgFogMat.uniforms.uPulse.value = pulse;
 
     /* ── CSS bloom overlay ── */
-    bloomOverlay.style.opacity = (sT * 0.75).toFixed(3);
+    bloomOverlay.style.opacity = (sT * 0.28).toFixed(3);
 
     /* ── Energy sparks ── */
     updateSparks(sT, pulse);
