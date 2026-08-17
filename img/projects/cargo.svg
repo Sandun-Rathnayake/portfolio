@@ -1,0 +1,80 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bg-cargo" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#050c1e" />
+      <stop offset="50%" stop-color="#0c1d3d" />
+      <stop offset="100%" stop-color="#030712" />
+    </linearGradient>
+    <linearGradient id="card-cargo" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="rgba(255,255,255,0.06)" />
+      <stop offset="100%" stop-color="rgba(255,255,255,0.02)" />
+    </linearGradient>
+    <linearGradient id="route-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#00ffcc" />
+      <stop offset="50%" stop-color="#0088ff" />
+      <stop offset="100%" stop-color="#7000ff" />
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="800" height="450" fill="url(#bg-cargo)" />
+
+  <!-- World Map Grid Pattern -->
+  <g stroke="rgba(0, 212, 255, 0.07)" stroke-width="1">
+    <line x1="0" y1="100" x2="800" y2="100" />
+    <line x1="0" y1="200" x2="800" y2="200" />
+    <line x1="0" y1="300" x2="800" y2="300" />
+    <line x1="0" y1="400" x2="800" y2="400" />
+    <line x1="200" y1="0" x2="200" y2="450" />
+    <line x1="400" y1="0" x2="400" y2="450" />
+    <line x1="600" y1="0" x2="600" y2="450" />
+  </g>
+
+  <!-- Dashboard Window Frame -->
+  <rect x="40" y="30" width="720" height="390" rx="10" fill="rgba(8, 16, 36, 0.85)" stroke="rgba(0, 255, 204, 0.3)" stroke-width="1.5" />
+  
+  <!-- Header Bar -->
+  <rect x="40" y="30" width="720" height="40" rx="10" fill="rgba(255, 255, 255, 0.04)" />
+  <circle cx="70" cy="50" r="5" fill="#ff5f56" />
+  <circle cx="86" cy="50" r="5" fill="#ffbd2e" />
+  <circle cx="102" cy="50" r="5" fill="#27c93f" />
+  <text x="400" y="55" text-anchor="middle" fill="#00ffcc" font-family="monospace" font-size="13" font-weight="bold" letter-spacing="1">REAL-TIME CARGO TRACKING SYSTEM — LOGISTICS PLATFORM</text>
+
+  <!-- Global Route Curves -->
+  <path d="M 120 280 Q 280 80 480 240 T 680 180" fill="none" stroke="url(#route-grad)" stroke-width="3" stroke-dasharray="6 4" />
+  <path d="M 120 280 Q 280 80 480 240 T 680 180" fill="none" stroke="#00ffcc" stroke-width="8" opacity="0.15" />
+
+  <!-- Logistics Hub Nodes -->
+  <g>
+    <!-- Origin Hub -->
+    <circle cx="120" cy="280" r="8" fill="#00ffcc" />
+    <circle cx="120" cy="280" r="16" fill="none" stroke="#00ffcc" stroke-width="1.5" opacity="0.5" />
+    <text x="120" y="310" text-anchor="middle" fill="#00ffcc" font-family="monospace" font-size="10" font-weight="bold">COLOMBO HUB (LK)</text>
+  </g>
+
+  <g>
+    <!-- Transit Hub -->
+    <circle cx="480" cy="240" r="8" fill="#0088ff" />
+    <circle cx="480" cy="240" r="16" fill="none" stroke="#0088ff" stroke-width="1.5" opacity="0.5" />
+    <text x="480" y="270" text-anchor="middle" fill="#0088ff" font-family="monospace" font-size="10" font-weight="bold">ROTTERDAM PORT (NL)</text>
+  </g>
+
+  <g>
+    <!-- Destination Hub -->
+    <circle cx="680" cy="180" r="8" fill="#7000ff" />
+    <circle cx="680" cy="180" r="16" fill="none" stroke="#7000ff" stroke-width="1.5" opacity="0.5" />
+    <text x="680" y="210" text-anchor="middle" fill="#7000ff" font-family="monospace" font-size="10" font-weight="bold">LONDON GATEWAY (UK)</text>
+  </g>
+
+  <!-- Live Telemetry Stats Box -->
+  <rect x="70" y="90" width="220" height="110" rx="6" fill="url(#card-cargo)" stroke="rgba(0, 255, 204, 0.2)" stroke-width="1" />
+  <text x="85" y="115" fill="rgba(255,255,255,0.6)" font-family="monospace" font-size="9">SHIPMENT TRACKING ID</text>
+  <text x="85" y="138" fill="#00ffcc" font-family="monospace" font-size="14" font-weight="bold">LK-884092-EJB</text>
+  <text x="85" y="165" fill="rgba(255,255,255,0.6)" font-family="monospace" font-size="9">EJB Session State: OK</text>
+  <text x="85" y="185" fill="#27c93f" font-family="monospace" font-size="10" font-weight="bold">IN TRANSIT — ON SCHEDULE</text>
+
+  <!-- Container Status Overlay -->
+  <rect x="520" y="90" width="210" height="70" rx="6" fill="url(#card-cargo)" stroke="rgba(255,255,255,0.08)" stroke-width="1" />
+  <text x="535" y="115" fill="rgba(255,255,255,0.6)" font-family="monospace" font-size="9">REAL-TIME GPS TELEMETRY</text>
+  <text x="535" y="142" fill="#ffffff" font-family="sans-serif" font-size="14" font-weight="bold">51.9244° N, 4.4777° E</text>
+</svg>

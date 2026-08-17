@@ -1,0 +1,77 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bg-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#081026" />
+      <stop offset="50%" stop-color="#0f224a" />
+      <stop offset="100%" stop-color="#050a18" />
+    </linearGradient>
+    <linearGradient id="card-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="rgba(255,255,255,0.07)" />
+      <stop offset="100%" stop-color="rgba(255,255,255,0.02)" />
+    </linearGradient>
+    <linearGradient id="accent-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#00d4ff" />
+      <stop offset="100%" stop-color="#0055ff" />
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="800" height="450" fill="url(#bg-grad)" />
+
+  <!-- Grid lines -->
+  <g stroke="rgba(255,255,255,0.04)" stroke-width="1">
+    <line x1="0" y1="90" x2="800" y2="90" />
+    <line x1="0" y1="180" x2="800" y2="180" />
+    <line x1="0" y1="270" x2="800" y2="270" />
+    <line x1="0" y1="360" x2="800" y2="360" />
+    <line x1="160" y1="0" x2="160" y2="450" />
+    <line x1="320" y1="0" x2="320" y2="450" />
+    <line x1="480" y1="0" x2="480" y2="450" />
+    <line x1="640" y1="0" x2="640" y2="450" />
+  </g>
+
+  <!-- Dashboard Window Frame -->
+  <rect x="50" y="40" width="700" height="370" rx="10" fill="rgba(10, 20, 45, 0.8)" stroke="rgba(0, 212, 255, 0.3)" stroke-width="1.5" />
+  
+  <!-- Window Header -->
+  <rect x="50" y="40" width="700" height="40" rx="10" fill="rgba(255, 255, 255, 0.05)" />
+  <circle cx="80" cy="60" r="5" fill="#ff5f56" />
+  <circle cx="96" cy="60" r="5" fill="#ffbd2e" />
+  <circle cx="112" cy="60" r="5" fill="#27c93f" />
+  <text x="400" y="65" text-anchor="middle" fill="#00d4ff" font-family="monospace" font-size="13" font-weight="bold" letter-spacing="1">HOSPITAL MANAGEMENT SYSTEM — ENTERPRISE DASHBOARD</text>
+
+  <!-- Sidebar -->
+  <rect x="70" y="100" width="140" height="290" rx="6" fill="url(#card-grad)" stroke="rgba(255,255,255,0.08)" stroke-width="1" />
+  <rect x="85" y="120" width="110" height="24" rx="4" fill="rgba(0,212,255,0.2)" />
+  <text x="140" y="136" text-anchor="middle" fill="#00d4ff" font-family="monospace" font-size="10">► Overview</text>
+  <text x="140" y="175" text-anchor="middle" fill="rgba(255,255,255,0.5)" font-family="monospace" font-size="10">Paramedics</text>
+  <text x="140" y="215" text-anchor="middle" fill="rgba(255,255,255,0.5)" font-family="monospace" font-size="10">Patient Records</text>
+  <text x="140" y="255" text-anchor="middle" fill="rgba(255,255,255,0.5)" font-family="monospace" font-size="10">GRN Tracking</text>
+  <text x="140" y="295" text-anchor="middle" fill="rgba(255,255,255,0.5)" font-family="monospace" font-size="10">Equipment</text>
+  <text x="140" y="335" text-anchor="middle" fill="rgba(255,255,255,0.5)" font-family="monospace" font-size="10">RBAC Security</text>
+
+  <!-- Metric Cards -->
+  <rect x="230" y="100" width="150" height="80" rx="6" fill="url(#card-grad)" stroke="rgba(255,255,255,0.08)" stroke-width="1" />
+  <text x="245" y="125" fill="rgba(255,255,255,0.6)" font-family="monospace" font-size="10">Active Admissions</text>
+  <text x="245" y="155" fill="#ffffff" font-family="sans-serif" font-size="22" font-weight="bold">1,248</text>
+
+  <rect x="400" y="100" width="150" height="80" rx="6" fill="url(#card-grad)" stroke="rgba(255,255,255,0.08)" stroke-width="1" />
+  <text x="415" y="125" fill="rgba(255,255,255,0.6)" font-family="monospace" font-size="10">Paramedic On-Call</text>
+  <text x="415" y="155" fill="#00d4ff" font-family="sans-serif" font-size="22" font-weight="bold">24 Units</text>
+
+  <rect x="570" y="100" width="160" height="80" rx="6" fill="url(#card-grad)" stroke="rgba(255,255,255,0.08)" stroke-width="1" />
+  <text x="585" y="125" fill="rgba(255,255,255,0.6)" font-family="monospace" font-size="10">GRN Status</text>
+  <text x="585" y="155" fill="#27c93f" font-family="sans-serif" font-size="18" font-weight="bold">VERIFIED OK</text>
+
+  <!-- Main Patient Chart Area -->
+  <rect x="230" y="200" width="500" height="190" rx="6" fill="url(#card-grad)" stroke="rgba(0, 212, 255, 0.2)" stroke-width="1" />
+  <text x="250" y="225" fill="rgba(255,255,255,0.8)" font-family="monospace" font-size="11" font-weight="bold">Patient Intake &amp; Resource Occupancy Chart</text>
+
+  <!-- ECG / Vital Wave Line -->
+  <path d="M 250 310 L 300 310 L 315 260 L 330 350 L 345 240 L 360 310 L 420 310 L 435 270 L 450 330 L 465 250 L 480 310 L 540 310 L 555 260 L 570 340 L 585 310 L 710 310" fill="none" stroke="#00d4ff" stroke-width="2.5" />
+  <path d="M 250 310 L 300 310 L 315 260 L 330 350 L 345 240 L 360 310 L 420 310 L 435 270 L 450 330 L 465 250 L 480 310 L 540 310 L 555 260 L 570 340 L 585 310 L 710 310" fill="none" stroke="#00d4ff" stroke-width="8" opacity="0.2" />
+
+  <!-- Heartbeat Pulse Glow Spot -->
+  <circle cx="585" cy="310" r="6" fill="#00d4ff" />
+  <circle cx="585" cy="310" r="14" fill="none" stroke="#00d4ff" stroke-width="1.5" opacity="0.6" />
+</svg>
