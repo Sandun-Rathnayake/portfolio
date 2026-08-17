@@ -3,20 +3,23 @@
  * All physics/visual parameters live in CFG — the control panel can mutate it.
  */
 (function () {
-  'use strict';
+  "use strict";
 
-  const canvas = document.getElementById('three-canvas');
-  if (!canvas || typeof THREE === 'undefined') return;
+  const canvas = document.getElementById("three-canvas");
+  if (!canvas || typeof THREE === "undefined") return;
 
   /* ── renderer ── */
   const renderer = new THREE.WebGLRenderer({
-    canvas, antialias: false, alpha: false, powerPreference: 'high-performance',
+    canvas,
+    antialias: false,
+    alpha: false,
+    powerPreference: "high-performance",
   });
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
   renderer.setClearColor(0x000000, 1);
 
-  const scene  = new THREE.Scene();
-  scene.fog    = new THREE.Fog(0x060c24, 2.0, 50.0);
+  const scene = new THREE.Scene();
+  scene.fog = new THREE.Fog(0x060c24, 2.0, 50.0);
   const camera = new THREE.PerspectiveCamera(55, 1, 0.1, 500);
   camera.position.z = 42;
 
@@ -25,53 +28,53 @@
   ══════════════════════════════════════════════════════════════ */
   const CFG = {
     /* ── sphere / corona ── */
-    sphereR:      2.4,
-    shieldR:      6.2,
-    lightR:       23.0,
-    pulseSpeed:   0.65,
-    pulseAmt:     0.075,
-    coronaScale:  .95,        // Corona overall size scale
-    coronaGlow:   3.0,        // Corona glow opacity
-    coronaRim:    3.0,        // Eclipse rim ring intensity
+    sphereR: 2.4,
+    shieldR: 6.2,
+    lightR: 23.0,
+    pulseSpeed: 0.65,
+    pulseAmt: 0.075,
+    coronaScale: 0.95, // Corona overall size scale
+    coronaGlow: 3.0, // Corona glow opacity
+    coronaRim: 3.0, // Eclipse rim ring intensity
 
     /* ── rectangles ── */
-    particleCount: 20000,      // 500–5000 (requires rebuildCount)
-    minLen:        0.60,
-    maxLen:        7.5,
-    minWid:        0.066,
-    maxWid:        0.120,
-    stripFlex:     1.0,        // Snake-like bending flexibility (0.0=rigid, 1.0=curved, 2.0=snake)
+    particleCount: 20000, // 500–5000 (requires rebuildCount)
+    minLen: 0.6,
+    maxLen: 7.5,
+    minWid: 0.066,
+    maxWid: 0.12,
+    stripFlex: 1.0, // Snake-like bending flexibility (0.0=rigid, 1.0=curved, 2.0=snake)
 
     /* ── flow physics ── */
-    upward:        0.0078,
-    damping:       0.865,
-    swirlK:        0.027,
-    noiseF:        0.0180,
-    noiseS:        0.048,
-    noiseT:        0.09,
-    alignK:        0.012,
-    cohereK:       0.018,
-    shieldK:       0.52,
-    slowZone:      3.5,
+    upward: 0.0078,
+    damping: 0.865,
+    swirlK: 0.027,
+    noiseF: 0.018,
+    noiseS: 0.048,
+    noiseT: 0.09,
+    alignK: 0.012,
+    cohereK: 0.018,
+    shieldK: 0.52,
+    slowZone: 3.5,
 
     /* ── 3D Spreading & Depth (X, Y, Z) ── */
-    xSpread:       90.0,      // X width range
-    ySpread:       52.0,      // Y height range
-    zSpread:       9.0,      // Z depth range
-    zBias:        -0.80,      // Depth bias: negative = more particles at the BACK, fewer in FRONT
+    xSpread: 90.0, // X width range
+    ySpread: 52.0, // Y height range
+    zSpread: 9.0, // Z depth range
+    zBias: -0.8, // Depth bias: negative = more particles at the BACK, fewer in FRONT
 
     /* ── lighting ── */
-    briBoost:      0.5,
-    falloffPow:    5.0,       // 1=linear 2=sqr 3=cubic 4=quartic
-    colorWarm:     0.0,       // 0=cool blue 1=warm white
+    briBoost: 0.5,
+    falloffPow: 5.0, // 1=linear 2=sqr 3=cubic 4=quartic
+    colorWarm: 0.0, // 0=cool blue 1=warm white
 
     /* ── atmospheric fog & background colors ── */
-    fogEnable:     1,          // 1 = Enabled, 0 = Disabled
-    fogDensity:    0.50,       // Fog intensity (0.0 to 3.0)
-    fogNear:       2.0,        // Depth behind sphere where fog starts
-    fogFar:        25.0,       // Depth behind sphere for max fog
-    fogColor:      '#0b009e',  // Fog color (customizable from control panel)
-    bgColor:       '#040714',  // Full screen background color (customizable)
+    fogEnable: 1, // 1 = Enabled, 0 = Disabled
+    fogDensity: 0.5, // Fog intensity (0.0 to 3.0)
+    fogNear: 2.0, // Depth behind sphere where fog starts
+    fogFar: 25.0, // Depth behind sphere for max fog
+    fogColor: "#0b009e", // Fog color (customizable from control panel)
+    bgColor: "#040714", // Full screen background color (customizable)
   };
 
   /* ══════════════════════════════════════════════════════════════
@@ -82,17 +85,30 @@
     return n - Math.floor(n);
   }
   function vnoise(x, y) {
-    const ix = Math.floor(x), iy = Math.floor(y);
-    const fx = x - ix, fy = y - iy;
-    const ux = fx * fx * (3 - 2 * fx), uy = fy * fy * (3 - 2 * fy);
-    return hash21(ix,iy) + (hash21(ix+1,iy)-hash21(ix,iy))*ux
-         + (hash21(ix,iy+1)-hash21(ix,iy))*uy
-         + (hash21(ix+1,iy+1)-hash21(ix+1,iy)-hash21(ix,iy+1)+hash21(ix,iy))*ux*uy;
+    const ix = Math.floor(x),
+      iy = Math.floor(y);
+    const fx = x - ix,
+      fy = y - iy;
+    const ux = fx * fx * (3 - 2 * fx),
+      uy = fy * fy * (3 - 2 * fy);
+    return (
+      hash21(ix, iy) +
+      (hash21(ix + 1, iy) - hash21(ix, iy)) * ux +
+      (hash21(ix, iy + 1) - hash21(ix, iy)) * uy +
+      (hash21(ix + 1, iy + 1) -
+        hash21(ix + 1, iy) -
+        hash21(ix, iy + 1) +
+        hash21(ix, iy)) *
+        ux *
+        uy
+    );
   }
   function curl2(x, y, t) {
     const e = 0.08;
-    const n0 = vnoise(x, y+t), nx = vnoise(x+e, y+t), ny = vnoise(x, y+e+t);
-    return { cx: (ny-n0)/e, cy: -(nx-n0)/e };
+    const n0 = vnoise(x, y + t),
+      nx = vnoise(x + e, y + t),
+      ny = vnoise(x, y + e + t);
+    return { cx: (ny - n0) / e, cy: -(nx - n0) / e };
   }
 
   /* ══════════════════════════════════════════════════════════════
@@ -106,13 +122,15 @@
      is invisible and the rim glow is only at the sphere edge.
   ══════════════════════════════════════════════════════════════ */
   function makeEclipseTex(res, stops) {
-    const c = document.createElement('canvas');
+    const c = document.createElement("canvas");
     c.width = c.height = res;
-    const ctx = c.getContext('2d');
+    const ctx = c.getContext("2d");
     const half = res / 2;
-    ctx.clearRect(0, 0, res, res);               // fully transparent background
+    ctx.clearRect(0, 0, res, res); // fully transparent background
     const g = ctx.createRadialGradient(half, half, 0, half, half, half);
-    stops.forEach(([t, col]) => g.addColorStop(Math.max(0, Math.min(1, t)), col));
+    stops.forEach(([t, col]) =>
+      g.addColorStop(Math.max(0, Math.min(1, t)), col),
+    );
     ctx.fillStyle = g;
     ctx.fillRect(0, 0, res, res);
     return new THREE.CanvasTexture(c);
@@ -120,14 +138,16 @@
 
   /* ── Directional Rim Texture for Top-Left (-135°) & Bottom-Right (45°) Crescent Shine ── */
   function makeAsymmetricRimTex(res, stops) {
-    const c = document.createElement('canvas');
+    const c = document.createElement("canvas");
     c.width = c.height = res;
-    const ctx = c.getContext('2d');
+    const ctx = c.getContext("2d");
     const half = res / 2;
     ctx.clearRect(0, 0, res, res);
 
     const g = ctx.createRadialGradient(half, half, 0, half, half, half);
-    stops.forEach(([t, col]) => g.addColorStop(Math.max(0, Math.min(1, t)), col));
+    stops.forEach(([t, col]) =>
+      g.addColorStop(Math.max(0, Math.min(1, t)), col),
+    );
     ctx.fillStyle = g;
     ctx.fillRect(0, 0, res, res);
 
@@ -139,11 +159,14 @@
       const dy = y - half;
       for (let x = 0; x < res; x++) {
         const dx = x - half;
-        const dist = Math.sqrt(dx*dx + dy*dy);
+        const dist = Math.sqrt(dx * dx + dy * dy);
         if (dist > 0) {
           const theta = Math.atan2(dy, dx);
           // Angle -135° (Top-Left) & 45° (Bottom-Right) crescent arc
-          const angleFactor = Math.pow(Math.abs(Math.cos(theta - (-2.35619))), 2.2);
+          const angleFactor = Math.pow(
+            Math.abs(Math.cos(theta - -2.35619)),
+            2.2,
+          );
 
           const idx = (y * res + x) * 4;
           data[idx + 3] = Math.floor(data[idx + 3] * angleFactor);
@@ -161,57 +184,80 @@
   const SR = CFG.sphereR; // 2.4
 
   function addCoronaLayer(planeHalf, stops, order, isAsymmetric) {
-    const tex = isAsymmetric ? makeAsymmetricRimTex(1024, stops) : makeEclipseTex(1024, stops);
+    const tex = isAsymmetric
+      ? makeAsymmetricRimTex(1024, stops)
+      : makeEclipseTex(1024, stops);
     const m = new THREE.Mesh(
       new THREE.PlaneGeometry(planeHalf * 2, planeHalf * 2),
       new THREE.MeshBasicMaterial({
-        map: tex, transparent: true,
-        blending: THREE.AdditiveBlending, depthWrite: false, depthTest: false,
-      })
+        map: tex,
+        transparent: true,
+        blending: THREE.AdditiveBlending,
+        depthWrite: false,
+        depthTest: false,
+      }),
     );
     m.renderOrder = order;
     coronaGroup.add(m);
     return m;
   }
 
-  const PH0 = SR * 3.2, SF0 = 1 / 3.2;  // Thin bright white-cyan rim
-  const PH1 = SR * 7.5, SF1 = 1 / 7.5;  // Inner soft blue bloom
-  const PH2 = SR * 18.0, SF2 = 1 / 18.0; // Outer atmosphere haze
+  const PH0 = SR * 3.2,
+    SF0 = 1 / 3.2; // Thin bright white-cyan rim
+  const PH1 = SR * 7.5,
+    SF1 = 1 / 7.5; // Inner soft blue bloom
+  const PH2 = SR * 18.0,
+    SF2 = 1 / 18.0; // Outer atmosphere haze
 
   const coronaMeshes = [
     /* 0 — Tight bright white-cyan crescent rim ring (Top-Left & Bottom-Right) */
-    addCoronaLayer(PH0, [
-      [0.00,           'rgba(  0,  0,  0, 0.00)'],
-      [SF0 * 0.88,     'rgba(  0,  0,  0, 0.00)'],
-      [SF0 * 0.96,     'rgba(215,240,255, 0.40)'],
-      [SF0,            'rgba(255,255,255, 1.00)'],  // ← BRIGHT pure white crescent rim at sphere edge
-      [SF0 * 1.08,     'rgba(195,230,255, 0.82)'],
-      [SF0 * 1.25,     'rgba(145,200,255, 0.50)'],
-      [SF0 * 1.55,     'rgba( 85,160,255, 0.22)'],
-      [SF0 * 2.20,     'rgba( 40,110,230, 0.06)'],
-      [1.00,           'rgba(  0,  0,  0, 0.00)'],
-    ], 4, true),
+    addCoronaLayer(
+      PH0,
+      [
+        [0.0, "rgba(  0,  0,  0, 0.00)"],
+        [SF0 * 0.88, "rgba(  0,  0,  0, 0.00)"],
+        [SF0 * 0.96, "rgba(215,240,255, 0.40)"],
+        [SF0, "rgba(255,255,255, 1.00)"], // ← BRIGHT pure white crescent rim at sphere edge
+        [SF0 * 1.08, "rgba(195,230,255, 0.82)"],
+        [SF0 * 1.25, "rgba(145,200,255, 0.50)"],
+        [SF0 * 1.55, "rgba( 85,160,255, 0.22)"],
+        [SF0 * 2.2, "rgba( 40,110,230, 0.06)"],
+        [1.0, "rgba(  0,  0,  0, 0.00)"],
+      ],
+      4,
+      true,
+    ),
 
     /* 1 — Inner soft violet-blue crescent bloom (Top-Left & Bottom-Right) */
-    addCoronaLayer(PH1, [
-      [0.00,           'rgba(  0,  0,  0, 0.00)'],
-      [SF1 * 0.88,     'rgba(  0,  0,  0, 0.00)'],
-      [SF1,            'rgba(165,200,255, 0.45)'],
-      [SF1 * 1.35,     'rgba(125,170,255, 0.28)'],
-      [SF1 * 2.00,     'rgba( 75,130,240, 0.12)'],
-      [SF1 * 3.20,     'rgba( 35, 80,200, 0.04)'],
-      [1.00,           'rgba(  0,  0,  0, 0.00)'],
-    ], 3, true),
+    addCoronaLayer(
+      PH1,
+      [
+        [0.0, "rgba(  0,  0,  0, 0.00)"],
+        [SF1 * 0.88, "rgba(  0,  0,  0, 0.00)"],
+        [SF1, "rgba(165,200,255, 0.45)"],
+        [SF1 * 1.35, "rgba(125,170,255, 0.28)"],
+        [SF1 * 2.0, "rgba( 75,130,240, 0.12)"],
+        [SF1 * 3.2, "rgba( 35, 80,200, 0.04)"],
+        [1.0, "rgba(  0,  0,  0, 0.00)"],
+      ],
+      3,
+      true,
+    ),
 
     /* 2 — Outer atmosphere haze */
-    addCoronaLayer(PH2, [
-      [0.00,           'rgba(  0,  0,  0, 0.00)'],
-      [SF2 * 0.85,     'rgba(  0,  0,  0, 0.00)'],
-      [SF2,            'rgba(110,150,240, 0.18)'],
-      [SF2 * 2.0,      'rgba( 45, 90,200, 0.08)'],
-      [SF2 * 4.0,      'rgba( 18, 45,140, 0.02)'],
-      [1.00,           'rgba(  0,  0,  0, 0.00)'],
-    ], 2, false),
+    addCoronaLayer(
+      PH2,
+      [
+        [0.0, "rgba(  0,  0,  0, 0.00)"],
+        [SF2 * 0.85, "rgba(  0,  0,  0, 0.00)"],
+        [SF2, "rgba(110,150,240, 0.18)"],
+        [SF2 * 2.0, "rgba( 45, 90,200, 0.08)"],
+        [SF2 * 4.0, "rgba( 18, 45,140, 0.02)"],
+        [1.0, "rgba(  0,  0,  0, 0.00)"],
+      ],
+      2,
+      false,
+    ),
   ];
 
   /* ── 2. DARK NAVY SPHERE WITH RADIAL GRADIENT & FRESNEL ── */
@@ -262,39 +308,47 @@
 
   const sphereMesh = new THREE.Mesh(
     new THREE.SphereGeometry(SR, 128, 128),
-    sphereMat
+    sphereMat,
   );
   sphereMesh.renderOrder = 10;
   scene.add(sphereMesh);
-
 
   /* ══════════════════════════════════════════════════════════════
      RECTANGLE SWARM — filled quads, up to MAX_P particles
   ══════════════════════════════════════════════════════════════ */
   const MAX_P = 35000;
-  const VPR   = 24; // verts per strip (4 quad segments = 8 triangles = 24 verts)
+  const VPR = 24; // verts per strip (4 quad segments = 8 triangles = 24 verts)
 
-  const posArr  = new Float32Array(MAX_P * VPR * 3);
-  const colArr  = new Float32Array(MAX_P * VPR * 3);
+  const posArr = new Float32Array(MAX_P * VPR * 3);
+  const colArr = new Float32Array(MAX_P * VPR * 3);
   const normArr = new Float32Array(MAX_P * VPR * 3);
 
   const rectGeo = new THREE.BufferGeometry();
-  rectGeo.setAttribute('position', new THREE.BufferAttribute(posArr, 3).setUsage(THREE.DynamicDrawUsage));
-  rectGeo.setAttribute('color',    new THREE.BufferAttribute(colArr, 3).setUsage(THREE.DynamicDrawUsage));
-  rectGeo.setAttribute('normal',   new THREE.BufferAttribute(normArr, 3).setUsage(THREE.DynamicDrawUsage));
+  rectGeo.setAttribute(
+    "position",
+    new THREE.BufferAttribute(posArr, 3).setUsage(THREE.DynamicDrawUsage),
+  );
+  rectGeo.setAttribute(
+    "color",
+    new THREE.BufferAttribute(colArr, 3).setUsage(THREE.DynamicDrawUsage),
+  );
+  rectGeo.setAttribute(
+    "normal",
+    new THREE.BufferAttribute(normArr, 3).setUsage(THREE.DynamicDrawUsage),
+  );
 
   /* ── SOLID METALLIC SHADER MATERIAL ───────────────────────────────
      Solid (transparent: false, depthWrite: true) metallic shader
      with specular reflection from central eclipse and Fresnel rim shine. */
   const rectMat = new THREE.ShaderMaterial({
     uniforms: {
-      uLightPos:   { value: new THREE.Vector3(0, 0, 0) },
-      uCameraPos:  { value: camera.position },
-      uFogEnable:  { value: CFG.fogEnable  !== undefined ? CFG.fogEnable  : 1.0 },
-      uFogNear:    { value: CFG.fogNear    || 2.0 },
-      uFogFar:     { value: CFG.fogFar     || 25.0 },
-      uFogDensity: { value: CFG.fogDensity || 0.80 },
-      uFogColor:   { value: new THREE.Color(CFG.fogColor || '#0e1b40') },
+      uLightPos: { value: new THREE.Vector3(0, 0, 0) },
+      uCameraPos: { value: camera.position },
+      uFogEnable: { value: CFG.fogEnable !== undefined ? CFG.fogEnable : 1.0 },
+      uFogNear: { value: CFG.fogNear || 2.0 },
+      uFogFar: { value: CFG.fogFar || 25.0 },
+      uFogDensity: { value: CFG.fogDensity || 0.8 },
+      uFogColor: { value: new THREE.Color(CFG.fogColor || "#0e1b40") },
     },
     vertexShader: `
       attribute vec3 color;
@@ -385,10 +439,10 @@
   /* ── Background Volumetric Light-Illuminated Fog Plane ── */
   const bgFogMat = new THREE.ShaderMaterial({
     uniforms: {
-      uFogEnable:     { value: CFG.fogEnable  !== undefined ? CFG.fogEnable  : 1.0 },
-      uFogDensity:    { value: CFG.fogDensity || 0.80 },
-      uFogColor:      { value: new THREE.Color(CFG.fogColor || '#0e1b40') },
-      uPulse:         { value: 1.0 },
+      uFogEnable: { value: CFG.fogEnable !== undefined ? CFG.fogEnable : 1.0 },
+      uFogDensity: { value: CFG.fogDensity || 0.8 },
+      uFogColor: { value: new THREE.Color(CFG.fogColor || "#0e1b40") },
+      uPulse: { value: 1.0 },
     },
     vertexShader: `
       varying vec2 vUv;
@@ -433,37 +487,35 @@
     blending: THREE.AdditiveBlending,
   });
 
-  const bgFogMesh = new THREE.Mesh(
-    new THREE.PlaneGeometry(160, 160),
-    bgFogMat
-  );
+  const bgFogMesh = new THREE.Mesh(new THREE.PlaneGeometry(160, 160), bgFogMat);
   bgFogMesh.position.z = -30.0;
   bgFogMesh.renderOrder = 0;
   scene.add(bgFogMesh);
 
   /* Per-particle state (allocated for MAX_P) */
-  const px    = new Float32Array(MAX_P);
-  const py    = new Float32Array(MAX_P);
-  const pz    = new Float32Array(MAX_P);
-  const pvx   = new Float32Array(MAX_P);
-  const pvy   = new Float32Array(MAX_P);
-  const pvz   = new Float32Array(MAX_P);
-  const pLen  = new Float32Array(MAX_P);
-  const pWid  = new Float32Array(MAX_P);
+  const px = new Float32Array(MAX_P);
+  const py = new Float32Array(MAX_P);
+  const pz = new Float32Array(MAX_P);
+  const pvx = new Float32Array(MAX_P);
+  const pvy = new Float32Array(MAX_P);
+  const pvz = new Float32Array(MAX_P);
+  const pLen = new Float32Array(MAX_P);
+  const pWid = new Float32Array(MAX_P);
   const pSeed = new Float32Array(MAX_P);
   /* smoothed velocity & orientation direction per particle (for 0 shaking + 4-joint snake bending) */
-  const svx   = new Float32Array(MAX_P);
-  const svy   = new Float32Array(MAX_P);
-  const pdx   = new Float32Array(MAX_P);
-  const pdy   = new Float32Array(MAX_P);
-  const ptx   = new Float32Array(MAX_P);
-  const pty   = new Float32Array(MAX_P);
+  const svx = new Float32Array(MAX_P);
+  const svy = new Float32Array(MAX_P);
+  const pdx = new Float32Array(MAX_P);
+  const pdy = new Float32Array(MAX_P);
+  const ptx = new Float32Array(MAX_P);
+  const pty = new Float32Array(MAX_P);
 
   /* Spawn a single particle anywhere across the full screen, starting below.
      On initial fill we distribute across the full height so the screen
      isn't empty at the beginning.                                          */
   function spawn(i, fullHeight) {
-    const { minLen, maxLen, minWid, maxWid, xSpread, ySpread, zSpread, zBias } = CFG;
+    const { minLen, maxLen, minWid, maxWid, xSpread, ySpread, zSpread, zBias } =
+      CFG;
     /* full viewport width xSpread */
     px[i] = (Math.random() - 0.5) * xSpread;
     /* normal respawn: enter from below; initial fill: anywhere on screen */
@@ -475,18 +527,18 @@
     pz[i] = (Math.random() - 0.5) * zSpread + zOffset;
 
     pvx[i] = (Math.random() - 0.5) * 0.04;
-    pvy[i] =  0.02 + Math.random() * 0.05;   // upward
+    pvy[i] = 0.02 + Math.random() * 0.05; // upward
     pvz[i] = (Math.random() - 0.5) * 0.015;
 
-    pLen[i]  = minLen + Math.random() * (maxLen - minLen);
-    pWid[i]  = minWid + Math.random() * (maxWid - minWid);
+    pLen[i] = minLen + Math.random() * (maxLen - minLen);
+    pWid[i] = minWid + Math.random() * (maxWid - minWid);
     pSeed[i] = Math.random() * 600;
-    svx[i]   = pvx[i];
-    svy[i]   = pvy[i];
-    pdx[i]   = 0;   // head direction (starts pointing up)
-    pdy[i]   = 1;
-    ptx[i]   = 0;   // tail direction
-    pty[i]   = 1;
+    svx[i] = pvx[i];
+    svy[i] = pvy[i];
+    pdx[i] = 0; // head direction (starts pointing up)
+    pdy[i] = 1;
+    ptx[i] = 0; // tail direction
+    pty[i] = 1;
   }
   function rebuildSizes() {
     const N = CFG.particleCount;
@@ -509,127 +561,289 @@
 
   /* ── resize ── */
   function onResize() {
-    const w = window.innerWidth, h = window.innerHeight;
+    const w = window.innerWidth,
+      h = window.innerHeight;
     renderer.setSize(w, h, false);
     camera.aspect = w / h;
     camera.updateProjectionMatrix();
   }
   onResize();
-  window.addEventListener('resize', onResize);
+  window.addEventListener("resize", onResize);
 
   /* ── 4-segment multi-joint ribbon writer for continuous snake-like bending ── */
-  function writeSnakeRibbon(base, n0x,n0y, n1x,n1y, n2x,n2y, n3x,n3y, n4x,n4y, d0x,d0y, d1x,d1y, d2x,d2y, d3x,d3y, d4x,d4y, W, cz, r, g, b, td) {
+  function writeSnakeRibbon(
+    base,
+    n0x,
+    n0y,
+    n1x,
+    n1y,
+    n2x,
+    n2y,
+    n3x,
+    n3y,
+    n4x,
+    n4y,
+    d0x,
+    d0y,
+    d1x,
+    d1y,
+    d2x,
+    d2y,
+    d3x,
+    d3y,
+    d4x,
+    d4y,
+    W,
+    cz,
+    r,
+    g,
+    b,
+    td,
+  ) {
     /* Perpendicular vectors at all 5 nodes */
-    const p0x = -d0y * W, p0y =  d0x * W;
-    const p1x = -d1y * W, p1y =  d1x * W;
-    const p2x = -d2y * W, p2y =  d2x * W;
-    const p3x = -d3y * W, p3y =  d3x * W;
-    const p4x = -d4y * W, p4y =  d4x * W;
+    const p0x = -d0y * W,
+      p0y = d0x * W;
+    const p1x = -d1y * W,
+      p1y = d1x * W;
+    const p2x = -d2y * W,
+      p2y = d2x * W;
+    const p3x = -d3y * W,
+      p3y = d3x * W;
+    const p4x = -d4y * W,
+      p4y = d4x * W;
 
     /* Left and Right positions at all 5 nodes */
-    const L0x = n0x + p0x, L0y = n0y + p0y, R0x = n0x - p0x, R0y = n0y - p0y;
-    const L1x = n1x + p1x, L1y = n1y + p1y, R1x = n1x - p1x, R1y = n1y - p1y;
-    const L2x = n2x + p2x, L2y = n2y + p2y, R2x = n2x - p2x, R2y = n2y - p2y;
-    const L3x = n3x + p3x, L3y = n3y + p3y, R3x = n3x - p3x, R3y = n3y - p3y;
-    const L4x = n4x + p4x, L4y = n4y + p4y, R4x = n4x - p4x, R4y = n4y - p4y;
+    const L0x = n0x + p0x,
+      L0y = n0y + p0y,
+      R0x = n0x - p0x,
+      R0y = n0y - p0y;
+    const L1x = n1x + p1x,
+      L1y = n1y + p1y,
+      R1x = n1x - p1x,
+      R1y = n1y - p1y;
+    const L2x = n2x + p2x,
+      L2y = n2y + p2y,
+      R2x = n2x - p2x,
+      R2y = n2y - p2y;
+    const L3x = n3x + p3x,
+      L3y = n3y + p3y,
+      R3x = n3x - p3x,
+      R3y = n3y - p3y;
+    const L4x = n4x + p4x,
+      L4y = n4y + p4y,
+      R4x = n4x - p4x,
+      R4y = n4y - p4y;
 
     /* Segment 1: Node 0 -> Node 1 */
-    posArr[base]    = L0x; posArr[base+1]  = L0y; posArr[base+2]  = cz;
-    posArr[base+3]  = R0x; posArr[base+4]  = R0y; posArr[base+5]  = cz;
-    posArr[base+6]  = R1x; posArr[base+7]  = R1y; posArr[base+8]  = cz;
+    posArr[base] = L0x;
+    posArr[base + 1] = L0y;
+    posArr[base + 2] = cz;
+    posArr[base + 3] = R0x;
+    posArr[base + 4] = R0y;
+    posArr[base + 5] = cz;
+    posArr[base + 6] = R1x;
+    posArr[base + 7] = R1y;
+    posArr[base + 8] = cz;
 
-    posArr[base+9]  = L0x; posArr[base+10] = L0y; posArr[base+11] = cz;
-    posArr[base+12] = R1x; posArr[base+13] = R1y; posArr[base+14] = cz;
-    posArr[base+15] = L1x; posArr[base+16] = L1y; posArr[base+17] = cz;
+    posArr[base + 9] = L0x;
+    posArr[base + 10] = L0y;
+    posArr[base + 11] = cz;
+    posArr[base + 12] = R1x;
+    posArr[base + 13] = R1y;
+    posArr[base + 14] = cz;
+    posArr[base + 15] = L1x;
+    posArr[base + 16] = L1y;
+    posArr[base + 17] = cz;
 
     /* Segment 2: Node 1 -> Node 2 */
-    posArr[base+18] = L1x; posArr[base+19] = L1y; posArr[base+20] = cz;
-    posArr[base+21] = R1x; posArr[base+22] = R1y; posArr[base+23] = cz;
-    posArr[base+24] = R2x; posArr[base+25] = R2y; posArr[base+26] = cz;
+    posArr[base + 18] = L1x;
+    posArr[base + 19] = L1y;
+    posArr[base + 20] = cz;
+    posArr[base + 21] = R1x;
+    posArr[base + 22] = R1y;
+    posArr[base + 23] = cz;
+    posArr[base + 24] = R2x;
+    posArr[base + 25] = R2y;
+    posArr[base + 26] = cz;
 
-    posArr[base+27] = L1x; posArr[base+28] = L1y; posArr[base+29] = cz;
-    posArr[base+30] = R2x; posArr[base+31] = R2y; posArr[base+32] = cz;
-    posArr[base+33] = L2x; posArr[base+34] = L2y; posArr[base+35] = cz;
+    posArr[base + 27] = L1x;
+    posArr[base + 28] = L1y;
+    posArr[base + 29] = cz;
+    posArr[base + 30] = R2x;
+    posArr[base + 31] = R2y;
+    posArr[base + 32] = cz;
+    posArr[base + 33] = L2x;
+    posArr[base + 34] = L2y;
+    posArr[base + 35] = cz;
 
     /* Segment 3: Node 2 -> Node 3 */
-    posArr[base+36] = L2x; posArr[base+37] = L2y; posArr[base+38] = cz;
-    posArr[base+39] = R2x; posArr[base+40] = R2y; posArr[base+41] = cz;
-    posArr[base+42] = R3x; posArr[base+43] = R3y; posArr[base+44] = cz;
+    posArr[base + 36] = L2x;
+    posArr[base + 37] = L2y;
+    posArr[base + 38] = cz;
+    posArr[base + 39] = R2x;
+    posArr[base + 40] = R2y;
+    posArr[base + 41] = cz;
+    posArr[base + 42] = R3x;
+    posArr[base + 43] = R3y;
+    posArr[base + 44] = cz;
 
-    posArr[base+45] = L2x; posArr[base+46] = L2y; posArr[base+47] = cz;
-    posArr[base+48] = R3x; posArr[base+49] = R3y; posArr[base+50] = cz;
-    posArr[base+51] = L3x; posArr[base+52] = L3y; posArr[base+53] = cz;
+    posArr[base + 45] = L2x;
+    posArr[base + 46] = L2y;
+    posArr[base + 47] = cz;
+    posArr[base + 48] = R3x;
+    posArr[base + 49] = R3y;
+    posArr[base + 50] = cz;
+    posArr[base + 51] = L3x;
+    posArr[base + 52] = L3y;
+    posArr[base + 53] = cz;
 
     /* Segment 4: Node 3 -> Node 4 */
-    posArr[base+54] = L3x; posArr[base+55] = L3y; posArr[base+56] = cz;
-    posArr[base+57] = R3x; posArr[base+58] = R3y; posArr[base+59] = cz;
-    posArr[base+60] = R4x; posArr[base+61] = R4y; posArr[base+62] = cz;
+    posArr[base + 54] = L3x;
+    posArr[base + 55] = L3y;
+    posArr[base + 56] = cz;
+    posArr[base + 57] = R3x;
+    posArr[base + 58] = R3y;
+    posArr[base + 59] = cz;
+    posArr[base + 60] = R4x;
+    posArr[base + 61] = R4y;
+    posArr[base + 62] = cz;
 
-    posArr[base+63] = L3x; posArr[base+64] = L3y; posArr[base+65] = cz;
-    posArr[base+66] = R4x; posArr[base+67] = R4y; posArr[base+68] = cz;
-    posArr[base+69] = L4x; posArr[base+70] = L4y; posArr[base+71] = cz;
+    posArr[base + 63] = L3x;
+    posArr[base + 64] = L3y;
+    posArr[base + 65] = cz;
+    posArr[base + 66] = R4x;
+    posArr[base + 67] = R4y;
+    posArr[base + 68] = cz;
+    posArr[base + 69] = L4x;
+    posArr[base + 70] = L4y;
+    posArr[base + 71] = cz;
 
     /* Normals across the 4 segments */
-    const rNx0 = -d1y * 0.40, rNy0 = d1x * 0.40, inv0 = 1.0 / Math.sqrt(rNx0*rNx0 + rNy0*rNy0 + 0.8281);
-    const nx0 = rNx0 * inv0, ny0 = rNy0 * inv0, nz0 = 0.91 * inv0;
+    const rNx0 = -d1y * 0.4,
+      rNy0 = d1x * 0.4,
+      inv0 = 1.0 / Math.sqrt(rNx0 * rNx0 + rNy0 * rNy0 + 0.8281);
+    const nx0 = rNx0 * inv0,
+      ny0 = rNy0 * inv0,
+      nz0 = 0.91 * inv0;
 
-    const rNx1 = -d3y * 0.40, rNy1 = d3x * 0.40, inv1 = 1.0 / Math.sqrt(rNx1*rNx1 + rNy1*rNy1 + 0.8281);
-    const nx1 = rNx1 * inv1, ny1 = rNy1 * inv1, nz1 = 0.91 * inv1;
+    const rNx1 = -d3y * 0.4,
+      rNy1 = d3x * 0.4,
+      inv1 = 1.0 / Math.sqrt(rNx1 * rNx1 + rNy1 * rNy1 + 0.8281);
+    const nx1 = rNx1 * inv1,
+      ny1 = rNy1 * inv1,
+      nz1 = 0.91 * inv1;
 
     for (let k = 0; k < 12; k++) {
       const idx = base + k * 3;
-      normArr[idx] = nx0; normArr[idx+1] = ny0; normArr[idx+2] = nz0;
+      normArr[idx] = nx0;
+      normArr[idx + 1] = ny0;
+      normArr[idx + 2] = nz0;
     }
     for (let k = 12; k < 24; k++) {
       const idx = base + k * 3;
-      normArr[idx] = nx1; normArr[idx+1] = ny1; normArr[idx+2] = nz1;
+      normArr[idx] = nx1;
+      normArr[idx + 1] = ny1;
+      normArr[idx + 2] = nz1;
     }
 
     /* Metallic colors gradient along the 5 nodes */
-    const tSide = td, tSpec = td * 3.0, hOpp = 0.55, hSpec = 1.00;
+    const tSide = td,
+      tSpec = td * 3.0,
+      hOpp = 0.55,
+      hSpec = 1.0;
 
     /* Seg 1 (Tail) */
-    colArr[base]    = r*tSpec;     colArr[base+1]  = g*tSpec;     colArr[base+2]  = b*tSpec;
-    colArr[base+3]  = r*tSide;     colArr[base+4]  = g*tSide;     colArr[base+5]  = b*tSide;
-    colArr[base+6]  = r*hOpp*0.4;  colArr[base+7]  = g*hOpp*0.4;  colArr[base+8]  = b*hOpp*0.4;
+    colArr[base] = r * tSpec;
+    colArr[base + 1] = g * tSpec;
+    colArr[base + 2] = b * tSpec;
+    colArr[base + 3] = r * tSide;
+    colArr[base + 4] = g * tSide;
+    colArr[base + 5] = b * tSide;
+    colArr[base + 6] = r * hOpp * 0.4;
+    colArr[base + 7] = g * hOpp * 0.4;
+    colArr[base + 8] = b * hOpp * 0.4;
 
-    colArr[base+9]  = r*tSpec;     colArr[base+10] = g*tSpec;     colArr[base+11] = b*tSpec;
-    colArr[base+12] = r*hOpp*0.4;  colArr[base+13] = g*hOpp*0.4;  colArr[base+14] = b*hOpp*0.4;
-    colArr[base+15] = r*hSpec*0.4; colArr[base+16] = g*hSpec*0.4; colArr[base+17] = b*hSpec*0.4;
+    colArr[base + 9] = r * tSpec;
+    colArr[base + 10] = g * tSpec;
+    colArr[base + 11] = b * tSpec;
+    colArr[base + 12] = r * hOpp * 0.4;
+    colArr[base + 13] = g * hOpp * 0.4;
+    colArr[base + 14] = b * hOpp * 0.4;
+    colArr[base + 15] = r * hSpec * 0.4;
+    colArr[base + 16] = g * hSpec * 0.4;
+    colArr[base + 17] = b * hSpec * 0.4;
 
     /* Seg 2 */
-    colArr[base+18] = r*hSpec*0.4; colArr[base+19] = g*hSpec*0.4; colArr[base+20] = b*hSpec*0.4;
-    colArr[base+21] = r*hOpp*0.4;  colArr[base+22] = g*hOpp*0.4;  colArr[base+23] = b*hOpp*0.4;
-    colArr[base+24] = r*hOpp*0.65; colArr[base+25] = g*hOpp*0.65; colArr[base+26] = b*hOpp*0.65;
+    colArr[base + 18] = r * hSpec * 0.4;
+    colArr[base + 19] = g * hSpec * 0.4;
+    colArr[base + 20] = b * hSpec * 0.4;
+    colArr[base + 21] = r * hOpp * 0.4;
+    colArr[base + 22] = g * hOpp * 0.4;
+    colArr[base + 23] = b * hOpp * 0.4;
+    colArr[base + 24] = r * hOpp * 0.65;
+    colArr[base + 25] = g * hOpp * 0.65;
+    colArr[base + 26] = b * hOpp * 0.65;
 
-    colArr[base+27] = r*hSpec*0.4; colArr[base+28] = g*hSpec*0.4; colArr[base+29] = b*hSpec*0.4;
-    colArr[base+30] = r*hOpp*0.65; colArr[base+31] = g*hOpp*0.65; colArr[base+32] = b*hOpp*0.65;
-    colArr[base+33] = r*hSpec*0.65;colArr[base+34] = g*hSpec*0.65;colArr[base+35] = b*hSpec*0.65;
+    colArr[base + 27] = r * hSpec * 0.4;
+    colArr[base + 28] = g * hSpec * 0.4;
+    colArr[base + 29] = b * hSpec * 0.4;
+    colArr[base + 30] = r * hOpp * 0.65;
+    colArr[base + 31] = g * hOpp * 0.65;
+    colArr[base + 32] = b * hOpp * 0.65;
+    colArr[base + 33] = r * hSpec * 0.65;
+    colArr[base + 34] = g * hSpec * 0.65;
+    colArr[base + 35] = b * hSpec * 0.65;
 
     /* Seg 3 */
-    colArr[base+36] = r*hSpec*0.65;colArr[base+37] = g*hSpec*0.65;colArr[base+38] = b*hSpec*0.65;
-    colArr[base+39] = r*hOpp*0.65; colArr[base+40] = g*hOpp*0.65; colArr[base+41] = b*hOpp*0.65;
-    colArr[base+42] = r*hOpp*0.85; colArr[base+43] = g*hOpp*0.85; colArr[base+44] = b*hOpp*0.85;
+    colArr[base + 36] = r * hSpec * 0.65;
+    colArr[base + 37] = g * hSpec * 0.65;
+    colArr[base + 38] = b * hSpec * 0.65;
+    colArr[base + 39] = r * hOpp * 0.65;
+    colArr[base + 40] = g * hOpp * 0.65;
+    colArr[base + 41] = b * hOpp * 0.65;
+    colArr[base + 42] = r * hOpp * 0.85;
+    colArr[base + 43] = g * hOpp * 0.85;
+    colArr[base + 44] = b * hOpp * 0.85;
 
-    colArr[base+45] = r*hSpec*0.65;colArr[base+46] = g*hSpec*0.65;colArr[base+47] = b*hSpec*0.65;
-    colArr[base+48] = r*hOpp*0.85; colArr[base+49] = g*hOpp*0.85; colArr[base+50] = b*hOpp*0.85;
-    colArr[base+51] = r*hSpec*0.85;colArr[base+52] = g*hSpec*0.85;colArr[base+53] = b*hSpec*0.85;
+    colArr[base + 45] = r * hSpec * 0.65;
+    colArr[base + 46] = g * hSpec * 0.65;
+    colArr[base + 47] = b * hSpec * 0.65;
+    colArr[base + 48] = r * hOpp * 0.85;
+    colArr[base + 49] = g * hOpp * 0.85;
+    colArr[base + 50] = b * hOpp * 0.85;
+    colArr[base + 51] = r * hSpec * 0.85;
+    colArr[base + 52] = g * hSpec * 0.85;
+    colArr[base + 53] = b * hSpec * 0.85;
 
     /* Seg 4 (Head) */
-    colArr[base+54] = r*hSpec*0.85;colArr[base+55] = g*hSpec*0.85;colArr[base+56] = b*hSpec*0.85;
-    colArr[base+57] = r*hOpp*0.85; colArr[base+58] = g*hOpp*0.85; colArr[base+59] = b*hOpp*0.85;
-    colArr[base+60] = r*hOpp;      colArr[base+61] = g*hOpp;      colArr[base+62] = b*hOpp;
+    colArr[base + 54] = r * hSpec * 0.85;
+    colArr[base + 55] = g * hSpec * 0.85;
+    colArr[base + 56] = b * hSpec * 0.85;
+    colArr[base + 57] = r * hOpp * 0.85;
+    colArr[base + 58] = g * hOpp * 0.85;
+    colArr[base + 59] = b * hOpp * 0.85;
+    colArr[base + 60] = r * hOpp;
+    colArr[base + 61] = g * hOpp;
+    colArr[base + 62] = b * hOpp;
 
-    colArr[base+63] = r*hSpec*0.85;colArr[base+64] = g*hSpec*0.85;colArr[base+65] = b*hSpec*0.85;
-    colArr[base+66] = r*hOpp;      colArr[base+67] = g*hOpp;      colArr[base+68] = b*hOpp;
-    colArr[base+69] = r*hSpec;     colArr[base+70] = g*hSpec;     colArr[base+71] = b*hSpec;
+    colArr[base + 63] = r * hSpec * 0.85;
+    colArr[base + 64] = g * hSpec * 0.85;
+    colArr[base + 65] = b * hSpec * 0.85;
+    colArr[base + 66] = r * hOpp;
+    colArr[base + 67] = g * hOpp;
+    colArr[base + 68] = b * hOpp;
+    colArr[base + 69] = r * hSpec;
+    colArr[base + 70] = g * hSpec;
+    colArr[base + 71] = b * hSpec;
   }
 
   /* ══════════════════════════════════════════════════════════════
      ANIMATION LOOP
   ══════════════════════════════════════════════════════════════ */
-  let clock  = 0;
-  let avgVX  = 0, avgVY = 0.06, avgVZ = 0;
+  let clock = 0;
+  let avgVX = 0,
+    avgVY = 0.06,
+    avgVZ = 0;
 
   function animate() {
     requestAnimationFrame(animate);
@@ -637,33 +851,45 @@
 
     /* snapshot config into locals (avoids repeated property lookups) */
     const {
-      sphereR, shieldR, lightR,
-      pulseSpeed, pulseAmt,
+      sphereR,
+      shieldR,
+      lightR,
+      pulseSpeed,
+      pulseAmt,
       particleCount,
-      upward, damping: DAMP, swirlK, noiseF, noiseS, noiseT,
-      alignK, shieldK, slowZone,
-      falloffPow, briBoost, colorWarm,
+      upward,
+      damping: DAMP,
+      swirlK,
+      noiseF,
+      noiseS,
+      noiseT,
+      alignK,
+      shieldK,
+      slowZone,
+      falloffPow,
+      briBoost,
+      colorWarm,
     } = CFG;
 
     /* draw only live particles */
     rectGeo.setDrawRange(0, particleCount * VPR);
 
     /* update atmospheric fog & background color uniforms from Control Panel */
-    const fOn   = CFG.fogEnable  !== undefined ? CFG.fogEnable  : 1.0;
-    const fNear = CFG.fogNear    !== undefined ? CFG.fogNear    : 2.0;
-    const fFar  = CFG.fogFar     !== undefined ? CFG.fogFar     : 25.0;
-    const fDens = CFG.fogDensity !== undefined ? CFG.fogDensity : 0.80;
-    const fColorHex = CFG.fogColor || '#0e1b40';
-    const bColorHex = CFG.bgColor  || '#040714';
+    const fOn = CFG.fogEnable !== undefined ? CFG.fogEnable : 1.0;
+    const fNear = CFG.fogNear !== undefined ? CFG.fogNear : 2.0;
+    const fFar = CFG.fogFar !== undefined ? CFG.fogFar : 25.0;
+    const fDens = CFG.fogDensity !== undefined ? CFG.fogDensity : 0.8;
+    const fColorHex = CFG.fogColor || "#0e1b40";
+    const bColorHex = CFG.bgColor || "#040714";
 
     const fogColorObj = new THREE.Color(fColorHex);
-    rectMat.uniforms.uFogEnable.value  = fOn;
-    rectMat.uniforms.uFogNear.value    = fNear;
-    rectMat.uniforms.uFogFar.value     = fFar;
+    rectMat.uniforms.uFogEnable.value = fOn;
+    rectMat.uniforms.uFogNear.value = fNear;
+    rectMat.uniforms.uFogFar.value = fFar;
     rectMat.uniforms.uFogDensity.value = fDens;
     rectMat.uniforms.uFogColor.value.copy(fogColorObj);
 
-    bgFogMat.uniforms.uFogEnable.value  = fOn;
+    bgFogMat.uniforms.uFogEnable.value = fOn;
     bgFogMat.uniforms.uFogDensity.value = fDens;
     bgFogMat.uniforms.uFogColor.value.copy(fogColorObj);
 
@@ -674,57 +900,69 @@
     coronaGroup.quaternion.copy(camera.quaternion);
 
     /* pulse calculation */
-    const pulse = 1.0
-      + Math.sin(clock * pulseSpeed)        * pulseAmt
-      + Math.sin(clock * pulseSpeed * 2.92) * pulseAmt * 0.4
-      + Math.sin(clock * pulseSpeed * 6.80) * pulseAmt * 0.13;
+    const pulse =
+      1.0 +
+      Math.sin(clock * pulseSpeed) * pulseAmt +
+      Math.sin(clock * pulseSpeed * 2.92) * pulseAmt * 0.4 +
+      Math.sin(clock * pulseSpeed * 6.8) * pulseAmt * 0.13;
 
     /* scale both central ball sphere & corona glow in 100% synchronized pulse */
     const sr = sphereR / 2.2;
     sphereMesh.scale.setScalar(pulse * sr);
 
     /* update background volumetric light-illuminated fog plane */
-    bgFogMat.uniforms.uFogEnable.value  = fOn;
+    bgFogMat.uniforms.uFogEnable.value = fOn;
     bgFogMat.uniforms.uFogDensity.value = fDens;
-    bgFogMat.uniforms.uPulse.value      = pulse;
+    bgFogMat.uniforms.uPulse.value = pulse;
 
     coronaMeshes.forEach((m, idx) => {
-      const isRim = (idx === 0);
+      const isRim = idx === 0;
       const cScale = CFG.coronaScale || 1.0;
-      const cGlow  = CFG.coronaGlow !== undefined ? CFG.coronaGlow : 1.0;
-      const cRim   = CFG.coronaRim  !== undefined ? CFG.coronaRim  : 1.0;
+      const cGlow = CFG.coronaGlow !== undefined ? CFG.coronaGlow : 1.0;
+      const cRim = CFG.coronaRim !== undefined ? CFG.coronaRim : 1.0;
 
-      m.scale.setScalar((pulse + idx * 0.010) * sr * cScale);
+      m.scale.setScalar((pulse + idx * 0.01) * sr * cScale);
       m.material.opacity = isRim ? cRim : cGlow;
       if (idx >= 2) {
-        m.rotation.z += (idx%2===0?1:-1) * 0.00035 * (idx+1);
+        m.rotation.z += (idx % 2 === 0 ? 1 : -1) * 0.00035 * (idx + 1);
       }
     });
 
     /* alignment accumulator */
-    let sumVX=0, sumVY=0, sumVZ=0;
-    for (let i=0; i<particleCount; i++) { sumVX+=pvx[i]; sumVY+=pvy[i]; sumVZ+=pvz[i]; }
-    avgVX = avgVX*0.97 + (sumVX/particleCount)*0.03;
-    avgVY = avgVY*0.97 + (sumVY/particleCount)*0.03;
-    avgVZ = avgVZ*0.97 + (sumVZ/particleCount)*0.03;
+    let sumVX = 0,
+      sumVY = 0,
+      sumVZ = 0;
+    for (let i = 0; i < particleCount; i++) {
+      sumVX += pvx[i];
+      sumVY += pvy[i];
+      sumVZ += pvz[i];
+    }
+    avgVX = avgVX * 0.97 + (sumVX / particleCount) * 0.03;
+    avgVY = avgVY * 0.97 + (sumVY / particleCount) * 0.03;
+    avgVZ = avgVZ * 0.97 + (sumVZ / particleCount) * 0.03;
 
     const posAttr = rectGeo.attributes.position;
     const colAttr = rectGeo.attributes.color;
 
-    for (let i=0; i<particleCount; i++) {
-      const x=px[i], y=py[i], z=pz[i];
-      const dist = Math.sqrt(x*x+y*y+z*z) || 1e-5;
+    for (let i = 0; i < particleCount; i++) {
+      const x = px[i],
+        y = py[i],
+        z = pz[i];
+      const dist = Math.sqrt(x * x + y * y + z * z) || 1e-5;
 
       /* upward + noise */
       pvy[i] += upward;
-      const { cx, cy } = curl2(x*noiseS + clock*noiseT, y*noiseS, i*0.00015);
+      const { cx, cy } = curl2(
+        x * noiseS + clock * noiseT,
+        y * noiseS,
+        i * 0.00015,
+      );
       pvx[i] += cx * noiseF;
       pvy[i] += cy * noiseF * 0.35;
 
       /* alignment */
       pvx[i] += (avgVX - pvx[i]) * alignK;
       pvy[i] += (avgVY - pvy[i]) * alignK * 0.5;
-
 
       /* ── PROACTIVE 3D LOOK-AHEAD AVOIDANCE ──────────────────────────────
          Each particle casts a 3D ray along its velocity and checks if the path
@@ -733,45 +971,55 @@
          its 3D ray NEVER intersects the sphere, so it flows smoothly directly in front
          or behind the ball without being pushed away!                */
 
-      const spd3D = Math.sqrt(pvx[i]*pvx[i] + pvy[i]*pvy[i] + pvz[i]*pvz[i]) || 1e-5;
+      const spd3D =
+        Math.sqrt(pvx[i] * pvx[i] + pvy[i] * pvy[i] + pvz[i] * pvz[i]) || 1e-5;
       const dvx = pvx[i] / spd3D;
       const dvy = pvy[i] / spd3D;
       const dvz = pvz[i] / spd3D;
 
-      const Lx = -x,  Ly = -y,  Lz = -z;             /* particle → sphere (0,0,0) */
-      const tc = Lx*dvx + Ly*dvy + Lz*dvz;          /* 3D closest-approach param */
+      const Lx = -x,
+        Ly = -y,
+        Lz = -z; /* particle → sphere (0,0,0) */
+      const tc = Lx * dvx + Ly * dvy + Lz * dvz; /* 3D closest-approach param */
 
-      if (tc > 0) {                                  /* sphere is AHEAD in 3D */
-        const d2c   = Math.max(0, (Lx*Lx + Ly*Ly + Lz*Lz) - tc*tc);
-        const AVODR = shieldR + 2.5;                 /* 3D collision radius */
+      if (tc > 0) {
+        /* sphere is AHEAD in 3D */
+        const d2c = Math.max(0, Lx * Lx + Ly * Ly + Lz * Lz - tc * tc);
+        const AVODR = shieldR + 2.5; /* 3D collision radius */
 
         if (d2c < AVODR * AVODR) {
           const closestD = Math.sqrt(d2c);
           const strength = Math.pow((AVODR - closestD) / AVODR, 1.2);
-          const urgency  = Math.max(0, 1.0 - tc / 18.0);
+          const urgency = Math.max(0, 1.0 - tc / 18.0);
 
           /* 2D lateral direction perpendicular to current XY velocity */
-          const spd2D = Math.sqrt(pvx[i]*pvx[i] + pvy[i]*pvy[i]) || 1e-5;
-          const perpX = -pvy[i] / spd2D, perpY = pvx[i] / spd2D;
-          const Lperp    = Lx*perpX + Ly*perpY;
+          const spd2D = Math.sqrt(pvx[i] * pvx[i] + pvy[i] * pvy[i]) || 1e-5;
+          const perpX = -pvy[i] / spd2D,
+            perpY = pvx[i] / spd2D;
+          const Lperp = Lx * perpX + Ly * perpY;
           const steerDir = Lperp >= 0 ? -1 : 1;
 
           const STEER_K = 0.026;
-          pvx[i] += perpX * steerDir * strength * (1.0 + urgency * 0.9) * STEER_K;
-          pvy[i] += perpY * steerDir * strength * (1.0 + urgency * 0.9) * STEER_K;
+          pvx[i] +=
+            perpX * steerDir * strength * (1.0 + urgency * 0.9) * STEER_K;
+          pvy[i] +=
+            perpY * steerDir * strength * (1.0 + urgency * 0.9) * STEER_K;
         }
       }
 
       /* ── 3D hard safety net — only fires if particle's 3D distance < shieldR ── */
       if (dist < shieldR) {
-        const nx = x/dist, ny = y/dist, nz = z/dist;
-        const vDotN = pvx[i]*nx + pvy[i]*ny + pvz[i]*nz;
-        if (vDotN < 0) {          /* cancel inward 3D velocity component */
+        const nx = x / dist,
+          ny = y / dist,
+          nz = z / dist;
+        const vDotN = pvx[i] * nx + pvy[i] * ny + pvz[i] * nz;
+        if (vDotN < 0) {
+          /* cancel inward 3D velocity component */
           pvx[i] -= vDotN * nx;
           pvy[i] -= vDotN * ny;
           pvz[i] -= vDotN * nz;
         }
-        pvx[i] += nx * 0.04;     /* steady gentle push outward */
+        pvx[i] += nx * 0.04; /* steady gentle push outward */
         pvy[i] += ny * 0.04;
         pvz[i] += nz * 0.04;
       }
@@ -787,17 +1035,22 @@
       }
 
       /* integrate */
-      pvx[i]*=DAMP; pvy[i]*=DAMP; pvz[i]*=DAMP;
-      px[i]+=pvx[i]; py[i]+=pvy[i]; pz[i]+=pvz[i];
+      pvx[i] *= DAMP;
+      pvy[i] *= DAMP;
+      pvz[i] *= DAMP;
+      px[i] += pvx[i];
+      py[i] += pvy[i];
+      pz[i] += pvz[i];
 
       /* lighting */
-      const d2=Math.sqrt(px[i]*px[i]+py[i]*py[i]+pz[i]*pz[i])||1e-5;
-      const traw=(lightR-d2)/(lightR-shieldR);
-      const t=Math.max(0,Math.min(1,traw));
+      const d2 =
+        Math.sqrt(px[i] * px[i] + py[i] * py[i] + pz[i] * pz[i]) || 1e-5;
+      const traw = (lightR - d2) / (lightR - shieldR);
+      const t = Math.max(0, Math.min(1, traw));
       const bri = Math.pow(t, falloffPow) * briBoost;
 
-      const nearF=Math.max(0,1-(d2-shieldR)/4.0);
-      const briP=bri*(1+(pulse-1)*nearF*1.4);
+      const nearF = Math.max(0, 1 - (d2 - shieldR) / 4.0);
+      const briP = bri * (1 + (pulse - 1) * nearF * 1.4);
 
       const closeT = Math.max(0, Math.min(1, (shieldR + 4.0 - d2) / 4.0));
       const cw = colorWarm;
@@ -811,62 +1064,111 @@
 
          gamma:   compress mid-tones, lift highlights (metal response curve)
          spec:    pure white spike that fires only at peak brightness       */
-      const gamma  = Math.pow(Math.max(0, briP), 0.65);   // metal gamma curve
-      const spec   = Math.pow(Math.max(0, briP - 0.55) / 0.45, 2.5); // specular spike
+      const gamma = Math.pow(Math.max(0, briP), 0.65); // metal gamma curve
+      const spec = Math.pow(Math.max(0, briP - 0.55) / 0.45, 2.5); // specular spike
 
       /* steel-silver base + optional warm tint from control panel */
-      const rC = Math.min(1, gamma * (0.48 + closeT * 0.52 + cw * 0.28) + spec * 0.50);
-      const gC = Math.min(1, gamma * (0.65 + closeT * 0.35 + cw * 0.12) + spec * 0.48);
-      const bC = Math.min(1, gamma * (0.95 - cw * 0.18)                  + spec * 0.44);
+      const rC = Math.min(
+        1,
+        gamma * (0.48 + closeT * 0.52 + cw * 0.28) + spec * 0.5,
+      );
+      const gC = Math.min(
+        1,
+        gamma * (0.65 + closeT * 0.35 + cw * 0.12) + spec * 0.48,
+      );
+      const bC = Math.min(1, gamma * (0.95 - cw * 0.18) + spec * 0.44);
 
       /* ── 0 SHAKING VELOCITY & MULTI-JOINT SNAKE BENDING ── */
       /* Filter out high-frequency noise from velocity direction */
       svx[i] = svx[i] * 0.88 + pvx[i] * 0.12;
       svy[i] = svy[i] * 0.88 + pvy[i] * 0.12;
 
-      const sSpd = Math.sqrt(svx[i]*svx[i] + svy[i]*svy[i]) || 1e-5;
-      const tvx = svx[i] / sSpd, tvy = svy[i] / sSpd;
+      const sSpd = Math.sqrt(svx[i] * svx[i] + svy[i] * svy[i]) || 1e-5;
+      const tvx = svx[i] / sSpd,
+        tvy = svy[i] / sSpd;
 
       /* Low-pass filter for head direction (eliminates shaking/jitter 100%) */
       pdx[i] += (tvx - pdx[i]) * 0.045;
       pdy[i] += (tvy - pdy[i]) * 0.045;
 
-      const dMag = Math.sqrt(pdx[i]*pdx[i] + pdy[i]*pdy[i]) || 1e-5;
-      const d4x = pdx[i] / dMag, d4y = pdy[i] / dMag; // Head direction (Node 4)
+      const dMag = Math.sqrt(pdx[i] * pdx[i] + pdy[i] * pdy[i]) || 1e-5;
+      const d4x = pdx[i] / dMag,
+        d4y = pdy[i] / dMag; // Head direction (Node 4)
 
       /* Tail direction (Node 0) lags behind head direction */
-      const sFlex = (CFG.stripFlex !== undefined ? CFG.stripFlex : 1.0);
+      const sFlex = CFG.stripFlex !== undefined ? CFG.stripFlex : 1.0;
       const flexRate = 0.035 * sFlex;
       ptx[i] += (d4x - ptx[i]) * flexRate;
       pty[i] += (d4y - pty[i]) * flexRate;
 
-      const tMag = Math.sqrt(ptx[i]*ptx[i] + pty[i]*pty[i]) || 1e-5;
-      const d0x = ptx[i] / tMag, d0y = pty[i] / tMag; // Tail direction (Node 0)
+      const tMag = Math.sqrt(ptx[i] * ptx[i] + pty[i] * pty[i]) || 1e-5;
+      const d0x = ptx[i] / tMag,
+        d0y = pty[i] / tMag; // Tail direction (Node 0)
 
       /* Smooth slerp interpolation across the 5 nodes (Nodes 0, 1, 2, 3, 4) */
-      const u1x = d0x * 0.75 + d4x * 0.25, u1y = d0y * 0.75 + d4y * 0.25, m1 = Math.sqrt(u1x*u1x + u1y*u1y)||1e-5;
-      const d1x = u1x / m1, d1y = u1y / m1; // Quarter direction (Node 1)
+      const u1x = d0x * 0.75 + d4x * 0.25,
+        u1y = d0y * 0.75 + d4y * 0.25,
+        m1 = Math.sqrt(u1x * u1x + u1y * u1y) || 1e-5;
+      const d1x = u1x / m1,
+        d1y = u1y / m1; // Quarter direction (Node 1)
 
-      const u2x = d0x * 0.50 + d4x * 0.50, u2y = d0y * 0.50 + d4y * 0.50, m2 = Math.sqrt(u2x*u2x + u2y*u2y)||1e-5;
-      const d2x = u2x / m2, d2y = u2y / m2; // Mid direction (Node 2)
+      const u2x = d0x * 0.5 + d4x * 0.5,
+        u2y = d0y * 0.5 + d4y * 0.5,
+        m2 = Math.sqrt(u2x * u2x + u2y * u2y) || 1e-5;
+      const d2x = u2x / m2,
+        d2y = u2y / m2; // Mid direction (Node 2)
 
-      const u3x = d0x * 0.25 + d4x * 0.75, u3y = d0y * 0.25 + d4y * 0.75, m3 = Math.sqrt(u3x*u3x + u3y*u3y)||1e-5;
-      const d3x = u3x / m3, d3y = u3y / m3; // Three-Quarter direction (Node 3)
+      const u3x = d0x * 0.25 + d4x * 0.75,
+        u3y = d0y * 0.25 + d4y * 0.75,
+        m3 = Math.sqrt(u3x * u3x + u3y * u3y) || 1e-5;
+      const d3x = u3x / m3,
+        d3y = u3y / m3; // Three-Quarter direction (Node 3)
 
       /* Compute 5 node positions along the curved spine */
-      const totalL = pLen[i], segL = totalL * 0.25, W = pWid[i], cz = pz[i];
-      const n2x = px[i], n2y = py[i];                // Center Node 2
-      const n1x = n2x - d1x * segL, n1y = n2y - d1y * segL; // Node 1
-      const n0x = n1x - d0x * segL, n0y = n1y - d0y * segL; // Tail Node 0
-      const n3x = n2x + d3x * segL, n3y = n2y + d3y * segL; // Node 3
-      const n4x = n3x + d4x * segL, n4y = n3y + d4y * segL; // Head Node 4
+      const totalL = pLen[i],
+        segL = totalL * 0.25,
+        W = pWid[i],
+        cz = pz[i];
+      const n2x = px[i],
+        n2y = py[i]; // Center Node 2
+      const n1x = n2x - d1x * segL,
+        n1y = n2y - d1y * segL; // Node 1
+      const n0x = n1x - d0x * segL,
+        n0y = n1y - d0y * segL; // Tail Node 0
+      const n3x = n2x + d3x * segL,
+        n3y = n2y + d3y * segL; // Node 3
+      const n4x = n3x + d4x * segL,
+        n4y = n3y + d4y * segL; // Head Node 4
 
       const base = i * VPR * 3;
       writeSnakeRibbon(
         base,
-        n0x,n0y, n1x,n1y, n2x,n2y, n3x,n3y, n4x,n4y,
-        d0x,d0y, d1x,d1y, d2x,d2y, d3x,d3y, d4x,d4y,
-        W, cz, rC, gC, bC, 0.022
+        n0x,
+        n0y,
+        n1x,
+        n1y,
+        n2x,
+        n2y,
+        n3x,
+        n3y,
+        n4x,
+        n4y,
+        d0x,
+        d0y,
+        d1x,
+        d1y,
+        d2x,
+        d2y,
+        d3x,
+        d3y,
+        d4x,
+        d4y,
+        W,
+        cz,
+        rC,
+        gC,
+        bC,
+        0.022,
       );
     }
 
@@ -885,16 +1187,16 @@
   ══════════════════════════════════════════════════════════════ */
 
   /* ─── Transition state ─── */
-  let scrollT       = 0.0;   // current interpolated value  0=eclipse  1=star
-  let scrollTarget  = 0.0;   // target driven by scroll position
-  let collapseForce = 0.0;   // cached alias for scrollT
+  let scrollT = 0.0; // current interpolated value  0=eclipse  1=star
+  let scrollTarget = 0.0; // target driven by scroll position
+  let collapseForce = 0.0; // cached alias for scrollT
 
   /* ─── Layer A: Premium Star Sphere ShaderMaterial ─── */
   const starMat = new THREE.ShaderMaterial({
     uniforms: {
-      uT:     { value: 0.0 },
+      uT: { value: 0.0 },
       uPulse: { value: 1.0 },
-      uTime:  { value: 0.0 },
+      uTime: { value: 0.0 },
     },
     vertexShader: `
       varying vec3 vNormal;
@@ -973,7 +1275,11 @@
 
   /* ─── Layer B: Omnidirectional glowing star corona billboard ─── */
   const starCoronaMat = new THREE.ShaderMaterial({
-    uniforms: { uT: {value:0.0}, uPulse: {value:1.0}, uTime: {value:0.0} },
+    uniforms: {
+      uT: { value: 0.0 },
+      uPulse: { value: 1.0 },
+      uTime: { value: 0.0 },
+    },
     vertexShader: `
       varying vec3 vWorldPos;
       void main() {
@@ -1003,11 +1309,14 @@
         gl_FragColor = vec4(col, alpha);
       }
     `,
-    transparent: true, depthWrite: false, depthTest: false,
+    transparent: true,
+    depthWrite: false,
+    depthTest: false,
     blending: THREE.AdditiveBlending,
   });
   const starCoronaMesh = new THREE.Mesh(
-    new THREE.PlaneGeometry(250, 250), starCoronaMat
+    new THREE.PlaneGeometry(250, 250),
+    starCoronaMat,
   );
   starCoronaMesh.position.z = -35.0;
   starCoronaMesh.renderOrder = 0;
@@ -1015,7 +1324,8 @@
 
   /* ─── Layer C: GPU Star Field (3 000 dim + 50 bright) ─── */
   function buildStarField() {
-    const N = 3000, NB = 50;
+    const N = 3000,
+      NB = 50;
     const allN = N + NB;
     const pos = new Float32Array(allN * 3);
     const seeds = new Float32Array(allN);
@@ -1023,23 +1333,25 @@
 
     for (let i = 0; i < allN; i++) {
       const isBright = i >= N;
-      const r = isBright ? 60 + Math.random()*80 : 80 + Math.random()*180;
+      const r = isBright ? 60 + Math.random() * 80 : 80 + Math.random() * 180;
       const theta = Math.random() * Math.PI * 2;
-      const phi   = Math.acos(2*Math.random()-1);
-      pos[i*3]   = r * Math.sin(phi)*Math.cos(theta);
-      pos[i*3+1] = r * Math.sin(phi)*Math.sin(theta);
-      pos[i*3+2] = -40 - Math.random() * 120;
-      seeds[i]   = Math.random() * 100;
-      sizes[i]   = isBright ? 2.5 + Math.random()*2.5 : 0.6 + Math.random()*1.6;
+      const phi = Math.acos(2 * Math.random() - 1);
+      pos[i * 3] = r * Math.sin(phi) * Math.cos(theta);
+      pos[i * 3 + 1] = r * Math.sin(phi) * Math.sin(theta);
+      pos[i * 3 + 2] = -40 - Math.random() * 120;
+      seeds[i] = Math.random() * 100;
+      sizes[i] = isBright
+        ? 2.5 + Math.random() * 2.5
+        : 0.6 + Math.random() * 1.6;
     }
 
     const geo = new THREE.BufferGeometry();
-    geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
-    geo.setAttribute('aSeed',   new THREE.BufferAttribute(seeds, 1));
-    geo.setAttribute('aSize',   new THREE.BufferAttribute(sizes, 1));
+    geo.setAttribute("position", new THREE.BufferAttribute(pos, 3));
+    geo.setAttribute("aSeed", new THREE.BufferAttribute(seeds, 1));
+    geo.setAttribute("aSize", new THREE.BufferAttribute(sizes, 1));
 
     const mat = new THREE.ShaderMaterial({
-      uniforms: { uT: {value:0.0}, uTime: {value:0.0} },
+      uniforms: { uT: { value: 0.0 }, uTime: { value: 0.0 } },
       vertexShader: `
         attribute float aSeed;
         attribute float aSize;
@@ -1061,7 +1373,8 @@
           gl_FragColor = vec4(0.88, 0.93, 1.00, a);
         }
       `,
-      transparent: true, depthWrite: false,
+      transparent: true,
+      depthWrite: false,
       blending: THREE.AdditiveBlending,
     });
 
@@ -1076,10 +1389,10 @@
   function buildNebulaMat(col1, col2) {
     return new THREE.ShaderMaterial({
       uniforms: {
-        uT:    {value:0.0},
-        uTime: {value:0.0},
-        uC1:   {value: new THREE.Color(col1)},
-        uC2:   {value: new THREE.Color(col2)},
+        uT: { value: 0.0 },
+        uTime: { value: 0.0 },
+        uC1: { value: new THREE.Color(col1) },
+        uC2: { value: new THREE.Color(col2) },
       },
       vertexShader: `
         varying vec2 vUv;
@@ -1120,43 +1433,49 @@
           gl_FragColor  = vec4(col, n * radFade * 0.32 * uT);
         }
       `,
-      transparent: true, depthWrite: false, depthTest: false,
+      transparent: true,
+      depthWrite: false,
+      depthTest: false,
       blending: THREE.AdditiveBlending,
       side: THREE.DoubleSide,
     });
   }
 
-  const neb1Mat = buildNebulaMat('#1a0040', '#7B3FBE');  // Purple nebula
-  const neb2Mat = buildNebulaMat('#001a3a', '#004b8f');  // Cyan nebula
-  const neb1 = new THREE.Mesh(new THREE.PlaneGeometry(320,320), neb1Mat);
-  const neb2 = new THREE.Mesh(new THREE.PlaneGeometry(280,280), neb2Mat);
-  neb1.position.set( 30, 20, -90); neb1.renderOrder = 0;
-  neb2.position.set(-25,-15,-130); neb2.renderOrder = 0;
-  scene.add(neb1); scene.add(neb2);
+  const neb1Mat = buildNebulaMat("#1a0040", "#7B3FBE"); // Purple nebula
+  const neb2Mat = buildNebulaMat("#001a3a", "#004b8f"); // Cyan nebula
+  const neb1 = new THREE.Mesh(new THREE.PlaneGeometry(320, 320), neb1Mat);
+  const neb2 = new THREE.Mesh(new THREE.PlaneGeometry(280, 280), neb2Mat);
+  neb1.position.set(30, 20, -90);
+  neb1.renderOrder = 0;
+  neb2.position.set(-25, -15, -130);
+  neb2.renderOrder = 0;
+  scene.add(neb1);
+  scene.add(neb2);
 
   /* ─── Layer E: Energy Sparks (200 orbital escape particles) ─── */
   const SPARK_N = 200;
   const sparkPos = new Float32Array(SPARK_N * 3);
-  const sparkAngle  = new Float32Array(SPARK_N);
+  const sparkAngle = new Float32Array(SPARK_N);
   const sparkRadius = new Float32Array(SPARK_N);
-  const sparkSpeed  = new Float32Array(SPARK_N);
-  const sparkEscT   = new Float32Array(SPARK_N);  // escape phase timer
+  const sparkSpeed = new Float32Array(SPARK_N);
+  const sparkEscT = new Float32Array(SPARK_N); // escape phase timer
   const sparkEscDir = new Float32Array(SPARK_N * 3);
 
   for (let i = 0; i < SPARK_N; i++) {
-    sparkAngle[i]    = Math.random() * Math.PI * 2;
-    sparkRadius[i]   = 0.0;
-    sparkSpeed[i]    = 0.008 + Math.random() * 0.018;
-    sparkEscT[i]     = Math.random() * 500; // offset so they don't all escape at once
-    const sa = Math.random()*Math.PI*2, sp = Math.acos(2*Math.random()-1);
-    sparkEscDir[i*3]   = Math.sin(sp)*Math.cos(sa);
-    sparkEscDir[i*3+1] = Math.sin(sp)*Math.sin(sa);
-    sparkEscDir[i*3+2] = Math.cos(sp);
+    sparkAngle[i] = Math.random() * Math.PI * 2;
+    sparkRadius[i] = 0.0;
+    sparkSpeed[i] = 0.008 + Math.random() * 0.018;
+    sparkEscT[i] = Math.random() * 500; // offset so they don't all escape at once
+    const sa = Math.random() * Math.PI * 2,
+      sp = Math.acos(2 * Math.random() - 1);
+    sparkEscDir[i * 3] = Math.sin(sp) * Math.cos(sa);
+    sparkEscDir[i * 3 + 1] = Math.sin(sp) * Math.sin(sa);
+    sparkEscDir[i * 3 + 2] = Math.cos(sp);
   }
   const sparkGeo = new THREE.BufferGeometry();
-  sparkGeo.setAttribute('position', new THREE.BufferAttribute(sparkPos, 3));
+  sparkGeo.setAttribute("position", new THREE.BufferAttribute(sparkPos, 3));
   const sparkMat = new THREE.ShaderMaterial({
-    uniforms: { uT: {value:0.0} },
+    uniforms: { uT: { value: 0.0 } },
     vertexShader: `
       uniform float uT;
       void main() {
@@ -1174,7 +1493,8 @@
         gl_FragColor = vec4(0.55, 0.88, 1.00, a);
       }
     `,
-    transparent: true, depthWrite: false,
+    transparent: true,
+    depthWrite: false,
     blending: THREE.AdditiveBlending,
   });
   const sparkMesh = new THREE.Points(sparkGeo, sparkMat);
@@ -1182,32 +1502,36 @@
   scene.add(sparkMesh);
 
   /* ─── Layer F: CSS Bloom Overlay ─── */
-  const bloomOverlay = document.createElement('div');
-  bloomOverlay.id = 'cosmos-bloom';
+  const bloomOverlay = document.createElement("div");
+  bloomOverlay.id = "cosmos-bloom";
   bloomOverlay.style.cssText = [
-    'position:fixed', 'inset:0', 'pointer-events:none', 'z-index:1',
-    'opacity:0', 'transition:opacity 0.3s',
-    'background:radial-gradient(ellipse 55% 55% at 50% 50%,',
-    '  rgba(0,120,255,0.10) 0%,',
-    '  rgba(80,0,180,0.06) 40%,',
-    '  rgba(0,0,20,0.0) 70%)',
-  ].join(';');
+    "position:fixed",
+    "inset:0",
+    "pointer-events:none",
+    "z-index:1",
+    "opacity:0",
+    "transition:opacity 0.3s",
+    "background:radial-gradient(ellipse 55% 55% at 50% 50%,",
+    "  rgba(0,120,255,0.10) 0%,",
+    "  rgba(80,0,180,0.06) 40%,",
+    "  rgba(0,0,20,0.0) 70%)",
+  ].join(";");
   document.body.appendChild(bloomOverlay);
 
   /* ─── Scroll Progress Driver ─── */
-  const skillsSection = document.getElementById('skills');
-  let scrollVel     = 0.0;  // scroll velocity (delta per frame)
-  let prevScrollTgt = 0.0;  // previous frame's scrollTarget for velocity calc
+  const skillsSection = document.getElementById("skills");
+  let scrollVel = 0.0; // scroll velocity (delta per frame)
+  let prevScrollTgt = 0.0; // previous frame's scrollTarget for velocity calc
 
   function updateScrollTarget() {
     if (!skillsSection) return;
     const rect = skillsSection.getBoundingClientRect();
-    const vh   = window.innerHeight;
+    const vh = window.innerHeight;
     const progress = (vh - rect.top) / (vh + rect.height * 0.5);
     scrollTarget = Math.max(0, Math.min(1, progress));
   }
 
-  window.addEventListener('scroll', updateScrollTarget, { passive: true });
+  window.addEventListener("scroll", updateScrollTarget, { passive: true });
   updateScrollTarget(); // init
 
   /* ─── Spark update helper ─── */
@@ -1231,24 +1555,24 @@
       if (phase < 180) {
         // Orbit sphere surface
         sparkAngle[i] += sparkSpeed[i];
-        const phi  = (i / SPARK_N) * Math.PI * 2 + sparkAngle[i] * 0.3;
+        const phi = (i / SPARK_N) * Math.PI * 2 + sparkAngle[i] * 0.3;
         const theta = sparkAngle[i];
-        const orbitR = SR_eff * 1.08 + Math.sin(sparkAngle[i]*3+i)*0.12;
+        const orbitR = SR_eff * 1.08 + Math.sin(sparkAngle[i] * 3 + i) * 0.12;
         ex = orbitR * Math.sin(phi) * Math.cos(theta);
         ey = orbitR * Math.sin(phi) * Math.sin(theta);
         ez = orbitR * Math.cos(phi);
       } else {
         // Escape outward then return
         const escFrac = (phase - 180) / 140;
-        const escDist = SR_eff * 1.08 + Math.sin(escFrac*Math.PI) * 4.5;
-        ex = sparkEscDir[i*3]   * escDist;
-        ey = sparkEscDir[i*3+1] * escDist;
-        ez = sparkEscDir[i*3+2] * escDist;
+        const escDist = SR_eff * 1.08 + Math.sin(escFrac * Math.PI) * 4.5;
+        ex = sparkEscDir[i * 3] * escDist;
+        ey = sparkEscDir[i * 3 + 1] * escDist;
+        ez = sparkEscDir[i * 3 + 2] * escDist;
       }
 
-      sparkPos[i*3]   = ex;
-      sparkPos[i*3+1] = ey;
-      sparkPos[i*3+2] = ez;
+      sparkPos[i * 3] = ex;
+      sparkPos[i * 3 + 1] = ey;
+      sparkPos[i * 3 + 2] = ez;
     }
     sparkGeo.attributes.position.needsUpdate = true;
     sparkMat.uniforms.uT.value = spawnT * Math.min(1, pulse);
@@ -1262,37 +1586,49 @@
     /* Scroll-velocity-adaptive lerp —
        slow scroll  → rate ~0.12 (fast but smooth)
        fast scroll  → rate up to 0.92 (nearly instant) */
-    scrollVel     = Math.abs(scrollTarget - prevScrollTgt);
+    scrollVel = Math.abs(scrollTarget - prevScrollTgt);
     prevScrollTgt = scrollTarget;
-    const adaptRate  = 0.12 + Math.min(scrollVel * 28.0, 0.80);
-    scrollT      += (scrollTarget - scrollT) * adaptRate;
+    const adaptRate = 0.12 + Math.min(scrollVel * 28.0, 0.8);
+    scrollT += (scrollTarget - scrollT) * adaptRate;
     collapseForce = scrollT;
-    const sT      = scrollT; // alias
+    const sT = scrollT; // alias
 
     const {
-      sphereR, shieldR, lightR,
-      pulseSpeed, pulseAmt,
+      sphereR,
+      shieldR,
+      lightR,
+      pulseSpeed,
+      pulseAmt,
       particleCount,
-      upward, damping: DAMP, swirlK, noiseF, noiseS, noiseT,
-      alignK, shieldK, slowZone,
-      falloffPow, briBoost, colorWarm,
+      upward,
+      damping: DAMP,
+      swirlK,
+      noiseF,
+      noiseS,
+      noiseT,
+      alignK,
+      shieldK,
+      slowZone,
+      falloffPow,
+      briBoost,
+      colorWarm,
     } = CFG;
 
     /* ── Fog & background uniforms ── */
-    const fOn       = CFG.fogEnable  !== undefined ? CFG.fogEnable  : 1.0;
-    const fNear     = CFG.fogNear    || 2.0;
-    const fFar      = CFG.fogFar     || 25.0;
-    const fDens     = CFG.fogDensity || 0.80;
-    const fogCO     = new THREE.Color(CFG.fogColor  || '#0e1b40');
-    const bgCO      = new THREE.Color(CFG.bgColor   || '#040714');
+    const fOn = CFG.fogEnable !== undefined ? CFG.fogEnable : 1.0;
+    const fNear = CFG.fogNear || 2.0;
+    const fFar = CFG.fogFar || 25.0;
+    const fDens = CFG.fogDensity || 0.8;
+    const fogCO = new THREE.Color(CFG.fogColor || "#0e1b40");
+    const bgCO = new THREE.Color(CFG.bgColor || "#040714");
 
-    rectMat.uniforms.uFogEnable.value  = fOn * (1.0 - sT);
-    rectMat.uniforms.uFogNear.value    = fNear;
-    rectMat.uniforms.uFogFar.value     = fFar;
+    rectMat.uniforms.uFogEnable.value = fOn * (1.0 - sT);
+    rectMat.uniforms.uFogNear.value = fNear;
+    rectMat.uniforms.uFogFar.value = fFar;
     rectMat.uniforms.uFogDensity.value = fDens;
     rectMat.uniforms.uFogColor.value.copy(fogCO);
 
-    bgFogMat.uniforms.uFogEnable.value  = fOn * (1.0 - sT);
+    bgFogMat.uniforms.uFogEnable.value = fOn * (1.0 - sT);
     bgFogMat.uniforms.uFogDensity.value = fDens;
     bgFogMat.uniforms.uFogColor.value.copy(fogCO);
 
@@ -1302,46 +1638,48 @@
     renderer.setClearColor(bgCO, 1.0);
 
     /* ── Pulse ── */
-    const pulse = 1.0
-      + Math.sin(clock * pulseSpeed)        * pulseAmt
-      + Math.sin(clock * pulseSpeed * 2.92) * pulseAmt * 0.4
-      + Math.sin(clock * pulseSpeed * 6.80) * pulseAmt * 0.13;
+    const pulse =
+      1.0 +
+      Math.sin(clock * pulseSpeed) * pulseAmt +
+      Math.sin(clock * pulseSpeed * 2.92) * pulseAmt * 0.4 +
+      Math.sin(clock * pulseSpeed * 6.8) * pulseAmt * 0.13;
 
     /* ── Sphere & corona uniforms ── */
     const sr = sphereR / 2.2;
     sphereMesh.scale.setScalar(pulse * sr);
-    starMat.uniforms.uT.value     = sT;
+    starMat.uniforms.uT.value = sT;
     starMat.uniforms.uPulse.value = pulse;
-    starMat.uniforms.uTime.value  = clock;
+    starMat.uniforms.uTime.value = clock;
 
     /* ── Eclipse corona fades out as star fades in ── */
     coronaGroup.quaternion.copy(camera.quaternion);
     const coronaFade = Math.max(0, 1.0 - sT * 2.2);
     coronaMeshes.forEach((m, idx) => {
       const cScale = CFG.coronaScale || 1.0;
-      const cGlow  = CFG.coronaGlow  !== undefined ? CFG.coronaGlow : 1.0;
-      const cRim   = CFG.coronaRim   !== undefined ? CFG.coronaRim  : 1.0;
-      const isRim  = (idx === 0);
-      m.scale.setScalar((pulse + idx * 0.010) * sr * cScale);
+      const cGlow = CFG.coronaGlow !== undefined ? CFG.coronaGlow : 1.0;
+      const cRim = CFG.coronaRim !== undefined ? CFG.coronaRim : 1.0;
+      const isRim = idx === 0;
+      m.scale.setScalar((pulse + idx * 0.01) * sr * cScale);
       m.material.opacity = (isRim ? cRim : cGlow) * coronaFade;
-      if (idx >= 2) m.rotation.z += (idx%2===0?1:-1)*0.00035*(idx+1);
+      if (idx >= 2)
+        m.rotation.z += (idx % 2 === 0 ? 1 : -1) * 0.00035 * (idx + 1);
     });
     coronaGroup.visible = coronaFade > 0.01;
 
     /* ── Star corona fades in ── */
     starCoronaMesh.quaternion.copy(camera.quaternion);
-    starCoronaMat.uniforms.uT.value     = sT;
+    starCoronaMat.uniforms.uT.value = sT;
     starCoronaMat.uniforms.uPulse.value = pulse;
-    starCoronaMat.uniforms.uTime.value  = clock;
+    starCoronaMat.uniforms.uTime.value = clock;
 
     /* ── Star field ── */
-    starPointsMat.uniforms.uT.value    = sT;
+    starPointsMat.uniforms.uT.value = sT;
     starPointsMat.uniforms.uTime.value = clock;
 
     /* ── Nebula ── */
-    neb1Mat.uniforms.uT.value    = sT;
+    neb1Mat.uniforms.uT.value = sT;
     neb1Mat.uniforms.uTime.value = clock;
-    neb2Mat.uniforms.uT.value    = sT;
+    neb2Mat.uniforms.uT.value = sT;
     neb2Mat.uniforms.uTime.value = clock;
     neb1.rotation.z += 0.00004;
     neb2.rotation.z -= 0.00003;
@@ -1363,9 +1701,13 @@
     const velBoost = 1.0 + Math.min(scrollVel * 55.0, 11.0); // 1x slow → 12x fast
     if (sT > 0.005) {
       for (let i = 0; i < particleCount; i++) {
-        const dx = px[i], dy = py[i], dz = pz[i];
-        const d3  = Math.sqrt(dx*dx + dy*dy + dz*dz) || 1e-5;
-        const nx  = dx/d3, ny = dy/d3, nz = dz/d3;
+        const dx = px[i],
+          dy = py[i],
+          dz = pz[i];
+        const d3 = Math.sqrt(dx * dx + dy * dy + dz * dz) || 1e-5;
+        const nx = dx / d3,
+          ny = dy / d3,
+          nz = dz / d3;
 
         const gravStr = sT * 0.065 * Math.min(d3 * 0.14, 1.2) * velBoost;
         pvx[i] -= nx * gravStr;
@@ -1374,18 +1716,24 @@
 
         const swirlEnv = sT * (1.0 - sT) * 4.0;
         const swirlStr = swirlEnv * 0.018 * Math.min(velBoost, 3.0);
-        pvx[i] += (-ny) * swirlStr;
-        pvy[i] +=   nx  * swirlStr;
+        pvx[i] += -ny * swirlStr;
+        pvy[i] += nx * swirlStr;
       }
     }
 
     // Alignment (suppressed during collapse)
     const alignSuppress = 1.0 - Math.min(sT * 2.0, 1.0);
-    let sumVX=0, sumVY=0, sumVZ=0;
-    for (let i=0; i<particleCount; i++) { sumVX+=pvx[i]; sumVY+=pvy[i]; sumVZ+=pvz[i]; }
-    avgVX = avgVX*0.97 + (sumVX/particleCount)*0.03;
-    avgVY = avgVY*0.97 + (sumVY/particleCount)*0.03;
-    avgVZ = avgVZ*0.97 + (sumVZ/particleCount)*0.03;
+    let sumVX = 0,
+      sumVY = 0,
+      sumVZ = 0;
+    for (let i = 0; i < particleCount; i++) {
+      sumVX += pvx[i];
+      sumVY += pvy[i];
+      sumVZ += pvz[i];
+    }
+    avgVX = avgVX * 0.97 + (sumVX / particleCount) * 0.03;
+    avgVY = avgVY * 0.97 + (sumVY / particleCount) * 0.03;
+    avgVZ = avgVZ * 0.97 + (sumVZ / particleCount) * 0.03;
 
     const posAttr = rectGeo.attributes.position;
     const colAttr = rectGeo.attributes.color;
@@ -1394,14 +1742,20 @@
     if (sT > 0.75) {
       rectGeo.setDrawRange(0, 0);
     } else {
-      for (let i=0; i<particleCount; i++) {
-        const x=px[i], y=py[i], z=pz[i];
-        const dist = Math.sqrt(x*x+y*y+z*z) || 1e-5;
+      for (let i = 0; i < particleCount; i++) {
+        const x = px[i],
+          y = py[i],
+          z = pz[i];
+        const dist = Math.sqrt(x * x + y * y + z * z) || 1e-5;
 
         // Upward + noise (suppressed during collapse)
         const physScale = 1.0 - Math.min(sT * 1.5, 1.0);
         pvy[i] += upward * physScale;
-        const { cx, cy } = curl2(x*noiseS + clock*noiseT, y*noiseS, i*0.00015);
+        const { cx, cy } = curl2(
+          x * noiseS + clock * noiseT,
+          y * noiseS,
+          i * 0.00015,
+        );
         pvx[i] += cx * noiseF * physScale;
         pvy[i] += cy * noiseF * 0.35 * physScale;
 
@@ -1410,114 +1764,192 @@
 
         // Avoidance only active before collapse kicks in
         if (sT < 0.4) {
-          const spd3D = Math.sqrt(pvx[i]*pvx[i] + pvy[i]*pvy[i] + pvz[i]*pvz[i]) || 1e-5;
-          const dvx = pvx[i]/spd3D, dvy = pvy[i]/spd3D, dvz = pvz[i]/spd3D;
-          const Lx=-x, Ly=-y, Lz=-z;
-          const tc = Lx*dvx + Ly*dvy + Lz*dvz;
+          const spd3D =
+            Math.sqrt(pvx[i] * pvx[i] + pvy[i] * pvy[i] + pvz[i] * pvz[i]) ||
+            1e-5;
+          const dvx = pvx[i] / spd3D,
+            dvy = pvy[i] / spd3D,
+            dvz = pvz[i] / spd3D;
+          const Lx = -x,
+            Ly = -y,
+            Lz = -z;
+          const tc = Lx * dvx + Ly * dvy + Lz * dvz;
           if (tc > 0) {
-            const d2c   = Math.max(0, (Lx*Lx+Ly*Ly+Lz*Lz) - tc*tc);
+            const d2c = Math.max(0, Lx * Lx + Ly * Ly + Lz * Lz - tc * tc);
             const AVODR = shieldR + 2.5;
-            if (d2c < AVODR*AVODR) {
+            if (d2c < AVODR * AVODR) {
               const closestD = Math.sqrt(d2c);
-              const strength = Math.pow((AVODR-closestD)/AVODR, 1.2);
-              const urgency  = Math.max(0, 1.0 - tc/18.0);
-              const spd2D = Math.sqrt(pvx[i]*pvx[i]+pvy[i]*pvy[i]) || 1e-5;
-              const perpX = -pvy[i]/spd2D, perpY = pvx[i]/spd2D;
-              const steerDir = (Lx*perpX+Ly*perpY) >= 0 ? -1 : 1;
-              pvx[i] += perpX * steerDir * strength * (1.0+urgency*0.9) * 0.026;
-              pvy[i] += perpY * steerDir * strength * (1.0+urgency*0.9) * 0.026;
+              const strength = Math.pow((AVODR - closestD) / AVODR, 1.2);
+              const urgency = Math.max(0, 1.0 - tc / 18.0);
+              const spd2D =
+                Math.sqrt(pvx[i] * pvx[i] + pvy[i] * pvy[i]) || 1e-5;
+              const perpX = -pvy[i] / spd2D,
+                perpY = pvx[i] / spd2D;
+              const steerDir = Lx * perpX + Ly * perpY >= 0 ? -1 : 1;
+              pvx[i] +=
+                perpX * steerDir * strength * (1.0 + urgency * 0.9) * 0.026;
+              pvy[i] +=
+                perpY * steerDir * strength * (1.0 + urgency * 0.9) * 0.026;
             }
           }
           if (dist < shieldR) {
-            const nx=x/dist, ny=y/dist, nz=z/dist;
-            const vDotN = pvx[i]*nx + pvy[i]*ny + pvz[i]*nz;
-            if (vDotN < 0) { pvx[i]-=vDotN*nx; pvy[i]-=vDotN*ny; pvz[i]-=vDotN*nz; }
-            pvx[i]+=nx*0.04; pvy[i]+=ny*0.04; pvz[i]+=nz*0.04;
+            const nx = x / dist,
+              ny = y / dist,
+              nz = z / dist;
+            const vDotN = pvx[i] * nx + pvy[i] * ny + pvz[i] * nz;
+            if (vDotN < 0) {
+              pvx[i] -= vDotN * nx;
+              pvy[i] -= vDotN * ny;
+              pvz[i] -= vDotN * nz;
+            }
+            pvx[i] += nx * 0.04;
+            pvy[i] += ny * 0.04;
+            pvz[i] += nz * 0.04;
           }
         }
 
         // Respawn suppressed during collapse
         if (py[i] > 28 && sT < 0.18) {
           spawn(i, false);
-          const base = i*VPR*3;
-          posArr.fill(0, base, base+VPR*3);
-          colArr.fill(0, base, base+VPR*3);
-          normArr.fill(0, base, base+VPR*3);
+          const base = i * VPR * 3;
+          posArr.fill(0, base, base + VPR * 3);
+          colArr.fill(0, base, base + VPR * 3);
+          normArr.fill(0, base, base + VPR * 3);
           continue;
         }
 
-        pvx[i]*=DAMP; pvy[i]*=DAMP; pvz[i]*=DAMP;
-        px[i]+=pvx[i]; py[i]+=pvy[i]; pz[i]+=pvz[i];
+        pvx[i] *= DAMP;
+        pvy[i] *= DAMP;
+        pvz[i] *= DAMP;
+        px[i] += pvx[i];
+        py[i] += pvy[i];
+        pz[i] += pvz[i];
 
         /* Lighting */
-        const d2   = Math.sqrt(px[i]*px[i]+py[i]*py[i]+pz[i]*pz[i]) || 1e-5;
-        const traw = (lightR-d2)/(lightR-shieldR);
-        const t    = Math.max(0, Math.min(1, traw));
-        const bri  = Math.pow(t, falloffPow) * briBoost;
-        const nearF= Math.max(0, 1-(d2-shieldR)/4.0);
-        const briP = bri * (1+(pulse-1)*nearF*1.4);
+        const d2 =
+          Math.sqrt(px[i] * px[i] + py[i] * py[i] + pz[i] * pz[i]) || 1e-5;
+        const traw = (lightR - d2) / (lightR - shieldR);
+        const t = Math.max(0, Math.min(1, traw));
+        const bri = Math.pow(t, falloffPow) * briBoost;
+        const nearF = Math.max(0, 1 - (d2 - shieldR) / 4.0);
+        const briP = bri * (1 + (pulse - 1) * nearF * 1.4);
 
         /* Particles brighten + shift cyan as they collapse toward core */
         const starGlow = 1.0 + sT * 2.5;
-        const colFrac  = Math.min(sT * 2.0, 1.0); // 0=metallic  1=electric blue
+        const colFrac = Math.min(sT * 2.0, 1.0); // 0=metallic  1=electric blue
 
-        const closeT = Math.max(0, Math.min(1, (shieldR+4.0-d2)/4.0));
-        const cw     = colorWarm;
-        const gamma  = Math.pow(Math.max(0,briP), 0.65);
-        const spec   = Math.pow(Math.max(0,briP-0.55)/0.45, 2.5);
+        const closeT = Math.max(0, Math.min(1, (shieldR + 4.0 - d2) / 4.0));
+        const cw = colorWarm;
+        const gamma = Math.pow(Math.max(0, briP), 0.65);
+        const spec = Math.pow(Math.max(0, briP - 0.55) / 0.45, 2.5);
 
-        const rMetal = gamma*(0.48+closeT*0.52+cw*0.28) + spec*0.50;
-        const gMetal = gamma*(0.65+closeT*0.35+cw*0.12) + spec*0.48;
-        const bMetal = gamma*(0.95-cw*0.18)              + spec*0.44;
+        const rMetal = gamma * (0.48 + closeT * 0.52 + cw * 0.28) + spec * 0.5;
+        const gMetal = gamma * (0.65 + closeT * 0.35 + cw * 0.12) + spec * 0.48;
+        const bMetal = gamma * (0.95 - cw * 0.18) + spec * 0.44;
 
         // Electric blue star collapse color
-        const rStar = gamma*0.22 + spec*0.45;
-        const gStar = gamma*0.72 + spec*0.60;
-        const bStar = gamma*1.00 + spec*0.90;
+        const rStar = gamma * 0.22 + spec * 0.45;
+        const gStar = gamma * 0.72 + spec * 0.6;
+        const bStar = gamma * 1.0 + spec * 0.9;
 
-        const rC0 = Math.min(1, (rMetal*(1-colFrac) + rStar*colFrac) * starGlow);
-        const gC0 = Math.min(1, (gMetal*(1-colFrac) + gStar*colFrac) * starGlow);
-        const bC0 = Math.min(1, (bMetal*(1-colFrac) + bStar*colFrac) * starGlow);
+        const rC0 = Math.min(
+          1,
+          (rMetal * (1 - colFrac) + rStar * colFrac) * starGlow,
+        );
+        const gC0 = Math.min(
+          1,
+          (gMetal * (1 - colFrac) + gStar * colFrac) * starGlow,
+        );
+        const bC0 = Math.min(
+          1,
+          (bMetal * (1 - colFrac) + bStar * colFrac) * starGlow,
+        );
 
         /* Proximity fade — particle vanishes as it enters the sphere core */
-        const fadeR    = sphereR * 3.5;          // fade starts at 3.5× sphere radius
-        const proxFade = Math.max(0, Math.min(1, (d2 - sphereR) / (fadeR - sphereR)));
+        const fadeR = sphereR * 3.5; // fade starts at 3.5× sphere radius
+        const proxFade = Math.max(
+          0,
+          Math.min(1, (d2 - sphereR) / (fadeR - sphereR)),
+        );
         const rC = rC0 * proxFade;
         const gC = gC0 * proxFade;
         const bC = bC0 * proxFade;
 
-        svx[i]=svx[i]*0.88+pvx[i]*0.12;
-        svy[i]=svy[i]*0.88+pvy[i]*0.12;
-        const sSpd=Math.sqrt(svx[i]*svx[i]+svy[i]*svy[i])||1e-5;
-        const tvx=svx[i]/sSpd, tvy=svy[i]/sSpd;
-        pdx[i]+=(tvx-pdx[i])*0.045;
-        pdy[i]+=(tvy-pdy[i])*0.045;
-        const dMag=Math.sqrt(pdx[i]*pdx[i]+pdy[i]*pdy[i])||1e-5;
-        const d4x=pdx[i]/dMag, d4y=pdy[i]/dMag;
-        const sFlex=(CFG.stripFlex!==undefined?CFG.stripFlex:1.0);
-        ptx[i]+=(d4x-ptx[i])*0.035*sFlex;
-        pty[i]+=(d4y-pty[i])*0.035*sFlex;
-        const tMag=Math.sqrt(ptx[i]*ptx[i]+pty[i]*pty[i])||1e-5;
-        const d0x=ptx[i]/tMag, d0y=pty[i]/tMag;
-        const u1x=d0x*.75+d4x*.25,u1y=d0y*.75+d4y*.25,m1=Math.sqrt(u1x*u1x+u1y*u1y)||1e-5;
-        const d1x=u1x/m1, d1y=u1y/m1;
-        const u2x=d0x*.50+d4x*.50,u2y=d0y*.50+d4y*.50,m2=Math.sqrt(u2x*u2x+u2y*u2y)||1e-5;
-        const d2x=u2x/m2, d2y=u2y/m2;
-        const u3x=d0x*.25+d4x*.75,u3y=d0y*.25+d4y*.75,m3=Math.sqrt(u3x*u3x+u3y*u3y)||1e-5;
-        const d3x=u3x/m3, d3y=u3y/m3;
+        svx[i] = svx[i] * 0.88 + pvx[i] * 0.12;
+        svy[i] = svy[i] * 0.88 + pvy[i] * 0.12;
+        const sSpd = Math.sqrt(svx[i] * svx[i] + svy[i] * svy[i]) || 1e-5;
+        const tvx = svx[i] / sSpd,
+          tvy = svy[i] / sSpd;
+        pdx[i] += (tvx - pdx[i]) * 0.045;
+        pdy[i] += (tvy - pdy[i]) * 0.045;
+        const dMag = Math.sqrt(pdx[i] * pdx[i] + pdy[i] * pdy[i]) || 1e-5;
+        const d4x = pdx[i] / dMag,
+          d4y = pdy[i] / dMag;
+        const sFlex = CFG.stripFlex !== undefined ? CFG.stripFlex : 1.0;
+        ptx[i] += (d4x - ptx[i]) * 0.035 * sFlex;
+        pty[i] += (d4y - pty[i]) * 0.035 * sFlex;
+        const tMag = Math.sqrt(ptx[i] * ptx[i] + pty[i] * pty[i]) || 1e-5;
+        const d0x = ptx[i] / tMag,
+          d0y = pty[i] / tMag;
+        const u1x = d0x * 0.75 + d4x * 0.25,
+          u1y = d0y * 0.75 + d4y * 0.25,
+          m1 = Math.sqrt(u1x * u1x + u1y * u1y) || 1e-5;
+        const d1x = u1x / m1,
+          d1y = u1y / m1;
+        const u2x = d0x * 0.5 + d4x * 0.5,
+          u2y = d0y * 0.5 + d4y * 0.5,
+          m2 = Math.sqrt(u2x * u2x + u2y * u2y) || 1e-5;
+        const d2x = u2x / m2,
+          d2y = u2y / m2;
+        const u3x = d0x * 0.25 + d4x * 0.75,
+          u3y = d0y * 0.25 + d4y * 0.75,
+          m3 = Math.sqrt(u3x * u3x + u3y * u3y) || 1e-5;
+        const d3x = u3x / m3,
+          d3y = u3y / m3;
 
-        const totalL=pLen[i], segL=totalL*0.25, W=pWid[i], cz=pz[i];
-        const n2x=px[i], n2y=py[i];
-        const n1x=n2x-d1x*segL, n1y=n2y-d1y*segL;
-        const n0x=n1x-d0x*segL, n0y=n1y-d0y*segL;
-        const n3x=n2x+d3x*segL, n3y=n2y+d3y*segL;
-        const n4x=n3x+d4x*segL, n4y=n3y+d4y*segL;
+        const totalL = pLen[i],
+          segL = totalL * 0.25,
+          W = pWid[i],
+          cz = pz[i];
+        const n2x = px[i],
+          n2y = py[i];
+        const n1x = n2x - d1x * segL,
+          n1y = n2y - d1y * segL;
+        const n0x = n1x - d0x * segL,
+          n0y = n1y - d0y * segL;
+        const n3x = n2x + d3x * segL,
+          n3y = n2y + d3y * segL;
+        const n4x = n3x + d4x * segL,
+          n4y = n3y + d4y * segL;
 
         writeSnakeRibbon(
-          i*VPR*3,
-          n0x,n0y, n1x,n1y, n2x,n2y, n3x,n3y, n4x,n4y,
-          d0x,d0y, d1x,d1y, d2x,d2y, d3x,d3y, d4x,d4y,
-          W, cz, rC, gC, bC, 0.022
+          i * VPR * 3,
+          n0x,
+          n0y,
+          n1x,
+          n1y,
+          n2x,
+          n2y,
+          n3x,
+          n3y,
+          n4x,
+          n4y,
+          d0x,
+          d0y,
+          d1x,
+          d1y,
+          d2x,
+          d2y,
+          d3x,
+          d3y,
+          d4x,
+          d4y,
+          W,
+          cz,
+          rC,
+          gC,
+          bC,
+          0.022,
         );
       }
     }
@@ -1537,24 +1969,49 @@
     rebuildCount,
     getDefaults() {
       return {
-        sphereR:2.2, shieldR:6.2, lightR:15.0,
-        pulseSpeed:0.65, pulseAmt:0.075,
-        coronaScale:1.0, coronaGlow:1.0, coronaRim:1.0,
-        particleCount:3000,
-        minLen:0.30, maxLen:0.70, minWid:0.010, maxWid:0.025,
-        upward:0.0048, damping:0.92, swirlK:0.009, noiseF:0.0065,
-        noiseS:0.048, noiseT:0.09, alignK:0.012, cohereK:0.018,
-        shieldK:0.52, slowZone:3.5,
-        xSpread:90.0, ySpread:52.0, zSpread:16.0, zBias:-0.45,
-        falloffPow:3.0, briBoost:1.0, colorWarm:0.0,
-        fogEnable:1, fogDensity:0.80, fogNear:2.0, fogFar:25.0, fogColor:'#0e1b40',
+        sphereR: 2.2,
+        shieldR: 6.2,
+        lightR: 15.0,
+        pulseSpeed: 0.65,
+        pulseAmt: 0.075,
+        coronaScale: 1.0,
+        coronaGlow: 1.0,
+        coronaRim: 1.0,
+        particleCount: 3000,
+        minLen: 0.3,
+        maxLen: 0.7,
+        minWid: 0.01,
+        maxWid: 0.025,
+        upward: 0.0048,
+        damping: 0.92,
+        swirlK: 0.009,
+        noiseF: 0.0065,
+        noiseS: 0.048,
+        noiseT: 0.09,
+        alignK: 0.012,
+        cohereK: 0.018,
+        shieldK: 0.52,
+        slowZone: 3.5,
+        xSpread: 90.0,
+        ySpread: 52.0,
+        zSpread: 16.0,
+        zBias: -0.45,
+        falloffPow: 3.0,
+        briBoost: 1.0,
+        colorWarm: 0.0,
+        fogEnable: 1,
+        fogDensity: 0.8,
+        fogNear: 2.0,
+        fogFar: 25.0,
+        fogColor: "#0e1b40",
       };
     },
   };
 
   window.__threeScene = {
-    setBackgroundColor(hex) { renderer.setClearColor(new THREE.Color(hex),1); },
+    setBackgroundColor(hex) {
+      renderer.setClearColor(new THREE.Color(hex), 1);
+    },
     setNebulaTheme() {},
   };
-
 })();

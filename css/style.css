@@ -869,27 +869,29 @@
    .work__thumb-bg {
      position: absolute;
      inset: 0;
+     background-size: cover;
+     background-position: center;
      transition: transform 0.6s var(--ease-out);
    }
 
-   /* Project thumbnail gradient backgrounds */
+   /* Project thumbnail gradient & image backgrounds */
    .work__thumb-bg--1 {
-     background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+     background-image: linear-gradient(rgba(15, 12, 41, 0.3), rgba(36, 36, 62, 0.6)), url('../img/projects/writescan.jpg');
    }
    .work__thumb-bg--2 {
-     background: linear-gradient(135deg, #0a2342, #0d3b6e, #0a5c8a);
+     background-image: linear-gradient(rgba(10, 35, 66, 0.3), rgba(10, 92, 138, 0.6)), url('../img/projects/ecommerce.jpg');
    }
    .work__thumb-bg--3 {
-     background: linear-gradient(135deg, #1a0533, #4a0e6b, #1a0533);
+     background-image: linear-gradient(rgba(26, 5, 51, 0.3), rgba(74, 14, 107, 0.6)), url('../img/projects/foodwaste.jpg');
    }
    .work__thumb-bg--4 {
-     background: linear-gradient(135deg, #003027, #006a4e, #003027);
+     background-image: linear-gradient(rgba(0, 48, 39, 0.3), rgba(0, 106, 78, 0.6)), url('../img/projects/chat.jpg');
    }
    .work__thumb-bg--5 {
-     background: linear-gradient(135deg, #1f0a0a, #5c1a1a, #1f0a0a);
+     background-image: linear-gradient(135deg, #0a192f, #112240, #1b3a4b);
    }
    .work__thumb-bg--6 {
-     background: linear-gradient(135deg, #0f1a2e, #1e3a5f, #0f1a2e);
+     background-image: linear-gradient(135deg, #0f172a, #1e293b, #0f2b48);
    }
 
    /* Grid pattern overlay on thumbnails */

@@ -114,54 +114,46 @@
         break;
 
       case 'about':
-        printLine('SANDUN RATHNAYAKE — STAFF FULL STACK ENGINEER');
-        printLine('---------------------------------------------');
-        printLine('System design architect specializing in robust scalable databases,');
-        printLine('event-driven message pipelines, and high-performance WebGL interfaces.');
-        printLine('Dedicated to clean, predictable systems and exactly-once processing.');
+        printLine('SANDUN RATHNAYAKE — FULL-STACK SOFTWARE ENGINEER');
+        printLine('------------------------------------------------');
+        printLine('Full-Stack Software Engineer with 2 years of experience designing,');
+        printLine('developing, and deploying scalable web applications & mobile solutions.');
+        printLine('Expertise in Java EE, React Native, RESTful APIs, AWS, and AI Integrations.');
         break;
 
       case 'experience':
         printLine('CAREER TIMELINE:');
         printLine('----------------');
-        printLine('► Senior Full Stack Engineer @ NexaTech Solutions (2024–Present)');
-        printLine('  Leading microservices architecture with NestJS, Kafka, Redis');
-        printLine('');
-        printLine('► Full Stack Developer @ CloudBase (2022–2024)');
-        printLine('  Built multi-tenant SaaS with Next.js, AWS, PostgreSQL');
-        printLine('');
-        printLine('► Software Engineer @ DevForge Labs (2020–2022)');
-        printLine('  Developed RESTful APIs using Jakarta EE, Hibernate, MySQL');
-        printLine('');
-        printLine('► Junior Developer @ Startify (2019–2020)');
-        printLine('  Created WordPress themes, React Native apps, CodeIgniter apps');
+        printLine('► Full-Stack Software Engineer & Project Leader @ Lakmini International (Sep 2024–Present)');
+        printLine('  Developing Android & iOS apps, RESTful APIs, and OpenAI AI integrations');
         printLine('');
         printLine('EDUCATION:');
-        printLine('  BSc (Hons) Computer Science — University of Colombo (2016–2020)');
+        printLine('  BSc (Hons) Software Engineering — Birmingham City University, UK (2023–2024)');
+        printLine('  Diploma in Professional Software Engineering — Java Institute Sri Lanka (2023–2024)');
         break;
 
       case 'skills':
         printLine('CORE SYSTEM ENGINEERING COMPETENCE');
         printLine('----------------------------------');
-        printLine('        [01 SYSTEM & PLATFORM ARCHITECTURE]');
-        printLine('         [02 CORE: JAVA, PHP, JS, SQL]');
-        printLine('       [03 REACT, REACT NATIVE, ANDROID]');
-        printLine('        [04 APIS: REST, OPEN API, GRPC]');
-        printLine('         [05 MYSQL, POSTGRESQL, NOSQL]');
-        printLine('          [06 DEVSECOPS, CLOUD, GIT]');
-        printLine('             [07 BLENDER & 3D]');
-        printLine('               [08 APEX UI]');
+        printLine('        [01 LANGUAGES: JAVA, PYTHON, JS, TS, PHP, C/C++]');
+        printLine('         [02 FRONTEND: HTML, CSS, REACT NATIVE, THREE.JS]');
+        printLine('       [03 FRAMEWORKS: JAVA EE, JAKARTA EE, HIBERNATE, EJB]');
+        printLine('        [04 DATABASES: MYSQL, POSTGRESQL, SQLITE, MONGODB]');
+        printLine('         [05 CLOUD & DEVOPS: AWS, GIT, MAVEN, GRADLE]');
+        printLine('          [06 SERVERS: APACHE TOMCAT, PAYARA, NGINX]');
+        printLine('             [07 AI & APIS: OPENAI API, OCR, WEBSOCKET]');
+        printLine('               [08 ARCHITECTURE: MVC, AGILE, UML]');
         break;
 
       case 'projects':
         printLine('ACTIVE PROJECTS REGISTRY:');
         printLine('-------------------------');
-        printLine('1. NexaCommerce     - E-Commerce Engine (NestJS, Kafka, Redis)');
-        printLine('2. PulseAnalytics   - Live Stream Pipeline (Go, ClickHouse, Ws)');
-        printLine('3. Archway CMS      - Multi-Tenant Web Engine (Next.js, AWS S3)');
-        printLine('4. FlowSync API     - Event Router Gateway (gRPC, Redis Lua)');
-        printLine('5. OrbUI Toolkit    - Accessible Elements (Shadow DOM, WCAG AAA)');
-        printLine('6. VaultDB Engine   - P2P Encrypted Consensus (Raft, Java NIO)');
+        printLine('1. WriteScan          - OCR & AI Document App (React Native, OpenAI API)');
+        printLine('2. E-Commerce Platform- Full-Stack Web App (Java EE, MVC, MySQL)');
+        printLine('3. Food Waste App     - M-Commerce Reduction App (Android, Java EE)');
+        printLine('4. Real-Time Chat App - Mobile Messaging System (React Native, WebSocket)');
+        printLine('5. Hospital System    - Enterprise Desktop App (Java Swing, RBAC)');
+        printLine('6. Cargo Tracking     - Real-Time Logistics Platform (Java EE, EJB)');
         printLine('');
         printLine('Click work cards on the grid above to expand visual dashboards.');
         break;
@@ -169,11 +161,11 @@
       case 'contact':
         printLine('TRANSMISSION ENDPOINTS:');
         printLine('-----------------------');
-        printLine('  EMAIL:     sandun.rathnayake@example.dev');
-        printLine('  GITHUB:    github.com/sandunrathnayake');
-        printLine('  LINKEDIN:  linkedin.com/in/sandunrathnayake');
-        printLine('  TWITTER:   twitter.com/sandundev');
-        printLine('  LOCATION:  GMT+5:30 LK (Sri Lanka)');
+        printLine('  EMAIL:     sandunbuddika09@gmail.com');
+        printLine('  PHONE:     +94 78 117 8102');
+        printLine('  GITHUB:    github.com/Sandun-Rathnayake');
+        printLine('  LINKEDIN:  linkedin.com/in/sandun09');
+        printLine('  LOCATION:  Piliyandala, Sri Lanka');
         break;
 
       case 'email':
@@ -231,7 +223,7 @@
         `Hi Sandun,\n\n${mailState.message}\n\nBest regards,\n${mailState.name}\nEmail: ${mailState.email}`
       );
       setTimeout(() => {
-        window.location.href = `mailto:sandun.rathnayake@example.dev?subject=${subject}&body=${body}`;
+        window.location.href = `mailto:sandunbuddika09@gmail.com?subject=${subject}&body=${body}`;
       }, 1000);
 
       // Reset state
