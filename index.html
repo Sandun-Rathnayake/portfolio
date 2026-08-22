@@ -904,10 +904,12 @@
           <div class="terminal__body">
             <div id="terminal-logs"></div>
             <div class="terminal__prompt-line">
-              <span class="terminal__prompt" id="terminal-prompt">sandun@dev:~$
-              </span>
-              <input type="text" class="terminal__input" id="terminal-input" autocomplete="off" />
-              <span class="terminal__cursor"></span>
+              <span class="terminal__prompt" id="terminal-prompt">sandun@dev:~$</span>
+              <div class="terminal__input-wrapper">
+                <span class="terminal__typed" id="terminal-typed"></span>
+                <span class="terminal__cursor"></span>
+                <input type="text" class="terminal__input" id="terminal-input" autocomplete="off" spellcheck="false" />
+              </div>
             </div>
           </div>
         </div>

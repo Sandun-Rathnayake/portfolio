@@ -24,9 +24,17 @@
     const terminal = document.getElementById('contact-terminal');
     const logsWrap = document.getElementById('terminal-logs');
     const formInput = document.getElementById('terminal-input');
+    const typedSpan = document.getElementById('terminal-typed');
     const promptSpan = document.getElementById('terminal-prompt');
 
     if (!terminal || !logsWrap || !formInput) return;
+
+    function syncTyped() {
+      if (typedSpan) typedSpan.textContent = formInput.value;
+    }
+
+    formInput.addEventListener('input', syncTyped);
+    formInput.addEventListener('keyup', syncTyped);
 
     // Focus input on terminal click
     terminal.addEventListener('click', () => {
@@ -38,6 +46,7 @@
       if (e.key === 'Enter') {
         const rawCmd = formInput.value;
         formInput.value = '';
+        syncTyped();
         const cleanCmd = rawCmd.trim();
 
         if (cleanCmd.length > 0) {
@@ -65,6 +74,7 @@
         if (terminalHistory.length > 0 && historyIndex > 0) {
           historyIndex--;
           formInput.value = terminalHistory[historyIndex];
+          syncTyped();
         }
       }
       if (e.key === 'ArrowDown') {
@@ -72,9 +82,11 @@
         if (terminalHistory.length > 0 && historyIndex < terminalHistory.length - 1) {
           historyIndex++;
           formInput.value = terminalHistory[historyIndex];
+          syncTyped();
         } else {
           historyIndex = terminalHistory.length;
           formInput.value = '';
+          syncTyped();
         }
       }
     });

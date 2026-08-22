@@ -2188,51 +2188,66 @@
    .terminal__prompt-line {
      display: flex;
      align-items: center;
-     gap: 0.3rem;
+     gap: 0.4rem;
+     position: relative;
    }
 
    .terminal__prompt {
      color: var(--accent);
      white-space: nowrap;
+     font-family: var(--font-mono);
+     font-size: 0.75rem;
+     user-select: none;
    }
 
-   .terminal__input {
-     background: transparent !important;
-     border: none !important;
-     outline: none !important;
-     color: #ffffff !important;
-     font-family: var(--font-mono) !important;
-     font-size: 0.72rem !important;
-     padding: 0 !important;
-     margin: 0 !important;
+   .terminal__input-wrapper {
+     display: inline-flex;
+     align-items: center;
+     position: relative;
      flex: 1;
-     caret-color: transparent; /* custom cursor */
+     min-height: 1.2rem;
+   }
+
+   .terminal__typed {
+     color: #ffffff;
+     font-family: var(--font-mono);
+     font-size: 0.75rem;
+     white-space: pre;
+     user-select: none;
    }
 
    .terminal__cursor {
-     width: 6px;
-     height: 11px;
+     width: 7px;
+     height: 13px;
      background-color: var(--accent);
-     animation: terminal-blink 1s step-end infinite;
      display: inline-block;
+     margin-left: 2px;
+     animation: terminal-blink 1s step-end infinite;
      flex-shrink: 0;
+     box-shadow: 0 0 8px var(--accent-glow);
    }
 
    @keyframes terminal-blink {
-     from, to { background-color: transparent }
-     50% { background-color: var(--accent) }
+     from, to { background-color: transparent; }
+     50% { background-color: var(--accent); }
    }
 
-   /* Responsive styles for Detail Drawer and Grid */
-   @media (max-width: 1024px) {
-     .project-detail__grid {
-       grid-template-columns: 1fr;
-       gap: 3rem;
-     }
-
-     .telemetry-panel {
-       position: static;
-     }
+   .terminal__input {
+     position: absolute;
+     top: 0;
+     left: 0;
+     width: 100%;
+     height: 100%;
+     opacity: 0;
+     caret-color: transparent !important;
+     border: none !important;
+     outline: none !important;
+     background: transparent !important;
+     font-family: var(--font-mono) !important;
+     font-size: 0.75rem !important;
+     padding: 0 !important;
+     margin: 0 !important;
+     cursor: text;
    }
 
    @media (max-width: 768px) {
