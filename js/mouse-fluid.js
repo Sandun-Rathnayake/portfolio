@@ -182,7 +182,7 @@
       this._setupEventListeners();
 
       // ── GUI Control Panel (lil-gui) ────────────────────────
-      this._initGUI();
+      // this._initGUI();
     }
 
     _initShaders() {

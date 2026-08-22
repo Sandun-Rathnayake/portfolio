@@ -13,7 +13,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
-    href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap"
     rel="stylesheet" />
 
 
@@ -84,8 +84,8 @@
     <!-- ══ HERO SECTION ══════════════════════════════════════ -->
     <section id="hero" class="hero section">
       <div class="hero__meta">
-        <span class="hero__meta-item reveal-text">Full Stack Engineer</span>
-        <span class="hero__meta-item reveal-text">Thinking in systems.</span>
+        <span class="hero__meta-item reveal-text"><span class="hero__status-dot"></span> Available for Opportunities</span>
+        <span class="hero__meta-item reveal-text">Colombo, LK • Full-Stack Engineer</span>
       </div>
 
       <div class="hero__headline">
@@ -100,8 +100,18 @@
 
       <div class="hero__bio reveal-text">
         <p>
-          I'm <strong>Sandun Rathnayake</strong>, a Full-Stack Software Engineer with 2 years of experience engineering end-to-end web &amp; mobile solutions. Specialized in Java EE &amp; Jakarta EE, React Native, RESTful APIs, AWS, OCR &amp; AI Integration.
+          I'm <strong>Sandun Rathnayake</strong>, a Full-Stack Software Engineer with 2+ years of experience engineering scalable web &amp; mobile solutions, Java EE enterprise backends, and AI-powered products.
         </p>
+        <div class="hero__actions">
+          <button class="hero__cta" data-scroll-to="work">
+            <span>Explore Work</span>
+            <span class="hero__cta-arrow">↓</span>
+          </button>
+          <button class="hero__cta hero__cta--secondary" data-scroll-to="contact">
+            <span>Get In Touch</span>
+            <span class="hero__cta-arrow">↗</span>
+          </button>
+        </div>
       </div>
 
       <div class="hero__scroll-hint reveal-text" aria-hidden="true">
@@ -631,7 +641,9 @@
       <div class="experience__cards">
 
         <!-- 01 — Full-Stack Software Engineer @ Lakmini International -->
-        <div class="exp-card reveal-cloth" style="--delay:0s">
+        <div class="exp-card reveal-cloth" style="--delay:0s" data-tilt-3d>
+          <div class="exp-card__glow" aria-hidden="true"></div>
+          <div class="exp-card__cyber-grid" aria-hidden="true"></div>
           <div class="exp-card__num">01</div>
           <div class="exp-card__body">
             <div class="exp-card__top">
@@ -666,7 +678,9 @@
         </div>
 
         <!-- 02 — Full-Stack Software Engineer @ JsoftLK -->
-        <div class="exp-card reveal-cloth" style="--delay:0.15s">
+        <div class="exp-card reveal-cloth" style="--delay:0.15s" data-tilt-3d>
+          <div class="exp-card__glow" aria-hidden="true"></div>
+          <div class="exp-card__cyber-grid" aria-hidden="true"></div>
           <div class="exp-card__num">02</div>
           <div class="exp-card__body">
             <div class="exp-card__top">
@@ -698,18 +712,28 @@
 
       </div><!-- /.experience__cards -->
 
-      <!-- Education -->
+      <!-- Education Holographic Grid -->
       <div class="experience__education">
-        <h3 class="experience__education-title reveal-text">Education</h3>
-        <div class="experience__edu-item reveal-text" style="margin-bottom: 1.5rem;">
-          <span class="experience__degree">BSc (Hons) Software Engineering</span>
-          <span class="experience__university">Birmingham City University, UK</span>
-          <span class="experience__year">Sep 2023 – Sep 2024</span>
-        </div>
-        <div class="experience__edu-item reveal-text">
-          <span class="experience__degree">Diploma in Professional Software Engineering</span>
-          <span class="experience__university">Java Institute Sri Lanka</span>
-          <span class="experience__year">Sep 2023 – Sep 2024</span>
+        <h3 class="experience__education-title reveal-text">Education &amp; Credentials</h3>
+        <div class="experience__edu-grid">
+          <div class="edu-card reveal-cloth" style="--delay:0.1s" data-tilt-3d>
+            <div class="edu-card__glow" aria-hidden="true"></div>
+            <div class="edu-card__badge-icon">🎓</div>
+            <div class="edu-card__info">
+              <span class="edu-card__degree">BSc (Hons) Software Engineering</span>
+              <span class="edu-card__university">Birmingham City University, UK</span>
+              <span class="edu-card__year">Sep 2023 – Sep 2024</span>
+            </div>
+          </div>
+          <div class="edu-card reveal-cloth" style="--delay:0.2s" data-tilt-3d>
+            <div class="edu-card__glow" aria-hidden="true"></div>
+            <div class="edu-card__badge-icon">🏛</div>
+            <div class="edu-card__info">
+              <span class="edu-card__degree">Diploma in Professional Software Engineering</span>
+              <span class="edu-card__university">Java Institute Sri Lanka</span>
+              <span class="edu-card__year">Sep 2023 – Sep 2024</span>
+            </div>
+          </div>
         </div>
       </div>
     </section>
@@ -926,7 +950,7 @@
   <script src="https://cdn.jsdelivr.net/npm/lil-gui@0.19"></script>
   <script src="js/mouse-fluid.js"></script>
   <script src="js/three-scene.js"></script>
-  <script src="js/control-panel.js"></script>
+  <!-- <script src="js/control-panel.js"></script> -->
   <script src="js/animations.js"></script>
   <script src="js/ui.js"></script>
   <script src="js/projects.js"></script>
