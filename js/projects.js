@@ -4,112 +4,157 @@
  */
 
 (function () {
-  'use strict';
+  "use strict";
 
   // ── Projects Database ─────────────────────────────────────
   const PROJECTS_DATA = {
     1: {
-      title: 'WriteScan — OCR & AI Document App',
-      year: '2024',
-      role: 'Project Leader & Developer',
-      type: 'Professional Mobile App · Lakmini International (Pvt) Ltd',
-      summary: 'Cross-platform mobile application for iOS and Android featuring camera OCR scanning and AI-powered document intelligence using OpenAI API.',
-      challenge: 'Integrating real-time camera-based text recognition, enabling conversational Q&A over complex document uploads, and designing a high-throughput Java EE backend API.',
+      title: "WriteScan — OCR & AI Document App",
+      year: "2024",
+      role: "Project Leader & Developer",
+      type: "Professional Mobile App · Lakmini International (Pvt) Ltd",
+      summary:
+        "Cross-platform mobile application for iOS and Android with 100K+ downloads, featuring camera OCR scanning and AI-powered document intelligence using OpenAI API.",
+      challenge:
+        "Integrating real-time camera-based text recognition, enabling conversational Q&A over complex document uploads, and designing a high-throughput Java EE backend API.",
       achievements: [
-        'Built cross-platform mobile app (WriteScan) supporting camera text scanning, document upload, and intelligent document Q&A using OpenAI API.',
-        'Engineered real-time AI conversation pipeline for interactive text extraction and deep document analysis.',
-        'Developed robust backend REST API using Java EE and MySQL for secure user authentication, session control, and document storage.'
+        "Achieved 100,000+ downloads across iOS and Android platforms.",
+        "Built cross-platform mobile app (WriteScan) supporting camera text scanning, document upload, and intelligent document Q&A using OpenAI API.",
+        "Engineered real-time AI conversation pipeline for interactive text extraction and deep document analysis.",
+        "Developed robust backend REST API using Java EE and MySQL for secure user authentication, session control, and document storage.",
       ],
-      tech: ['React Native', 'OpenAI API', 'OCR Integration', 'Java EE', 'RESTful APIs', 'MySQL', 'iOS', 'Android'],
-      liveUrl: 'https://github.com/Sandun-Rathnayake',
-      githubUrl: 'https://github.com/Sandun-Rathnayake',
-      chartType: 'writescan'
+      tech: [
+        "React Native",
+        "OpenAI API",
+        "OCR Integration",
+        "Java EE",
+        "RESTful APIs",
+        "MySQL",
+        "iOS",
+        "Android",
+      ],
+      liveUrl: "https://github.com/Sandun-Rathnayake",
+      githubUrl: "https://github.com/Sandun-Rathnayake",
+      chartType: "writescan",
     },
     2: {
-      title: 'E-Commerce Full-Stack Web Platform',
-      year: '2024',
-      role: 'Full-Stack Developer',
-      type: 'Academic Project · Java Institute Sri Lanka',
-      summary: 'Full-featured web-based e-commerce platform built on Model-View-Controller (MVC) architecture supporting multi-category product catalog, shopping cart, and transactional checkout.',
-      challenge: 'Implementing strict MVC pattern separation, managing dynamic session shopping cart state, and ensuring secure payment processing flows.',
+      title: "E-Commerce Full-Stack Web Platform",
+      year: "2024",
+      role: "Full-Stack Developer",
+      type: "Professional Project · Java Institute Sri Lanka",
+      summary:
+        "Full-featured web-based e-commerce platform built on Model-View-Controller (MVC) architecture supporting multi-category product catalog, shopping cart, and transactional checkout.",
+      challenge:
+        "Implementing strict MVC pattern separation, managing dynamic session shopping cart state, and ensuring secure payment processing flows.",
       achievements: [
-        'Architected complete e-commerce web platform utilizing MVC pattern with Java EE, Hibernate ORM, and MySQL database backend.',
-        'Created responsive and accessible web frontend using HTML5, CSS3, and JavaScript.',
-        'Implemented secure user registration, session management, product filter catalog, and checkout payment processing workflows.'
+        "Architected complete e-commerce web platform utilizing MVC pattern with Java EE, Hibernate ORM, and MySQL database backend.",
+        "Created responsive and accessible web frontend using HTML5, CSS3, and JavaScript.",
+        "Implemented secure user registration, session management, product filter catalog, and checkout payment processing workflows.",
       ],
-      tech: ['Java EE', 'Jakarta EE', 'Hibernate', 'MySQL', 'MVC', 'HTML5', 'CSS3', 'JavaScript'],
-      liveUrl: 'https://github.com/Sandun-Rathnayake',
-      githubUrl: 'https://github.com/Sandun-Rathnayake',
-      chartType: 'ecommerce'
+      tech: [
+        "Java EE",
+        "Jakarta EE",
+        "Hibernate",
+        "MySQL",
+        "MVC",
+        "HTML5",
+        "CSS3",
+        "JavaScript",
+      ],
+      liveUrl: "https://github.com/Sandun-Rathnayake",
+      githubUrl: "https://github.com/Sandun-Rathnayake",
+      chartType: "ecommerce",
     },
     3: {
-      title: 'M-Commerce Food Waste Reduction App',
-      year: '2024',
-      role: 'Mobile Developer',
-      type: 'Academic Project · Android',
-      summary: 'Mobile commercial application aimed at mitigating retail food waste by enabling grocery stores and outlets to sell near-expiry food items at discounted prices.',
-      challenge: 'Designing real-time price updates for dynamic inventory, location-based store item discovery, and optimized JSON payload transport over mobile networks.',
+      title: "M-Commerce Food Waste Reduction App",
+      year: "2024",
+      role: "Mobile Developer",
+      type: "Professional Project · Android",
+      summary:
+        "Mobile commercial application aimed at mitigating retail food waste by enabling grocery stores and outlets to sell near-expiry food items at discounted prices.",
+      challenge:
+        "Designing real-time price updates for dynamic inventory, location-based store item discovery, and optimized JSON payload transport over mobile networks.",
       achievements: [
-        'Developed native Android application frontend in Java with custom user interface components.',
-        'Implemented backend RESTful API infrastructure utilizing Java EE, Hibernate, and MySQL server.',
-        'Integrated dynamic item discounting feeds and real-time inventory availability trackers to promote sustainability.'
+        "Developed native Android application frontend in Java with custom user interface components.",
+        "Implemented backend RESTful API infrastructure utilizing Java EE, Hibernate, and MySQL server.",
+        "Integrated dynamic item discounting feeds and real-time inventory availability trackers to promote sustainability.",
       ],
-      tech: ['Android SDK', 'Java', 'RESTful APIs', 'Java EE', 'Hibernate', 'MySQL'],
-      liveUrl: 'https://github.com/Sandun-Rathnayake',
-      githubUrl: 'https://github.com/Sandun-Rathnayake',
-      chartType: 'foodwaste'
+      tech: [
+        "Android SDK",
+        "Java",
+        "RESTful APIs",
+        "Java EE",
+        "Hibernate",
+        "MySQL",
+      ],
+      liveUrl: "https://github.com/Sandun-Rathnayake",
+      githubUrl: "https://github.com/Sandun-Rathnayake",
+      chartType: "foodwaste",
     },
     4: {
-      title: 'Real-Time Chat & Messaging App',
-      year: '2024',
-      role: 'Full-Stack Developer',
-      type: 'Personal Project · React Native + TypeScript',
-      summary: 'Cross-platform real-time mobile messaging application engineered with WebSockets for instant message delivery, push notifications, and chat history persistence.',
-      challenge: 'Maintaining low-latency bi-directional WebSocket channels on mobile networks, ensuring message delivery receipt synchronization, and message persistence.',
+      title: "Real-Time Chat & Messaging App",
+      year: "2024",
+      role: "Full-Stack Developer",
+      type: "Professional Project · React Native + TypeScript",
+      summary:
+        "Cross-platform real-time mobile messaging application engineered with WebSockets for instant message delivery, push notifications, and chat history persistence.",
+      challenge:
+        "Maintaining low-latency bi-directional WebSocket channels on mobile networks, ensuring message delivery receipt synchronization, and message persistence.",
       achievements: [
-        'Built cross-platform real-time chat interface with React Native, TypeScript, and WebSocket protocol.',
-        'Developed backend REST API infrastructure in Java EE with MySQL database persistence.',
-        'Implemented push notification triggers, message status indicators (sent, delivered, read), and chat state synchronization.'
+        "Built cross-platform real-time chat interface with React Native, TypeScript, and WebSocket protocol.",
+        "Developed backend REST API infrastructure in Java EE with MySQL database persistence.",
+        "Implemented push notification triggers, message status indicators (sent, delivered, read), and chat state synchronization.",
       ],
-      tech: ['React Native', 'TypeScript', 'WebSocket', 'Java EE', 'RESTful APIs', 'MySQL'],
-      liveUrl: 'https://github.com/Sandun-Rathnayake',
-      githubUrl: 'https://github.com/Sandun-Rathnayake',
-      chartType: 'chat'
+      tech: [
+        "React Native",
+        "TypeScript",
+        "WebSocket",
+        "Java EE",
+        "RESTful APIs",
+        "MySQL",
+      ],
+      liveUrl: "https://github.com/Sandun-Rathnayake",
+      githubUrl: "https://github.com/Sandun-Rathnayake",
+      chartType: "chat",
     },
     5: {
-      title: 'Hospital Management System',
-      year: '2023',
-      role: 'Desktop App Developer',
-      type: 'Academic Project · Java Swing',
-      summary: 'Enterprise desktop software for comprehensive hospital management including patient intake, staff scheduling, room & equipment allocation, paramedic assignment, and billing.',
-      challenge: 'Handling complex multi-department hospital workflows, strict Role-Based Access Control (RBAC), and generating detailed financial and inventory reports.',
+      title: "Hospital Management System",
+      year: "2023",
+      role: "Desktop App Developer",
+      type: "Professional Project · Java Swing",
+      summary:
+        "Enterprise desktop software for comprehensive hospital management including patient intake, staff scheduling, room & equipment allocation, paramedic assignment, and billing.",
+      challenge:
+        "Handling complex multi-department hospital workflows, strict Role-Based Access Control (RBAC), and generating detailed financial and inventory reports.",
       achievements: [
-        'Developed desktop management system in Java Swing handling paramedic/vehicle assignment, staff, patient records, and equipment allocations.',
-        'Engineered Goods Received Note (GRN) inventory tracking and billing payment processing modules.',
-        'Implemented fine-grained Role-Based Access Control (RBAC) and dynamic operational reporting dashboards.'
+        "Developed desktop management system in Java Swing handling paramedic/vehicle assignment, staff, patient records, and equipment allocations.",
+        "Engineered Goods Received Note (GRN) inventory tracking and billing payment processing modules.",
+        "Implemented fine-grained Role-Based Access Control (RBAC) and dynamic operational reporting dashboards.",
       ],
-      tech: ['Java Swing', 'Java', 'MySQL', 'RBAC Security', 'Desktop GUI'],
-      liveUrl: 'https://github.com/Sandun-Rathnayake',
-      githubUrl: 'https://github.com/Sandun-Rathnayake',
-      chartType: 'hospital'
+      tech: ["Java Swing", "Java", "MySQL", "RBAC Security", "Desktop GUI"],
+      liveUrl: "https://github.com/Sandun-Rathnayake",
+      githubUrl: "https://github.com/Sandun-Rathnayake",
+      chartType: "hospital",
     },
     6: {
-      title: 'Real-Time Cargo Tracking System',
-      year: '2023',
-      role: 'Backend Systems Developer',
-      type: 'Academic Project · Java EE + EJB',
-      summary: 'Enterprise logistics tracking web application enabling customers and operators to track freight cargo shipments in real time using unique shipment identifiers.',
-      challenge: 'Ensuring transaction consistency under concurrent status updates, managing EJB session state across logistics nodes, and real-time tracking lookups.',
+      title: "Real-Time Cargo Tracking System",
+      year: "2023",
+      role: "Backend Systems Developer",
+      type: "Professional Project · Java EE + EJB",
+      summary:
+        "Enterprise logistics tracking web application enabling customers and operators to track freight cargo shipments in real time using unique shipment identifiers.",
+      challenge:
+        "Ensuring transaction consistency under concurrent status updates, managing EJB session state across logistics nodes, and real-time tracking lookups.",
       achievements: [
-        'Engineered enterprise logistics backend utilizing Enterprise JavaBeans (EJB) for transactional isolation and business logic encapsulation.',
-        'Built real-time shipment status lookup and tracking pipeline using unique shipment IDs.',
-        'Configured session management and database state transaction control for high reliability.'
+        "Engineered enterprise logistics backend utilizing Enterprise JavaBeans (EJB) for transactional isolation and business logic encapsulation.",
+        "Built real-time shipment status lookup and tracking pipeline using unique shipment IDs.",
+        "Configured session management and database state transaction control for high reliability.",
       ],
-      tech: ['Java EE', 'EJB', 'Enterprise JavaBeans', 'MySQL', 'RESTful APIs'],
-      liveUrl: 'https://github.com/Sandun-Rathnayake',
-      githubUrl: 'https://github.com/Sandun-Rathnayake',
-      chartType: 'cargo'
-    }
+      tech: ["Java EE", "EJB", "Enterprise JavaBeans", "MySQL", "RESTful APIs"],
+      liveUrl: "https://github.com/Sandun-Rathnayake",
+      githubUrl: "https://github.com/Sandun-Rathnayake",
+      chartType: "cargo",
+    },
   };
 
   // ── Global Animation Frame Tracker ────────────────────────
@@ -117,10 +162,10 @@
 
   // ── Initialize Project Details Drawer ─────────────────────
   function initProjectDrawer() {
-    const drawer = document.getElementById('project-drawer');
-    const backdrop = document.getElementById('project-drawer-backdrop');
-    const closeBtn = document.getElementById('project-drawer-close');
-    const scrollContainer = document.getElementById('project-drawer-scroll');
+    const drawer = document.getElementById("project-drawer");
+    const backdrop = document.getElementById("project-drawer-backdrop");
+    const closeBtn = document.getElementById("project-drawer-close");
+    const scrollContainer = document.getElementById("project-drawer-scroll");
 
     if (!drawer || !backdrop || !closeBtn || !scrollContainer) return;
 
@@ -162,25 +207,17 @@
               <div class="project-detail__section">
                 <h3 class="project-detail__sub">03 — Key Achievements & Solutions</h3>
                 <ul class="project-detail__list">
-                  ${data.achievements.map((ach) => `<li>${ach}</li>`).join('')}
+                  ${data.achievements.map((ach) => `<li>${ach}</li>`).join("")}
                 </ul>
               </div>
 
               <div class="project-detail__section">
                 <h3 class="project-detail__sub">04 — Technologies Deployed</h3>
                 <div class="project-detail__tags">
-                  ${data.tech.map((t) => `<span class="skills__badge">${t}</span>`).join('')}
+                  ${data.tech.map((t) => `<span class="skills__badge">${t}</span>`).join("")}
                 </div>
               </div>
 
-              <div class="project-detail__actions">
-                <a href="${data.liveUrl}" target="_blank" rel="noopener" class="project-detail__btn">
-                  <span>DEPLOYED APP ↗</span>
-                </a>
-                <a href="${data.githubUrl}" target="_blank" rel="noopener" class="project-detail__btn project-detail__btn--alt">
-                  <span>SOURCE CODE ↗</span>
-                </a>
-              </div>
             </div>
 
             <div class="project-detail__telemetry">
@@ -203,12 +240,12 @@
       `;
 
       // Show Drawer
-      document.body.classList.add('cursor-hover');
-      drawer.setAttribute('aria-hidden', 'false');
-      drawer.classList.add('active');
+      document.body.classList.add("cursor-hover");
+      drawer.setAttribute("aria-hidden", "false");
+      drawer.classList.add("active");
 
       // Prevent parent scroll
-      document.body.style.overflow = 'hidden';
+      document.body.style.overflow = "hidden";
 
       // Start Custom Telemetry Animation
       setTimeout(() => {
@@ -218,9 +255,9 @@
 
     // Close Drawer
     function closeProject() {
-      drawer.setAttribute('aria-hidden', 'true');
-      drawer.classList.remove('active');
-      document.body.style.overflow = '';
+      drawer.setAttribute("aria-hidden", "true");
+      drawer.classList.remove("active");
+      document.body.style.overflow = "";
 
       if (activeAnimationId) {
         cancelAnimationFrame(activeAnimationId);
@@ -229,36 +266,36 @@
     }
 
     // Intercept clicks on project cards
-    document.querySelectorAll('.work__item').forEach((item) => {
-      const link = item.querySelector('.work__link');
+    document.querySelectorAll(".work__item").forEach((item) => {
+      const link = item.querySelector(".work__link");
       if (!link) return;
 
       const id = item.dataset.index;
       if (!id) return;
 
-      link.addEventListener('click', (e) => {
+      link.addEventListener("click", (e) => {
         e.preventDefault();
         openProject(id);
       });
     });
 
     // Close event listeners
-    closeBtn.addEventListener('click', closeProject);
-    backdrop.addEventListener('click', closeProject);
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') closeProject();
+    closeBtn.addEventListener("click", closeProject);
+    backdrop.addEventListener("click", closeProject);
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") closeProject();
     });
   }
 
   // ── Custom Vector Animations for Project Telemetry ──────────────
   function startTelemetryAnimation(type) {
-    const wrap = document.getElementById('telemetry-canvas-wrap');
-    const m1 = document.getElementById('telemetry-metric-1');
-    const m2 = document.getElementById('telemetry-metric-2');
+    const wrap = document.getElementById("telemetry-canvas-wrap");
+    const m1 = document.getElementById("telemetry-metric-1");
+    const m2 = document.getElementById("telemetry-metric-2");
     if (!wrap) return;
 
     // ── 01: WriteScan — OCR Camera Scan & OpenAI AI Vector Flow ──
-    if (type === 'writescan') {
+    if (type === "writescan") {
       wrap.innerHTML = `
         <svg viewBox="0 0 400 220" class="telemetry-svg">
           <!-- Document Frame -->
@@ -289,10 +326,10 @@
         </svg>
       `;
 
-      const laser = document.getElementById('laser-beam');
-      const glow = document.getElementById('laser-glow');
-      const pulse = document.getElementById('ocr-pulse');
-      const aiCore = document.getElementById('ai-core');
+      const laser = document.getElementById("laser-beam");
+      const glow = document.getElementById("laser-glow");
+      const pulse = document.getElementById("ocr-pulse");
+      const aiCore = document.getElementById("ai-core");
 
       let scanY = 20;
       let dir = 1.5;
@@ -303,19 +340,22 @@
         if (scanY > 175 || scanY < 25) dir = -dir;
 
         if (laser) {
-          laser.setAttribute('y1', scanY);
-          laser.setAttribute('y2', scanY);
+          laser.setAttribute("y1", scanY);
+          laser.setAttribute("y2", scanY);
         }
         if (glow) {
-          glow.setAttribute('points', `60,${scanY} 220,${scanY} 220,${scanY + 12} 60,${scanY + 12}`);
+          glow.setAttribute(
+            "points",
+            `60,${scanY} 220,${scanY} 220,${scanY + 12} 60,${scanY + 12}`,
+          );
         }
 
         pulseT = (pulseT + 0.02) % 1;
-        if (pulse) pulse.setAttribute('cx', 220 + pulseT * 70);
+        if (pulse) pulse.setAttribute("cx", 220 + pulseT * 70);
 
         if (aiCore) {
           const r = 12 + Math.sin(Date.now() * 0.005) * 4;
-          aiCore.setAttribute('r', r);
+          aiCore.setAttribute("r", r);
         }
 
         const conf = (98.5 + Math.random() * 1.2).toFixed(1);
@@ -327,8 +367,8 @@
       }
       animate();
 
-    // ── 02: E-Commerce Platform — Full-Stack MVC Architecture Flow ──
-    } else if (type === 'ecommerce') {
+      // ── 02: E-Commerce Platform — Full-Stack MVC Architecture Flow ──
+    } else if (type === "ecommerce") {
       wrap.innerHTML = `
         <svg viewBox="0 0 400 220" class="telemetry-svg">
           <!-- Connector Lines -->
@@ -361,22 +401,23 @@
         </svg>
       `;
 
-      const p1 = document.getElementById('mvc-p1');
-      const p2 = document.getElementById('mvc-p2');
-      const meter = document.getElementById('t-meter');
+      const p1 = document.getElementById("mvc-p1");
+      const p2 = document.getElementById("mvc-p2");
+      const meter = document.getElementById("t-meter");
 
-      let t1 = 0, t2 = 0.5;
+      let t1 = 0,
+        t2 = 0.5;
 
       function animate() {
         t1 = (t1 + 0.015) % 1;
         t2 = (t2 + 0.015) % 1;
 
-        if (p1) p1.setAttribute('cx', 90 + t1 * 80);
-        if (p2) p2.setAttribute('cx', 230 + t2 * 80);
+        if (p1) p1.setAttribute("cx", 90 + t1 * 80);
+        if (p2) p2.setAttribute("cx", 230 + t2 * 80);
 
         if (meter) {
           const w = 140 + Math.sin(Date.now() * 0.003) * 60;
-          meter.setAttribute('width', w);
+          meter.setAttribute("width", w);
         }
 
         const tps = Math.round(320 + Math.random() * 45);
@@ -388,8 +429,8 @@
       }
       animate();
 
-    // ── 03: Food Waste Reduction App — Store Radar & Discount Vector Scanner ──
-    } else if (type === 'foodwaste') {
+      // ── 03: Food Waste Reduction App — Store Radar & Discount Vector Scanner ──
+    } else if (type === "foodwaste") {
       wrap.innerHTML = `
         <svg viewBox="0 0 400 220" class="telemetry-svg">
           <!-- Radar Grid Rings -->
@@ -422,7 +463,7 @@
         </svg>
       `;
 
-      const sweep = document.getElementById('radar-sweep');
+      const sweep = document.getElementById("radar-sweep");
       let angle = 0;
 
       function animate() {
@@ -431,8 +472,8 @@
         const y2 = 110 + Math.sin(angle) * 90;
 
         if (sweep) {
-          sweep.setAttribute('x2', x2);
-          sweep.setAttribute('y2', y2);
+          sweep.setAttribute("x2", x2);
+          sweep.setAttribute("y2", y2);
         }
 
         const saved = Math.round(140 + Math.random() * 15);
@@ -443,8 +484,8 @@
       }
       animate();
 
-    // ── 04: Real-Time Chat App — WebSocket Full-Duplex Vector Pipeline ──
-    } else if (type === 'chat') {
+      // ── 04: Real-Time Chat App — WebSocket Full-Duplex Vector Pipeline ──
+    } else if (type === "chat") {
       wrap.innerHTML = `
         <svg viewBox="0 0 400 220" class="telemetry-svg">
           <!-- Channel Lines -->
@@ -471,9 +512,9 @@
         </svg>
       `;
 
-      const tx = document.getElementById('ws-tx');
-      const rx = document.getElementById('ws-rx');
-      const status = document.getElementById('delivery-status');
+      const tx = document.getElementById("ws-tx");
+      const rx = document.getElementById("ws-rx");
+      const status = document.getElementById("delivery-status");
 
       let txX = 80;
       let rxX = 320;
@@ -485,8 +526,8 @@
         rxX -= 3.5;
         if (rxX < 80) rxX = 320;
 
-        if (tx) tx.setAttribute('cx', txX);
-        if (rx) rx.setAttribute('cx', rxX);
+        if (tx) tx.setAttribute("cx", txX);
+        if (rx) rx.setAttribute("cx", rxX);
 
         const rtt = Math.round(14 + Math.random() * 8);
         if (m1) m1.textContent = `WebSocket RTT: ${rtt}ms`;
@@ -496,8 +537,8 @@
       }
       animate();
 
-    // ── 05: Hospital Management System — Enterprise Workflow & RBAC Node Graph ──
-    } else if (type === 'hospital') {
+      // ── 05: Hospital Management System — Enterprise Workflow & RBAC Node Graph ──
+    } else if (type === "hospital") {
       wrap.innerHTML = `
         <svg viewBox="0 0 400 220" class="telemetry-svg">
           <!-- Flow Connections -->
@@ -536,7 +577,7 @@
         </svg>
       `;
 
-      const hp = document.getElementById('hosp-p');
+      const hp = document.getElementById("hosp-p");
       let nodeIdx = 0;
       const waypoints = [
         { x: 70, y: 110 },
@@ -544,7 +585,7 @@
         { x: 250, y: 60 },
         { x: 330, y: 110 },
         { x: 250, y: 160 },
-        { x: 150, y: 160 }
+        { x: 150, y: 160 },
       ];
       let t = 0;
 
@@ -562,8 +603,8 @@
         const cy = p1.y + (p2.y - p1.y) * t;
 
         if (hp) {
-          hp.setAttribute('cx', cx);
-          hp.setAttribute('cy', cy);
+          hp.setAttribute("cx", cx);
+          hp.setAttribute("cy", cy);
         }
 
         if (m1) m1.textContent = `RBAC Policy: ENFORCED`;
@@ -573,8 +614,8 @@
       }
       animate();
 
-    // ── 06: Real-Time Cargo Tracking — Logistics Transit Tracker & EJB State Machine ──
-    } else if (type === 'cargo') {
+      // ── 06: Real-Time Cargo Tracking — Logistics Transit Tracker & EJB State Machine ──
+    } else if (type === "cargo") {
       wrap.innerHTML = `
         <svg viewBox="0 0 400 220" class="telemetry-svg">
           <!-- Global Shipping Route Arc -->
@@ -599,8 +640,8 @@
         </svg>
       `;
 
-      const cargo = document.getElementById('cargo-shipment');
-      const pulse = document.getElementById('cargo-pulse');
+      const cargo = document.getElementById("cargo-shipment");
+      const pulse = document.getElementById("cargo-pulse");
       let t = 0;
 
       function animate() {
@@ -611,14 +652,14 @@
         const cy = (1 - t) * (1 - t) * 150 + 2 * (1 - t) * t * 20 + t * t * 150;
 
         if (cargo) {
-          cargo.setAttribute('cx', cx);
-          cargo.setAttribute('cy', cy);
+          cargo.setAttribute("cx", cx);
+          cargo.setAttribute("cy", cy);
         }
         if (pulse) {
-          pulse.setAttribute('cx', cx);
-          pulse.setAttribute('cy', cy);
+          pulse.setAttribute("cx", cx);
+          pulse.setAttribute("cy", cy);
           const pr = 10 + Math.sin(Date.now() * 0.006) * 6;
-          pulse.setAttribute('r', pr);
+          pulse.setAttribute("r", pr);
         }
 
         const trackerId = `LK-${Math.round(884000 + t * 1000)}`;
@@ -632,8 +673,8 @@
   }
 
   // ── Initialise ────────────────────────────────────────────
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initProjectDrawer);
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initProjectDrawer);
   } else {
     initProjectDrawer();
   }

@@ -4,118 +4,178 @@
  */
 
 (function () {
-  'use strict';
+  "use strict";
 
   // ── Projects Database ─────────────────────────────────────
   const PROJECTS_DATA = {
     1: {
-      title: 'NexaCommerce',
-      year: '2025–2026',
-      role: 'Lead Full-Stack Engineer',
-      type: 'Core E-Commerce Engine',
-      summary: 'Distributed, highly-scalable transactional e-commerce core engine engineered to support massive flash sales with low-latency consistency guarantees.',
-      challenge: 'Double-booking prevention during extreme concurrent traffic peaks (50k+ active checkouts), real-time inventory synchronization across multi-channel databases, and guaranteeing exactly-once transactional payment webhook settlements.',
+      title: "NexaCommerce",
+      year: "2025–2026",
+      role: "Lead Full-Stack Engineer",
+      type: "Core E-Commerce Engine",
+      summary:
+        "Distributed, highly-scalable transactional e-commerce core engine engineered to support massive flash sales with low-latency consistency guarantees.",
+      challenge:
+        "Double-booking prevention during extreme concurrent traffic peaks (50k+ active checkouts), real-time inventory synchronization across multi-channel databases, and guaranteeing exactly-once transactional payment webhook settlements.",
       achievements: [
-        'Implemented a low-latency Distributed Lock mechanism using Redis (Redlock pattern) to isolate SKU inventory adjustments, reducing database deadlocks and overselling occurrences to absolute zero.',
-        'Engineered a transactional Outbox Pattern using PostgreSQL and Apache Kafka to handle Stripe payment webhook states, guaranteeing asynchronous processing with exactly-once settlement guarantees.',
-        'Designed a multi-tier caching strategy (in-memory LRU + distributed Redis cluster) that reduced median checkout response times (p50) from 320ms to 18ms under 50k concurrent simulated users.',
-        'Created optimized secondary database indexing in Elasticsearch, improving product query response times and enabling fuzzy-text auto-completions under 10ms.'
+        "Implemented a low-latency Distributed Lock mechanism using Redis (Redlock pattern) to isolate SKU inventory adjustments, reducing database deadlocks and overselling occurrences to absolute zero.",
+        "Engineered a transactional Outbox Pattern using PostgreSQL and Apache Kafka to handle Stripe payment webhook states, guaranteeing asynchronous processing with exactly-once settlement guarantees.",
+        "Designed a multi-tier caching strategy (in-memory LRU + distributed Redis cluster) that reduced median checkout response times (p50) from 320ms to 18ms under 50k concurrent simulated users.",
+        "Created optimized secondary database indexing in Elasticsearch, improving product query response times and enabling fuzzy-text auto-completions under 10ms.",
       ],
-      tech: ['Node.js', 'NestJS', 'PostgreSQL', 'Redis Cluster', 'Apache Kafka', 'Elasticsearch', 'Stripe API'],
-      liveUrl: 'https://github.com/sandunrathnayake/nexacommerce-engine',
-      githubUrl: 'https://github.com/sandunrathnayake/nexacommerce-engine',
-      chartType: 'nexacommerce'
+      tech: [
+        "Node.js",
+        "NestJS",
+        "PostgreSQL",
+        "Redis Cluster",
+        "Apache Kafka",
+        "Elasticsearch",
+        "Stripe API",
+      ],
+      liveUrl: "https://github.com/sandunrathnayake/nexacommerce-engine",
+      githubUrl: "https://github.com/sandunrathnayake/nexacommerce-engine",
+      chartType: "nexacommerce",
     },
     2: {
-      title: 'PulseAnalytics',
-      year: '2025',
-      role: 'Senior Backend Engineer',
-      type: 'Real-Time Telemetry Pipeline',
-      summary: 'Real-time clickstream event collection and clickpath analytics platform processing millions of metrics daily for high-performance product optimization dashboards.',
-      challenge: 'Telemetry ingestion bottleneck under extreme traffic spikes and scaling analytical queries over terabytes of raw chronological clickstream event records.',
+      title: "PulseAnalytics",
+      year: "2025",
+      role: "Senior Backend Engineer",
+      type: "Real-Time Telemetry Pipeline",
+      summary:
+        "Real-time clickstream event collection and clickpath analytics platform processing millions of metrics daily for high-performance product optimization dashboards.",
+      challenge:
+        "Telemetry ingestion bottleneck under extreme traffic spikes and scaling analytical queries over terabytes of raw chronological clickstream event records.",
       achievements: [
-        'Configured a highly performant ingestion pipeline using Node streams and Redis list buffers before bulk-inserting into ClickHouse, handling ingestion peaks of 90,000 events/sec without packet drop.',
-        'Designed vectorized clickpath aggregation queries inside ClickHouse, speeding up user session duration reporting and multi-stage funnel queries by 45x compared to standard MySQL.',
-        'Built real-time dashboard socket pipelines using Node.js and the WebSockets (ws) library, achieving visual state synchronizations under 100ms with minimal memory footprint.',
-        'Authored robust telemetry partition algorithms, sharding clickstream logs by tenant space and reducing storage retrieval costs by 60%.'
+        "Configured a highly performant ingestion pipeline using Node streams and Redis list buffers before bulk-inserting into ClickHouse, handling ingestion peaks of 90,000 events/sec without packet drop.",
+        "Designed vectorized clickpath aggregation queries inside ClickHouse, speeding up user session duration reporting and multi-stage funnel queries by 45x compared to standard MySQL.",
+        "Built real-time dashboard socket pipelines using Node.js and the WebSockets (ws) library, achieving visual state synchronizations under 100ms with minimal memory footprint.",
+        "Authored robust telemetry partition algorithms, sharding clickstream logs by tenant space and reducing storage retrieval costs by 60%.",
       ],
-      tech: ['Go', 'ClickHouse', 'Redis In-Memory', 'Node.js', 'WebSockets', 'Docker', 'Grafana'],
-      liveUrl: 'https://github.com/sandunrathnayake/pulse-analytics-pipeline',
-      githubUrl: 'https://github.com/sandunrathnayake/pulse-analytics-pipeline',
-      chartType: 'pulse'
+      tech: [
+        "Go",
+        "ClickHouse",
+        "Redis In-Memory",
+        "Node.js",
+        "WebSockets",
+        "Docker",
+        "Grafana",
+      ],
+      liveUrl: "https://github.com/sandunrathnayake/pulse-analytics-pipeline",
+      githubUrl: "https://github.com/sandunrathnayake/pulse-analytics-pipeline",
+      chartType: "pulse",
     },
     3: {
-      title: 'Archway CMS',
-      year: '2024',
-      role: 'Lead Web Engineer',
-      type: 'Headless Multi-Tenant Engine',
-      summary: 'Lightweight modular headless content management system built to deploy thousands of independent marketing microsites from a unified visual schema canvas.',
-      challenge: 'Instantly propagating multi-tenant CDN invalidations, maintaining visual editor responsiveness with large schemas, and keeping asset optimization automated and cheap.',
+      title: "Archway CMS",
+      year: "2024",
+      role: "Lead Web Engineer",
+      type: "Headless Multi-Tenant Engine",
+      summary:
+        "Lightweight modular headless content management system built to deploy thousands of independent marketing microsites from a unified visual schema canvas.",
+      challenge:
+        "Instantly propagating multi-tenant CDN invalidations, maintaining visual editor responsiveness with large schemas, and keeping asset optimization automated and cheap.",
       achievements: [
-        'Developed a dynamic page compiler leveraging Next.js Incremental Static Regeneration (ISR), cutting average web server rendering times by 70%.',
-        'Engineered a visual drag-and-drop block schema visual editor that compiles blocks into highly optimized, nested JSON layouts, avoiding relational overhead.',
-        'Built an automated serverless media asset pipeline using AWS S3, Lambda, and CloudFront to automatically compress, webp-convert, and edge-cache images on the fly.',
-        'Integrated multi-tenant security policies with MongoDB, isolating client content spaces while maintaining shared database pooling.'
+        "Developed a dynamic page compiler leveraging Next.js Incremental Static Regeneration (ISR), cutting average web server rendering times by 70%.",
+        "Engineered a visual drag-and-drop block schema visual editor that compiles blocks into highly optimized, nested JSON layouts, avoiding relational overhead.",
+        "Built an automated serverless media asset pipeline using AWS S3, Lambda, and CloudFront to automatically compress, webp-convert, and edge-cache images on the fly.",
+        "Integrated multi-tenant security policies with MongoDB, isolating client content spaces while maintaining shared database pooling.",
       ],
-      tech: ['React.js', 'Next.js', 'Node.js', 'MongoDB', 'AWS CloudFront', 'AWS Lambda & S3', 'TailwindCSS'],
-      liveUrl: 'https://github.com/sandunrathnayake/archway-headless-cms',
-      githubUrl: 'https://github.com/sandunrathnayake/archway-headless-cms',
-      chartType: 'archway'
+      tech: [
+        "React.js",
+        "Next.js",
+        "Node.js",
+        "MongoDB",
+        "AWS CloudFront",
+        "AWS Lambda & S3",
+        "TailwindCSS",
+      ],
+      liveUrl: "https://github.com/sandunrathnayake/archway-headless-cms",
+      githubUrl: "https://github.com/sandunrathnayake/archway-headless-cms",
+      chartType: "archway",
     },
     4: {
-      title: 'FlowSync API',
-      year: '2024',
-      role: 'Backend Engineer',
-      type: 'Event-Driven Gateway',
-      summary: 'Unified high-availability API gateway acting as the secure edge routing layer, rate-limiting gate, and authentication proxy for microservices.',
-      challenge: 'Non-blocking JWT parsing at high scale, minimizing microservice-to-microservice hop overhead, and establishing reliable rate-limits under DDoS attacks.',
+      title: "FlowSync API",
+      year: "2024",
+      role: "Backend Engineer",
+      type: "Event-Driven Gateway",
+      summary:
+        "Unified high-availability API gateway acting as the secure edge routing layer, rate-limiting gate, and authentication proxy for microservices.",
+      challenge:
+        "Non-blocking JWT parsing at high scale, minimizing microservice-to-microservice hop overhead, and establishing reliable rate-limits under DDoS attacks.",
       achievements: [
-        'Authored a custom high-performance Gateway rate-limiter implementing Token Bucket algorithms inside atomic Redis Lua scripts, executing in under 2ms.',
-        'Engineered a zero-copy gRPC reverse proxy that translates external HTTP REST payloads to internal Protocol Buffer messages, saving 8ms of gateway hop overhead.',
-        'Integrated unified JWT validation caching, eliminating redundant authentication database calls and boosting peak routing capacity by 200%.',
-        'Configured Prometheus structured metrics and custom alerting, enabling gateway team members to detect traffic anomalies in under 2 seconds.'
+        "Authored a custom high-performance Gateway rate-limiter implementing Token Bucket algorithms inside atomic Redis Lua scripts, executing in under 2ms.",
+        "Engineered a zero-copy gRPC reverse proxy that translates external HTTP REST payloads to internal Protocol Buffer messages, saving 8ms of gateway hop overhead.",
+        "Integrated unified JWT validation caching, eliminating redundant authentication database calls and boosting peak routing capacity by 200%.",
+        "Configured Prometheus structured metrics and custom alerting, enabling gateway team members to detect traffic anomalies in under 2 seconds.",
       ],
-      tech: ['Node.js', 'Express', 'Redis', 'gRPC', 'Protocol Buffers', 'Prometheus', 'Grafana', 'Docker'],
-      liveUrl: 'https://github.com/sandunrathnayake/flowsync-api-gateway',
-      githubUrl: 'https://github.com/sandunrathnayake/flowsync-api-gateway',
-      chartType: 'flowsync'
+      tech: [
+        "Node.js",
+        "Express",
+        "Redis",
+        "gRPC",
+        "Protocol Buffers",
+        "Prometheus",
+        "Grafana",
+        "Docker",
+      ],
+      liveUrl: "https://github.com/sandunrathnayake/flowsync-api-gateway",
+      githubUrl: "https://github.com/sandunrathnayake/flowsync-api-gateway",
+      chartType: "flowsync",
     },
     5: {
-      title: 'OrbUI Design System',
-      year: '2023',
-      role: 'UI Architect',
-      type: 'Accessible Component Toolkit',
-      summary: 'Highly accessible, standards-compliant, headless web component library designed for high performance and strict enterprise design consistency.',
-      challenge: 'Achieving zero external dependencies with full accessibility standards, and keeping the entire bundled payload under 15KB gzipped.',
+      title: "OrbUI Design System",
+      year: "2023",
+      role: "UI Architect",
+      type: "Accessible Component Toolkit",
+      summary:
+        "Highly accessible, standards-compliant, headless web component library designed for high performance and strict enterprise design consistency.",
+      challenge:
+        "Achieving zero external dependencies with full accessibility standards, and keeping the entire bundled payload under 15KB gzipped.",
       achievements: [
-        'Authored 45+ atomic, responsive UI components utilizing vanilla HTML Custom Elements (Web Components) and encapsulated Shadow DOM architectures.',
-        'Passed strict WCAG 2.1 AAA automated and manual compliance audits, implementing full keyboard-trap management, focus rings, and dynamic ARIA attributes.',
-        'Optimized build outputs using Rollup tree-shaking and postcss configurations, reducing compiled bundle footprints to a lightweight 12.4KB gzipped.',
-        'Designed detailed design token schemas (JSON to Sass), allowing designers to theme elements instantly via CSS Custom Properties.'
+        "Authored 45+ atomic, responsive UI components utilizing vanilla HTML Custom Elements (Web Components) and encapsulated Shadow DOM architectures.",
+        "Passed strict WCAG 2.1 AAA automated and manual compliance audits, implementing full keyboard-trap management, focus rings, and dynamic ARIA attributes.",
+        "Optimized build outputs using Rollup tree-shaking and postcss configurations, reducing compiled bundle footprints to a lightweight 12.4KB gzipped.",
+        "Designed detailed design token schemas (JSON to Sass), allowing designers to theme elements instantly via CSS Custom Properties.",
       ],
-      tech: ['Web Components', 'Shadow DOM', 'Sass Tokens', 'Rollup', 'Jest', 'Storybook', 'HTML5'],
-      liveUrl: 'https://github.com/sandunrathnayake/orbui-design-system',
-      githubUrl: 'https://github.com/sandunrathnayake/orbui-design-system',
-      chartType: 'orbui'
+      tech: [
+        "Web Components",
+        "Shadow DOM",
+        "Sass Tokens",
+        "Rollup",
+        "Jest",
+        "Storybook",
+        "HTML5",
+      ],
+      liveUrl: "https://github.com/sandunrathnayake/orbui-design-system",
+      githubUrl: "https://github.com/sandunrathnayake/orbui-design-system",
+      chartType: "orbui",
     },
     6: {
-      title: 'VaultDB',
-      year: '2023',
-      role: 'Distributed Systems Developer',
-      type: 'Secure Peer-to-Peer DB',
-      summary: 'Decentralized, zero-knowledge encrypted peer-to-peer key-value database utilizing Raft consensus protocols for high availability and partition tolerance.',
-      challenge: 'Maintaining distributed transactional consensus under severe network partition scenarios, and guaranteeing secure client-side decryption with zero performance hit.',
+      title: "VaultDB",
+      year: "2023",
+      role: "Distributed Systems Developer",
+      type: "Secure Peer-to-Peer DB",
+      summary:
+        "Decentralized, zero-knowledge encrypted peer-to-peer key-value database utilizing Raft consensus protocols for high availability and partition tolerance.",
+      challenge:
+        "Maintaining distributed transactional consensus under severe network partition scenarios, and guaranteeing secure client-side decryption with zero performance hit.",
       achievements: [
-        'Coded the full Raft consensus algorithm from scratch in Java, supporting automated leader election, log replication, and atomic cluster membership changes.',
-        'Integrated zero-knowledge envelope encryption utilizing AES-GCM-256 with key rotations, keeping database WAL logs and storage encrypted at rest and in transit.',
-        'Engineered a highly optimized Write-Ahead Log (WAL) with Java mmap (Memory-Mapped Files), guaranteeing absolute data resilience with recovery times under 5ms.',
-        'Wrote a performant custom socket layer using Java NIO Channels, handling 15,000 inter-node transactions per second on standard virtual servers.'
+        "Coded the full Raft consensus algorithm from scratch in Java, supporting automated leader election, log replication, and atomic cluster membership changes.",
+        "Integrated zero-knowledge envelope encryption utilizing AES-GCM-256 with key rotations, keeping database WAL logs and storage encrypted at rest and in transit.",
+        "Engineered a highly optimized Write-Ahead Log (WAL) with Java mmap (Memory-Mapped Files), guaranteeing absolute data resilience with recovery times under 5ms.",
+        "Wrote a performant custom socket layer using Java NIO Channels, handling 15,000 inter-node transactions per second on standard virtual servers.",
       ],
-      tech: ['Java NIO', 'Raft Consensus Protocol', 'AES-GCM-256 Crypto', 'Memory Mapped Files', 'Maven', 'JUnit'],
-      liveUrl: 'https://github.com/sandunrathnayake/vaultdb-consensus-engine',
-      githubUrl: 'https://github.com/sandunrathnayake/vaultdb-consensus-engine',
-      chartType: 'vaultdb'
-    }
+      tech: [
+        "Java NIO",
+        "Raft Consensus Protocol",
+        "AES-GCM-256 Crypto",
+        "Memory Mapped Files",
+        "Maven",
+        "JUnit",
+      ],
+      liveUrl: "https://github.com/sandunrathnayake/vaultdb-consensus-engine",
+      githubUrl: "https://github.com/sandunrathnayake/vaultdb-consensus-engine",
+      chartType: "vaultdb",
+    },
   };
 
   // ── Global Animation Frame Tracker ────────────────────────
@@ -123,10 +183,10 @@
 
   // ── Initialize Project Details Drawer ─────────────────────
   function initProjectDrawer() {
-    const drawer = document.getElementById('project-drawer');
-    const backdrop = document.getElementById('project-drawer-backdrop');
-    const closeBtn = document.getElementById('project-drawer-close');
-    const scrollContainer = document.getElementById('project-drawer-scroll');
+    const drawer = document.getElementById("project-drawer");
+    const backdrop = document.getElementById("project-drawer-backdrop");
+    const closeBtn = document.getElementById("project-drawer-close");
+    const scrollContainer = document.getElementById("project-drawer-scroll");
 
     if (!drawer || !backdrop || !closeBtn || !scrollContainer) return;
 
@@ -168,25 +228,17 @@
               <div class="project-detail__section">
                 <h3 class="project-detail__sub">03 — Key Achievements & Solutions</h3>
                 <ul class="project-detail__list">
-                  ${data.achievements.map((ach) => `<li>${ach}</li>`).join('')}
+                  ${data.achievements.map((ach) => `<li>${ach}</li>`).join("")}
                 </ul>
               </div>
 
               <div class="project-detail__section">
                 <h3 class="project-detail__sub">04 — Technologies Deployed</h3>
                 <div class="project-detail__tags">
-                  ${data.tech.map((t) => `<span class="skills__badge">${t}</span>`).join('')}
+                  ${data.tech.map((t) => `<span class="skills__badge">${t}</span>`).join("")}
                 </div>
               </div>
 
-              <div class="project-detail__actions">
-                <a href="${data.liveUrl}" target="_blank" rel="noopener" class="project-detail__btn">
-                  <span>DEPLOYED APP ↗</span>
-                </a>
-                <a href="${data.githubUrl}" target="_blank" rel="noopener" class="project-detail__btn project-detail__btn--alt">
-                  <span>SOURCE CODE ↗</span>
-                </a>
-              </div>
             </div>
 
             <div class="project-detail__telemetry">
@@ -209,12 +261,12 @@
       `;
 
       // Show Drawer
-      document.body.classList.add('cursor-hover'); // Trigger cursor reaction
-      drawer.setAttribute('aria-hidden', 'false');
-      drawer.classList.add('active');
+      document.body.classList.add("cursor-hover"); // Trigger cursor reaction
+      drawer.setAttribute("aria-hidden", "false");
+      drawer.classList.add("active");
 
       // Prevent parent scroll
-      document.body.style.overflow = 'hidden';
+      document.body.style.overflow = "hidden";
 
       // Start Custom Telemetry Animation
       setTimeout(() => {
@@ -224,9 +276,9 @@
 
     // Close Drawer
     function closeProject() {
-      drawer.setAttribute('aria-hidden', 'true');
-      drawer.classList.remove('active');
-      document.body.style.overflow = '';
+      drawer.setAttribute("aria-hidden", "true");
+      drawer.classList.remove("active");
+      document.body.style.overflow = "";
 
       if (activeAnimationId) {
         cancelAnimationFrame(activeAnimationId);
@@ -235,36 +287,36 @@
     }
 
     // Intercept clicks on project cards
-    document.querySelectorAll('.work__item').forEach((item) => {
-      const link = item.querySelector('.work__link');
+    document.querySelectorAll(".work__item").forEach((item) => {
+      const link = item.querySelector(".work__link");
       if (!link) return;
 
       const id = item.dataset.index;
       if (!id) return;
 
-      link.addEventListener('click', (e) => {
+      link.addEventListener("click", (e) => {
         e.preventDefault();
         openProject(id);
       });
     });
 
     // Close event listeners
-    closeBtn.addEventListener('click', closeProject);
-    backdrop.addEventListener('click', closeProject);
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') closeProject();
+    closeBtn.addEventListener("click", closeProject);
+    backdrop.addEventListener("click", closeProject);
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") closeProject();
     });
   }
 
   // ── Custom Telemetry Animations ──────────────────────────
   function startTelemetryAnimation(type) {
-    const wrap = document.getElementById('telemetry-canvas-wrap');
-    const m1 = document.getElementById('telemetry-metric-1');
-    const m2 = document.getElementById('telemetry-metric-2');
+    const wrap = document.getElementById("telemetry-canvas-wrap");
+    const m1 = document.getElementById("telemetry-metric-1");
+    const m2 = document.getElementById("telemetry-metric-2");
     if (!wrap) return;
 
     // Dynamic Chart rendering
-    if (type === 'nexacommerce') {
+    if (type === "nexacommerce") {
       wrap.innerHTML = `
         <svg viewBox="0 0 400 200" class="telemetry-svg">
           <defs>
@@ -289,9 +341,9 @@
         </svg>
       `;
 
-      const path = document.getElementById('chart-path');
-      const fill = document.getElementById('chart-path-fill');
-      const dot = document.getElementById('chart-dot');
+      const path = document.getElementById("chart-path");
+      const fill = document.getElementById("chart-path-fill");
+      const dot = document.getElementById("chart-dot");
 
       let points = [];
       const maxPoints = 20;
@@ -324,13 +376,13 @@
 
             dFill += ` L ${points[points.length - 1].x} 180 Z`;
 
-            path.setAttribute('d', d);
-            fill.setAttribute('d', dFill);
+            path.setAttribute("d", d);
+            fill.setAttribute("d", dFill);
 
             // Update dot
             const last = points[points.length - 1];
-            dot.setAttribute('cx', last.x);
-            dot.setAttribute('cy', last.y);
+            dot.setAttribute("cx", last.x);
+            dot.setAttribute("cy", last.y);
 
             // Update text metric
             const latency = Math.round(10 + Math.random() * 12);
@@ -343,8 +395,7 @@
         activeAnimationId = requestAnimationFrame(animate);
       }
       animate();
-
-    } else if (type === 'pulse') {
+    } else if (type === "pulse") {
       wrap.innerHTML = `
         <svg viewBox="0 0 400 200" class="telemetry-svg">
           <g stroke="var(--border)" stroke-width="0.5">
@@ -355,24 +406,25 @@
         </svg>
       `;
 
-      const w1 = document.getElementById('wave-1');
-      const w2 = document.getElementById('wave-2');
+      const w1 = document.getElementById("wave-1");
+      const w2 = document.getElementById("wave-2");
       let offset = 0;
 
       function animate() {
         offset += 0.05;
-        let d1 = 'M 50 100';
-        let d2 = 'M 50 100';
+        let d1 = "M 50 100";
+        let d2 = "M 50 100";
 
         for (let x = 50; x <= 350; x += 5) {
-          const y1 = 100 + Math.sin(x * 0.04 + offset) * 35 * Math.sin(offset * 0.5);
+          const y1 =
+            100 + Math.sin(x * 0.04 + offset) * 35 * Math.sin(offset * 0.5);
           const y2 = 100 + Math.cos(x * 0.03 - offset * 1.5) * 20;
           d1 += ` L ${x} ${y1}`;
           d2 += ` L ${x} ${y2}`;
         }
 
-        w1.setAttribute('d', d1);
-        w2.setAttribute('d', d2);
+        w1.setAttribute("d", d1);
+        w2.setAttribute("d", d2);
 
         const speed = Math.round(84120 + Math.random() * 1400).toLocaleString();
         if (m1) m1.textContent = `Ingestion: ${speed} r/s`;
@@ -381,8 +433,7 @@
         activeAnimationId = requestAnimationFrame(animate);
       }
       animate();
-
-    } else if (type === 'archway') {
+    } else if (type === "archway") {
       wrap.innerHTML = `
         <svg viewBox="0 0 400 200" class="telemetry-svg">
           <line x1="120" y1="100" x2="280" y2="50" stroke="var(--border)" stroke-width="1.5" stroke-dasharray="3 3" />
@@ -409,11 +460,13 @@
         </svg>
       `;
 
-      const p1 = document.getElementById('p-pulse-1');
-      const p2 = document.getElementById('p-pulse-2');
-      const p3 = document.getElementById('p-pulse-3');
+      const p1 = document.getElementById("p-pulse-1");
+      const p2 = document.getElementById("p-pulse-2");
+      const p3 = document.getElementById("p-pulse-3");
 
-      let t1 = 0, t2 = 0.33, t3 = 0.66;
+      let t1 = 0,
+        t2 = 0.33,
+        t3 = 0.66;
 
       function animate() {
         t1 = (t1 + 0.007) % 1;
@@ -421,14 +474,14 @@
         t3 = (t3 + 0.007) % 1;
 
         // Linear interpolation
-        p1.setAttribute('cx', 120 + t1 * 160);
-        p1.setAttribute('cy', 100 + t1 * -50);
+        p1.setAttribute("cx", 120 + t1 * 160);
+        p1.setAttribute("cy", 100 + t1 * -50);
 
-        p2.setAttribute('cx', 120 + t2 * 160);
-        p2.setAttribute('cy', 100);
+        p2.setAttribute("cx", 120 + t2 * 160);
+        p2.setAttribute("cy", 100);
 
-        p3.setAttribute('cx', 120 + t3 * 160);
-        p3.setAttribute('cy', 100 + t3 * 50);
+        p3.setAttribute("cx", 120 + t3 * 160);
+        p3.setAttribute("cy", 100 + t3 * 50);
 
         if (m1) m1.textContent = `Replications: Active`;
         if (m2) m2.textContent = `CDN Propagation: 100%`;
@@ -436,8 +489,7 @@
         activeAnimationId = requestAnimationFrame(animate);
       }
       animate();
-
-    } else if (type === 'flowsync') {
+    } else if (type === "flowsync") {
       wrap.innerHTML = `
         <svg viewBox="0 0 400 200" class="telemetry-svg">
           <line x1="50" y1="100" x2="350" y2="100" stroke="var(--border)" stroke-width="2" />
@@ -446,7 +498,7 @@
         </svg>
       `;
 
-      const particlesGroup = document.getElementById('particles');
+      const particlesGroup = document.getElementById("particles");
       let particles = [];
 
       function animate() {
@@ -457,11 +509,11 @@
             y: 20,
             vy: 2.2 + Math.random() * 1.5,
             isPassed: false,
-            color: 'var(--text-secondary)'
+            color: "var(--text-secondary)",
           });
         }
 
-        particlesGroup.innerHTML = '';
+        particlesGroup.innerHTML = "";
 
         for (let i = 0; i < particles.length; i++) {
           const p = particles[i];
@@ -471,18 +523,21 @@
           if (!p.isPassed && p.y >= 100) {
             p.isPassed = true;
             if (Math.random() > 0.15) {
-              p.color = '#c8ff00'; // OK (green)
+              p.color = "#c8ff00"; // OK (green)
             } else {
-              p.color = '#ff4444'; // 429 Too Many Requests (red)
+              p.color = "#ff4444"; // 429 Too Many Requests (red)
               p.vy = -1.5; // Bounce off
             }
           }
 
-          const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-          circle.setAttribute('cx', p.x);
-          circle.setAttribute('cy', p.y);
-          circle.setAttribute('r', '3');
-          circle.setAttribute('fill', p.color);
+          const circle = document.createElementNS(
+            "http://www.w3.org/2000/svg",
+            "circle",
+          );
+          circle.setAttribute("cx", p.x);
+          circle.setAttribute("cy", p.y);
+          circle.setAttribute("r", "3");
+          circle.setAttribute("fill", p.color);
           particlesGroup.appendChild(circle);
         }
 
@@ -495,8 +550,7 @@
         activeAnimationId = requestAnimationFrame(animate);
       }
       animate();
-
-    } else if (type === 'orbui') {
+    } else if (type === "orbui") {
       wrap.innerHTML = `
         <div class="reflow-widget">
           <div class="reflow-widget__info">Drag slider to reflow Flex Grid in real time:</div>
@@ -513,12 +567,12 @@
         </div>
       `;
 
-      const grid = document.getElementById('reflow-grid');
-      const slider = document.getElementById('reflow-slider');
-      const widthLbl = document.getElementById('reflow-width');
+      const grid = document.getElementById("reflow-grid");
+      const slider = document.getElementById("reflow-slider");
+      const widthLbl = document.getElementById("reflow-width");
 
       if (slider && grid && widthLbl) {
-        slider.addEventListener('input', (e) => {
+        slider.addEventListener("input", (e) => {
           const w = e.target.value;
           grid.style.width = `${w}px`;
           widthLbl.textContent = `${w}px`;
@@ -527,8 +581,7 @@
 
       if (m1) m1.textContent = `Core size: 12.4KB`;
       if (m2) m2.textContent = `A11y check: WCAG AAA`;
-
-    } else if (type === 'vaultdb') {
+    } else if (type === "vaultdb") {
       wrap.innerHTML = `
         <svg viewBox="0 0 400 200" class="telemetry-svg">
           <!-- Replication Ring Path -->
@@ -552,7 +605,7 @@
         </svg>
       `;
 
-      const hb = document.getElementById('heartbeat');
+      const hb = document.getElementById("heartbeat");
       let angle = 0;
 
       function animate() {
@@ -561,8 +614,8 @@
         const cx = 200;
         const cy = 100;
 
-        hb.setAttribute('cx', cx + r * Math.sin(angle));
-        hb.setAttribute('cy', cy - r * Math.cos(angle));
+        hb.setAttribute("cx", cx + r * Math.sin(angle));
+        hb.setAttribute("cy", cy - r * Math.cos(angle));
 
         const lat = Math.round(14 + Math.random() * 3);
         if (m1) m1.textContent = `Consensus: Raft Valid`;
@@ -575,8 +628,8 @@
   }
 
   // ── Initialise ────────────────────────────────────────────
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initProjectDrawer);
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initProjectDrawer);
   } else {
     initProjectDrawer();
   }

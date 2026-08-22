@@ -89,41 +89,17 @@
     });
   }
 
-  // ── Theme Toggle ──────────────────────────────────────────
+  // ── Permanent Dark Theme ───────────────────────────────────
   function initTheme() {
-    const btn   = document.getElementById('theme-toggle');
-    const label = document.querySelector('.nav__theme-label');
-    if (!btn) return;
-
-    let isDark = true;
-
-    function applyThemeToScene(dark) {
-      if (window.__threeScene) {
-        if (window.__threeScene.setAccentColor) {
-          window.__threeScene.setAccentColor(dark ? '#c8ff00' : '#5a00ff');
-        }
-        window.__threeScene.setBackgroundColor(dark ? '#080808' : '#f5f4f0');
-        window.__threeScene.setLiquidColor(dark ? '#fafbff' : '#000000');
-        if (window.__threeScene.setNebulaTheme) {
-          window.__threeScene.setNebulaTheme(dark);
-        }
+    document.body.setAttribute('data-theme', 'dark');
+    if (window.__threeScene) {
+      if (window.__threeScene.setBackgroundColor) {
+        window.__threeScene.setBackgroundColor('#080808');
+      }
+      if (window.__threeScene.setLiquidColor) {
+        window.__threeScene.setLiquidColor('#fafbff');
       }
     }
-
-    // Respect system preference on first load
-    if (window.matchMedia('(prefers-color-scheme: light)').matches) {
-      isDark = false;
-      document.body.setAttribute('data-theme', 'light');
-      if (label) label.textContent = 'THEME[L]';
-      applyThemeToScene(false);
-    }
-
-    btn.addEventListener('click', () => {
-      isDark = !isDark;
-      document.body.setAttribute('data-theme', isDark ? 'dark' : 'light');
-      if (label) label.textContent = isDark ? 'THEME[D]' : 'THEME[L]';
-      applyThemeToScene(isDark);
-    });
   }
 
   // ── Keyboard navigation ───────────────────────────────────

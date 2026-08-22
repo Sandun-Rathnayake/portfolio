@@ -23,6 +23,13 @@
   const camera = new THREE.PerspectiveCamera(55, 1, 0.1, 500);
   camera.position.z = 42;
 
+  // ── Mouse-Fluid Post-Processing (mouse-fluid.js) ─────────────
+  let fluidEffect = null;
+  if (window.MouseFluidEffect) {
+    fluidEffect = new window.MouseFluidEffect(renderer, scene, camera);
+    window.__fluidEffect = fluidEffect;
+  }
+
   /* ══════════════════════════════════════════════════════════════
      LIVE CONFIG — every knob the control panel can change
   ══════════════════════════════════════════════════════════════ */
@@ -566,6 +573,9 @@
     renderer.setSize(w, h, false);
     camera.aspect = w / h;
     camera.updateProjectionMatrix();
+    if (fluidEffect && fluidEffect.resize) {
+      fluidEffect.resize();
+    }
   }
   onResize();
   window.addEventListener("resize", onResize);
@@ -1957,7 +1967,12 @@
     posAttr.needsUpdate = true;
     colAttr.needsUpdate = true;
     rectGeo.attributes.normal.needsUpdate = true;
-    renderer.render(scene, camera);
+
+    if (fluidEffect) {
+      fluidEffect.render();
+    } else {
+      renderer.render(scene, camera);
+    }
   }
 
   masterAnimate();
@@ -2011,6 +2026,11 @@
   window.__threeScene = {
     setBackgroundColor(hex) {
       renderer.setClearColor(new THREE.Color(hex), 1);
+    },
+    setLiquidColor(hex) {
+      if (fluidEffect && fluidEffect.setLiquidColor) {
+        fluidEffect.setLiquidColor(hex);
+      }
     },
     setNebulaTheme() {},
   };

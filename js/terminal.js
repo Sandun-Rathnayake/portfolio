@@ -126,6 +126,8 @@
         printLine('----------------');
         printLine('► Full-Stack Software Engineer & Project Leader @ Lakmini International (Sep 2024–Present)');
         printLine('  Developing Android & iOS apps, RESTful APIs, and OpenAI AI integrations');
+        printLine('► Full-Stack Software Engineer @ JsoftLK (Jan 2021–Jun 2022)');
+        printLine('  Full-stack web & Android development with Java, PHP, JS, Bootstrap, MySQL & Firebase');
         printLine('');
         printLine('EDUCATION:');
         printLine('  BSc (Hons) Software Engineering — Birmingham City University, UK (2023–2024)');
@@ -148,7 +150,7 @@
       case 'projects':
         printLine('ACTIVE PROJECTS REGISTRY:');
         printLine('-------------------------');
-        printLine('1. WriteScan          - OCR & AI Document App (React Native, OpenAI API)');
+        printLine('1. WriteScan          - OCR & AI Document App [100K+ Downloads] (React Native, OpenAI API)');
         printLine('2. E-Commerce Platform- Full-Stack Web App (Java EE, MVC, MySQL)');
         printLine('3. Food Waste App     - M-Commerce Reduction App (Android, Java EE)');
         printLine('4. Real-Time Chat App - Mobile Messaging System (React Native, WebSocket)');
