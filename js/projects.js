@@ -497,7 +497,7 @@
 
           <!-- Outgoing / Incoming Message Packets -->
           <circle id="ws-tx" cx="80" cy="85" r="5" fill="var(--accent)" />
-          <circle id="ws-rx" cx="320" cy="135" r="5" fill="#00d4ff" />
+          <circle id="ws-rx" cx="320" cy="135" r="5" fill="var(--accent)" />
 
           <!-- Mobile Client End -->
           <rect x="30" y="65" width="50" height="90" rx="6" fill="var(--bg)" stroke="var(--accent)" stroke-width="2" />

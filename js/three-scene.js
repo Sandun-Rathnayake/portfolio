@@ -84,6 +84,8 @@
     bgColor: "#040714", // Full screen background color (customizable)
   };
 
+  let themeMode = "default"; // 'default' | 'babypink'
+
   /* ══════════════════════════════════════════════════════════════
      NOISE
   ══════════════════════════════════════════════════════════════ */
@@ -190,14 +192,23 @@
 
   const SR = CFG.sphereR; // 2.4
 
-  function addCoronaLayer(planeHalf, stops, order, isAsymmetric) {
+  function addCoronaLayer(
+    planeHalf,
+    stops,
+    order,
+    isAsymmetric,
+    defColor,
+    pinkColor,
+  ) {
     const tex = isAsymmetric
       ? makeAsymmetricRimTex(1024, stops)
       : makeEclipseTex(1024, stops);
+
     const m = new THREE.Mesh(
       new THREE.PlaneGeometry(planeHalf * 2, planeHalf * 2),
       new THREE.MeshBasicMaterial({
         map: tex,
+        color: new THREE.Color(defColor || "#ffffff"),
         transparent: true,
         blending: THREE.AdditiveBlending,
         depthWrite: false,
@@ -205,6 +216,10 @@
       }),
     );
     m.renderOrder = order;
+    m.userData = {
+      defaultColor: new THREE.Color(defColor || "#ffffff"),
+      pinkColor: new THREE.Color(pinkColor || "#ffb6c1"),
+    };
     coronaGroup.add(m);
     return m;
   }
@@ -217,53 +232,59 @@
     SF2 = 1 / 18.0; // Outer atmosphere haze
 
   const coronaMeshes = [
-    /* 0 — Tight bright white-cyan crescent rim ring (Top-Left & Bottom-Right) */
+    /* 0 — Tight bright crescent rim ring (Top-Left & Bottom-Right) */
     addCoronaLayer(
       PH0,
       [
-        [0.0, "rgba(  0,  0,  0, 0.00)"],
-        [SF0 * 0.88, "rgba(  0,  0,  0, 0.00)"],
-        [SF0 * 0.96, "rgba(215,240,255, 0.40)"],
-        [SF0, "rgba(255,255,255, 1.00)"], // ← BRIGHT pure white crescent rim at sphere edge
-        [SF0 * 1.08, "rgba(195,230,255, 0.82)"],
-        [SF0 * 1.25, "rgba(145,200,255, 0.50)"],
-        [SF0 * 1.55, "rgba( 85,160,255, 0.22)"],
-        [SF0 * 2.2, "rgba( 40,110,230, 0.06)"],
-        [1.0, "rgba(  0,  0,  0, 0.00)"],
+        [0.0, "rgba(255, 255, 255, 0.00)"],
+        [SF0 * 0.88, "rgba(255, 255, 255, 0.00)"],
+        [SF0 * 0.96, "rgba(255, 255, 255, 0.40)"],
+        [SF0, "rgba(255, 255, 255, 1.00)"], // ← BRIGHT pure white crescent rim at sphere edge
+        [SF0 * 1.08, "rgba(255, 255, 255, 0.82)"],
+        [SF0 * 1.25, "rgba(255, 255, 255, 0.50)"],
+        [SF0 * 1.55, "rgba(255, 255, 255, 0.22)"],
+        [SF0 * 2.2, "rgba(255, 255, 255, 0.06)"],
+        [1.0, "rgba(255, 255, 255, 0.00)"],
       ],
       4,
       true,
+      "#cde6ff",
+      "#ffd8e4",
     ),
 
-    /* 1 — Inner soft violet-blue crescent bloom (Top-Left & Bottom-Right) */
+    /* 1 — Inner soft crescent bloom (Top-Left & Bottom-Right) */
     addCoronaLayer(
       PH1,
       [
-        [0.0, "rgba(  0,  0,  0, 0.00)"],
-        [SF1 * 0.88, "rgba(  0,  0,  0, 0.00)"],
-        [SF1, "rgba(165,200,255, 0.45)"],
-        [SF1 * 1.35, "rgba(125,170,255, 0.28)"],
-        [SF1 * 2.0, "rgba( 75,130,240, 0.12)"],
-        [SF1 * 3.2, "rgba( 35, 80,200, 0.04)"],
-        [1.0, "rgba(  0,  0,  0, 0.00)"],
+        [0.0, "rgba(255, 255, 255, 0.00)"],
+        [SF1 * 0.88, "rgba(255, 255, 255, 0.00)"],
+        [SF1, "rgba(255, 255, 255, 0.45)"],
+        [SF1 * 1.35, "rgba(255, 255, 255, 0.28)"],
+        [SF1 * 2.0, "rgba(255, 255, 255, 0.12)"],
+        [SF1 * 3.2, "rgba(255, 255, 255, 0.04)"],
+        [1.0, "rgba(255, 255, 255, 0.00)"],
       ],
       3,
       true,
+      "#78b4ff",
+      "#ff8da1",
     ),
 
     /* 2 — Outer atmosphere haze */
     addCoronaLayer(
       PH2,
       [
-        [0.0, "rgba(  0,  0,  0, 0.00)"],
-        [SF2 * 0.85, "rgba(  0,  0,  0, 0.00)"],
-        [SF2, "rgba(110,150,240, 0.18)"],
-        [SF2 * 2.0, "rgba( 45, 90,200, 0.08)"],
-        [SF2 * 4.0, "rgba( 18, 45,140, 0.02)"],
-        [1.0, "rgba(  0,  0,  0, 0.00)"],
+        [0.0, "rgba(255, 255, 255, 0.00)"],
+        [SF2 * 0.85, "rgba(255, 255, 255, 0.00)"],
+        [SF2, "rgba(255, 255, 255, 0.18)"],
+        [SF2 * 2.0, "rgba(255, 255, 255, 0.08)"],
+        [SF2 * 4.0, "rgba(255, 255, 255, 0.02)"],
+        [1.0, "rgba(255, 255, 255, 0.00)"],
       ],
       2,
       false,
+      "#4070e0",
+      "#d94b80",
     ),
   ];
 
@@ -351,6 +372,7 @@
     uniforms: {
       uLightPos: { value: new THREE.Vector3(0, 0, 0) },
       uCameraPos: { value: camera.position },
+      uThemePink: { value: 0.0 },
       uFogEnable: { value: CFG.fogEnable !== undefined ? CFG.fogEnable : 1.0 },
       uFogNear: { value: CFG.fogNear || 2.0 },
       uFogFar: { value: CFG.fogFar || 25.0 },
@@ -377,6 +399,7 @@
       varying vec3 vWorldPos;
       uniform vec3 uLightPos;
       uniform vec3 uCameraPos;
+      uniform float uThemePink;
       uniform float uFogEnable;
       uniform float uFogNear;
       uniform float uFogFar;
@@ -401,11 +424,13 @@
 
         float NdotH = max(dot(N, H), 0.0);
         float spec = pow(NdotH, 36.0);
-        vec3 specColor = vec3(1.0, 0.96, 0.92) * spec * 2.2 * lightIntensity;
+        vec3 specTint = mix(vec3(1.0, 0.96, 0.92), vec3(1.0, 0.85, 0.92), uThemePink);
+        vec3 specColor = specTint * spec * 2.2 * lightIntensity;
 
         float NdotV = max(dot(N, V), 0.0);
         float fresnel = pow(1.0 - NdotV, 3.5);
-        vec3 fresnelColor = mix(vColor, vec3(0.85, 0.92, 1.0), 0.75) * fresnel * 1.0;
+        vec3 fresnelTint = mix(vec3(0.85, 0.92, 1.0), vec3(1.0, 0.70, 0.85), uThemePink);
+        vec3 fresnelColor = mix(vColor, fresnelTint, 0.85) * fresnel * 1.2;
 
         vec3 finalColor = (ambientMetal + diffuseMetal + specColor + fresnelColor) * atten;
 
@@ -420,7 +445,8 @@
           float lightScatter = exp(-0.07 * rDist) * (0.3 + 0.7 * lightIntensity);
 
           vec3 darkSpaceFog    = uFogColor * 0.45;
-          vec3 shiningLightFog = mix(uFogColor * 1.8, vec3(0.85, 0.94, 1.0), 0.45); // Glowing light!
+          vec3 lightFogTint    = mix(vec3(0.85, 0.94, 1.0), vec3(1.0, 0.75, 0.88), uThemePink);
+          vec3 shiningLightFog = mix(uFogColor * 1.8, lightFogTint, 0.45);
 
           vec3 activeFogColor = mix(darkSpaceFog, shiningLightFog, clamp(lightScatter * 1.6, 0.0, 1.0));
           float fogAmount     = clamp(expFog, 0.0, 0.90);
@@ -889,8 +915,10 @@
     const fNear = CFG.fogNear !== undefined ? CFG.fogNear : 2.0;
     const fFar = CFG.fogFar !== undefined ? CFG.fogFar : 25.0;
     const fDens = CFG.fogDensity !== undefined ? CFG.fogDensity : 0.8;
-    const fColorHex = CFG.fogColor || "#0e1b40";
-    const bColorHex = CFG.bgColor || "#040714";
+    const fColorHex =
+      themeMode === "babypink" ? "#963693" : CFG.fogColor || "#0b009e";
+    const bColorHex =
+      themeMode === "babypink" ? "#000000" : CFG.bgColor || "#040714";
 
     const fogColorObj = new THREE.Color(fColorHex);
     rectMat.uniforms.uFogEnable.value = fOn;
@@ -925,6 +953,9 @@
     bgFogMat.uniforms.uFogDensity.value = fDens;
     bgFogMat.uniforms.uPulse.value = pulse;
 
+    const isPink = themeMode === "babypink" ? 1.0 : 0.0;
+    rectMat.uniforms.uThemePink.value = isPink;
+
     coronaMeshes.forEach((m, idx) => {
       const isRim = idx === 0;
       const cScale = CFG.coronaScale || 1.0;
@@ -933,6 +964,11 @@
 
       m.scale.setScalar((pulse + idx * 0.01) * sr * cScale);
       m.material.opacity = isRim ? cRim : cGlow;
+      if (m.userData && m.userData.defaultColor && m.userData.pinkColor) {
+        m.material.color.copy(
+          isPink ? m.userData.pinkColor : m.userData.defaultColor,
+        );
+      }
       if (idx >= 2) {
         m.rotation.z += (idx % 2 === 0 ? 1 : -1) * 0.00035 * (idx + 1);
       }
@@ -1077,16 +1113,25 @@
       const gamma = Math.pow(Math.max(0, briP), 0.65); // metal gamma curve
       const spec = Math.pow(Math.max(0, briP - 0.55) / 0.45, 2.5); // specular spike
 
-      /* steel-silver base + optional warm tint from control panel */
-      const rC = Math.min(
-        1,
-        gamma * (0.48 + closeT * 0.52 + cw * 0.28) + spec * 0.5,
-      );
-      const gC = Math.min(
-        1,
-        gamma * (0.65 + closeT * 0.35 + cw * 0.12) + spec * 0.48,
-      );
-      const bC = Math.min(1, gamma * (0.95 - cw * 0.18) + spec * 0.44);
+      let rC, gC, bC;
+      if (themeMode === "babypink") {
+        const rPink = gamma * 1.00 + spec * 0.8;
+        const gPink = gamma * 0.58 + spec * 0.65;
+        const bPink = gamma * 0.72 + spec * 0.70;
+        rC = Math.min(1, rPink);
+        gC = Math.min(1, gPink);
+        bC = Math.min(1, bPink);
+      } else {
+        rC = Math.min(
+          1,
+          gamma * (0.48 + closeT * 0.52 + cw * 0.28) + spec * 0.5,
+        );
+        gC = Math.min(
+          1,
+          gamma * (0.65 + closeT * 0.35 + cw * 0.12) + spec * 0.48,
+        );
+        bC = Math.min(1, gamma * (0.95 - cw * 0.18) + spec * 0.44);
+      }
 
       /* ── 0 SHAKING VELOCITY & MULTI-JOINT SNAKE BENDING ── */
       /* Filter out high-frequency noise from velocity direction */
@@ -1207,6 +1252,7 @@
       uT: { value: 0.0 },
       uPulse: { value: 1.0 },
       uTime: { value: 0.0 },
+      uThemePink: { value: 0.0 },
     },
     vertexShader: `
       varying vec3 vNormal;
@@ -1228,6 +1274,7 @@
       uniform float uT;
       uniform float uPulse;
       uniform float uTime;
+      uniform float uThemePink;
 
       float hash(vec2 p){ return fract(sin(dot(p,vec2(127.1,311.7)))*43758.545); }
       float vnoise(vec2 p){
@@ -1249,9 +1296,14 @@
 
         /* ── Eclipse navy sphere ── */
         float rFrac = length(vWorldPos.xy) / 2.4;
-        vec3 navyC = mix(vec3(0.022,0.040,0.160), vec3(0.060,0.112,0.300), clamp(rFrac*rFrac,0.0,1.0));
+        vec3 defaultNavy = mix(vec3(0.022,0.040,0.160), vec3(0.060,0.112,0.300), clamp(rFrac*rFrac,0.0,1.0));
+        vec3 pinkNavy    = mix(vec3(0.12,0.02,0.08), vec3(0.35,0.09,0.22), clamp(rFrac*rFrac,0.0,1.0));
+        vec3 navyC = mix(defaultNavy, pinkNavy, uThemePink);
+
         float nFres = pow(1.0-NdotV,4.5)*0.16;
-        vec3 eclipseCol = navyC + vec3(0.92,0.95,1.0)*nFres;
+        vec3 defaultFres = vec3(0.92,0.95,1.0);
+        vec3 pinkFres    = vec3(1.0,0.75,0.88);
+        vec3 eclipseCol = navyC + mix(defaultFres, pinkFres, uThemePink)*nFres;
 
         /* ── Animated energy surface ── */
         vec2 uv1 = vWorldPos.xz * 2.8 + uTime * 0.22;
@@ -1260,18 +1312,21 @@
         float e2 = fbm(uv2 + e1 * 0.6);
         float energy = clamp(e1*0.6 + e2*0.4, 0.0, 1.0);
 
-        /* HDR white-blue core */
-        vec3 coreCol  = mix(vec3(0.30,0.62,1.00), vec3(0.92,0.97,1.00), pow(NdotV,0.45));
-        coreCol      *= (0.95 + energy * 0.30) * uPulse;
+        /* Core */
+        vec3 defaultCore = mix(vec3(0.30,0.62,1.00), vec3(0.92,0.97,1.00), pow(NdotV,0.45));
+        vec3 pinkCore    = mix(vec3(1.00,0.45,0.70), vec3(1.00,0.88,0.95), pow(NdotV,0.45));
+        vec3 coreCol = mix(defaultCore, pinkCore, uThemePink) * (0.95 + energy * 0.30) * uPulse;
 
-        /* Cyan + violet Fresnel rim */
+        /* Rim */
         float fres    = pow(1.0 - NdotV, 2.8);
-        vec3  rimCyan = vec3(0.00, 0.85, 1.00) * fres * 1.8;
-        vec3  rimViol = vec3(0.55, 0.18, 1.00) * pow(fres,1.6) * 1.2;
-        vec3  rimCol  = mix(rimCyan, rimViol, energy);
+        vec3  defaultRim = mix(vec3(0.00, 0.85, 1.00) * fres * 1.8, vec3(0.55, 0.18, 1.00) * pow(fres,1.6) * 1.2, energy);
+        vec3  pinkRim    = mix(vec3(1.00, 0.40, 0.70) * fres * 2.0, vec3(1.00, 0.75, 0.90) * pow(fres,1.6) * 1.5, energy);
+        vec3  rimCol  = mix(defaultRim, pinkRim, uThemePink);
 
         /* Energy surface shimmer */
-        vec3  shimmer = vec3(0.15,0.55,1.00) * energy * 0.35;
+        vec3  defaultShimmer = vec3(0.15,0.55,1.00) * energy * 0.35;
+        vec3  pinkShimmer    = vec3(1.00,0.40,0.70) * energy * 0.35;
+        vec3  shimmer = mix(defaultShimmer, pinkShimmer, uThemePink);
 
         vec3 starCol = clamp(coreCol + rimCol + shimmer, 0.0, 1.0);
 
@@ -1289,6 +1344,7 @@
       uT: { value: 0.0 },
       uPulse: { value: 1.0 },
       uTime: { value: 0.0 },
+      uThemePink: { value: 0.0 },
     },
     vertexShader: `
       varying vec3 vWorldPos;
@@ -1303,18 +1359,17 @@
       uniform float uT;
       uniform float uPulse;
       uniform float uTime;
+      uniform float uThemePink;
       void main() {
         float r = length(vWorldPos.xy);
         float inner = exp(-0.048 * r);
         float mid   = exp(-0.018 * r);
         float outer = exp(-0.008 * r);
 
-        vec3 coreGlow  = vec3(0.60,0.80,1.00) * inner  * 0.85 * uPulse;
-        vec3 midGlow   = vec3(0.25,0.45,0.90) * mid    * 0.35;
-        vec3 outerGlow = vec3(0.15,0.20,0.60) * outer  * 0.15;
-        vec3 violetRim = vec3(0.45,0.12,0.80) * exp(-0.035*r) * 0.18;
+        vec3 defaultGlow = vec3(0.60,0.80,1.00) * inner * 0.85 * uPulse + vec3(0.25,0.45,0.90) * mid * 0.35 + vec3(0.15,0.20,0.60) * outer * 0.15 + vec3(0.45,0.12,0.80) * exp(-0.035*r) * 0.18;
+        vec3 pinkGlow = vec3(1.00,0.70,0.85) * inner * 0.95 * uPulse + vec3(1.00,0.45,0.70) * mid * 0.45 + vec3(0.80,0.25,0.55) * outer * 0.20 + vec3(1.00,0.60,0.85) * exp(-0.035*r) * 0.25;
+        vec3 col = mix(defaultGlow, pinkGlow, uThemePink);
 
-        vec3 col   = coreGlow + midGlow + outerGlow + violetRim;
         float alpha = clamp((inner*0.55 + mid*0.15) * uT, 0.0, 0.45);
         gl_FragColor = vec4(col, alpha);
       }
@@ -1361,7 +1416,11 @@
     geo.setAttribute("aSize", new THREE.BufferAttribute(sizes, 1));
 
     const mat = new THREE.ShaderMaterial({
-      uniforms: { uT: { value: 0.0 }, uTime: { value: 0.0 } },
+      uniforms: {
+        uT: { value: 0.0 },
+        uTime: { value: 0.0 },
+        uThemePink: { value: 0.0 },
+      },
       vertexShader: `
         attribute float aSeed;
         attribute float aSize;
@@ -1375,12 +1434,15 @@
       `,
       fragmentShader: `
         uniform float uT;
+        uniform float uThemePink;
         void main() {
           vec2 uv = gl_PointCoord - 0.5;
           float d = length(uv);
           if (d > 0.5) discard;
           float a = (1.0 - d*2.0) * uT;
-          gl_FragColor = vec4(0.88, 0.93, 1.00, a);
+          vec3 defaultStar = vec3(0.88, 0.93, 1.00);
+          vec3 pinkStar    = vec3(1.00, 0.78, 0.88);
+          gl_FragColor = vec4(mix(defaultStar, pinkStar, uThemePink), a);
         }
       `,
       transparent: true,
@@ -1485,7 +1547,10 @@
   const sparkGeo = new THREE.BufferGeometry();
   sparkGeo.setAttribute("position", new THREE.BufferAttribute(sparkPos, 3));
   const sparkMat = new THREE.ShaderMaterial({
-    uniforms: { uT: { value: 0.0 } },
+    uniforms: {
+      uT: { value: 0.0 },
+      uThemePink: { value: 0.0 },
+    },
     vertexShader: `
       uniform float uT;
       void main() {
@@ -1495,12 +1560,15 @@
     `,
     fragmentShader: `
       uniform float uT;
+      uniform float uThemePink;
       void main() {
         vec2 uv = gl_PointCoord - 0.5;
         float d = length(uv);
         if (d > 0.5) discard;
         float a = (1.0 - d*2.0) * uT;
-        gl_FragColor = vec4(0.55, 0.88, 1.00, a);
+        vec3 defaultSpark = vec3(0.55, 0.88, 1.00);
+        vec3 pinkSpark    = vec3(1.00, 0.52, 0.78);
+        gl_FragColor = vec4(mix(defaultSpark, pinkSpark, uThemePink), a);
       }
     `,
     transparent: true,
@@ -1629,8 +1697,12 @@
     const fNear = CFG.fogNear || 2.0;
     const fFar = CFG.fogFar || 25.0;
     const fDens = CFG.fogDensity || 0.8;
-    const fogCO = new THREE.Color(CFG.fogColor || "#0e1b40");
-    const bgCO = new THREE.Color(CFG.bgColor || "#040714");
+    const fColorHex =
+      themeMode === "babypink" ? "#963693" : CFG.fogColor || "#0b009e";
+    const bColorHex =
+      themeMode === "babypink" ? "#000000" : CFG.bgColor || "#040714";
+    const fogCO = new THREE.Color(fColorHex);
+    const bgCO = new THREE.Color(bColorHex);
 
     rectMat.uniforms.uFogEnable.value = fOn * (1.0 - sT);
     rectMat.uniforms.uFogNear.value = fNear;
@@ -1661,6 +1733,9 @@
     starMat.uniforms.uPulse.value = pulse;
     starMat.uniforms.uTime.value = clock;
 
+    const isPink = themeMode === "babypink" ? 1.0 : 0.0;
+    starMat.uniforms.uThemePink.value = isPink;
+
     /* ── Eclipse corona fades out as star fades in ── */
     coronaGroup.quaternion.copy(camera.quaternion);
     const coronaFade = Math.max(0, 1.0 - sT * 2.2);
@@ -1671,6 +1746,11 @@
       const isRim = idx === 0;
       m.scale.setScalar((pulse + idx * 0.01) * sr * cScale);
       m.material.opacity = (isRim ? cRim : cGlow) * coronaFade;
+      if (m.userData && m.userData.defaultColor && m.userData.pinkColor) {
+        m.material.color.copy(
+          isPink ? m.userData.pinkColor : m.userData.defaultColor,
+        );
+      }
       if (idx >= 2)
         m.rotation.z += (idx % 2 === 0 ? 1 : -1) * 0.00035 * (idx + 1);
     });
@@ -1681,16 +1761,33 @@
     starCoronaMat.uniforms.uT.value = sT;
     starCoronaMat.uniforms.uPulse.value = pulse;
     starCoronaMat.uniforms.uTime.value = clock;
+    starCoronaMat.uniforms.uThemePink.value = isPink;
 
     /* ── Star field ── */
     starPointsMat.uniforms.uT.value = sT;
     starPointsMat.uniforms.uTime.value = clock;
+    starPointsMat.uniforms.uThemePink.value = isPink;
 
     /* ── Nebula ── */
     neb1Mat.uniforms.uT.value = sT;
     neb1Mat.uniforms.uTime.value = clock;
     neb2Mat.uniforms.uT.value = sT;
     neb2Mat.uniforms.uTime.value = clock;
+    if (isPink) {
+      neb1Mat.uniforms.uC1.value.set("#3d0824");
+      neb1Mat.uniforms.uC2.value.set("#ff8da1");
+      neb2Mat.uniforms.uC1.value.set("#200514");
+      neb2Mat.uniforms.uC2.value.set("#ffb6c1");
+      bloomOverlay.style.background =
+        "radial-gradient(ellipse 55% 55% at 50% 50%, rgba(255,105,180,0.22) 0%, rgba(255,182,193,0.10) 40%, rgba(13,7,11,0.0) 70%)";
+    } else {
+      neb1Mat.uniforms.uC1.value.set("#1a0040");
+      neb1Mat.uniforms.uC2.value.set("#7B3FBE");
+      neb2Mat.uniforms.uC1.value.set("#001a3a");
+      neb2Mat.uniforms.uC2.value.set("#004b8f");
+      bloomOverlay.style.background =
+        "radial-gradient(ellipse 55% 55% at 50% 50%, rgba(0,120,255,0.10) 0%, rgba(80,0,180,0.06) 40%, rgba(0,0,20,0.0) 70%)";
+    }
     neb1.rotation.z += 0.00004;
     neb2.rotation.z -= 0.00003;
 
@@ -1701,6 +1798,7 @@
     bloomOverlay.style.opacity = (sT * 0.28).toFixed(3);
 
     /* ── Energy sparks ── */
+    sparkMat.uniforms.uThemePink.value = isPink;
     updateSparks(sT, pulse);
 
     /* ── Particle physics with gravity collapse ── */
@@ -1853,14 +1951,23 @@
         const gamma = Math.pow(Math.max(0, briP), 0.65);
         const spec = Math.pow(Math.max(0, briP - 0.55) / 0.45, 2.5);
 
-        const rMetal = gamma * (0.48 + closeT * 0.52 + cw * 0.28) + spec * 0.5;
-        const gMetal = gamma * (0.65 + closeT * 0.35 + cw * 0.12) + spec * 0.48;
-        const bMetal = gamma * (0.95 - cw * 0.18) + spec * 0.44;
-
-        // Electric blue star collapse color
-        const rStar = gamma * 0.22 + spec * 0.45;
-        const gStar = gamma * 0.72 + spec * 0.6;
-        const bStar = gamma * 1.0 + spec * 0.9;
+        let rMetal, gMetal, bMetal, rStar, gStar, bStar;
+        if (themeMode === "babypink") {
+          rMetal = gamma * (0.98 + closeT * 0.02) + spec * 0.6;
+          gMetal = gamma * (0.58 + closeT * 0.22) + spec * 0.45;
+          bMetal = gamma * (0.72 + closeT * 0.18) + spec * 0.55;
+          // Radiant neon sakura pink singularity collapse
+          rStar = gamma * 1.0 + spec * 0.6;
+          gStar = gamma * 0.45 + spec * 0.55;
+          bStar = gamma * 0.75 + spec * 0.8;
+        } else {
+          rMetal = gamma * (0.48 + closeT * 0.52 + cw * 0.28) + spec * 0.5;
+          gMetal = gamma * (0.65 + closeT * 0.35 + cw * 0.12) + spec * 0.48;
+          bMetal = gamma * (0.95 - cw * 0.18) + spec * 0.44;
+          rStar = gamma * 0.22 + spec * 0.45;
+          gStar = gamma * 0.72 + spec * 0.6;
+          bStar = gamma * 1.0 + spec * 0.9;
+        }
 
         const rC0 = Math.min(
           1,
@@ -2024,6 +2131,22 @@
   };
 
   window.__threeScene = {
+    setThemeColor(mode) {
+      themeMode = mode;
+      if (mode === "babypink") {
+        CFG.fogColor = "#963693";
+        CFG.bgColor = "#000000";
+        if (fluidEffect && fluidEffect.setLiquidColor) {
+          fluidEffect.setLiquidColor("#ffb6c1");
+        }
+      } else {
+        CFG.fogColor = "#0b009e";
+        CFG.bgColor = "#040714";
+        if (fluidEffect && fluidEffect.setLiquidColor) {
+          fluidEffect.setLiquidColor("#fafbff");
+        }
+      }
+    },
     setBackgroundColor(hex) {
       renderer.setClearColor(new THREE.Color(hex), 1);
     },

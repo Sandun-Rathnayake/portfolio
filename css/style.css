@@ -43,6 +43,88 @@
      --z-loader: 200;
    }
 
+   /* ─── BABY PINK THEME (ACTIVATED VIA 'bu' TERMINAL COMMAND) ─── */
+   [data-theme="babypink"] {
+     --bg: #0d070b;
+     --surface: rgba(255, 182, 193, 0.05);
+     --surface-2: #160c14;
+     --border: rgba(255, 182, 193, 0.16);
+     --text-primary: #fff2f6;
+     --text-secondary: rgba(255, 218, 228, 0.6);
+     --text-tertiary: rgba(255, 182, 193, 0.3);
+     --accent: #ffb6c1;
+     --accent-glow: rgba(255, 182, 193, 0.35);
+     --accent-dim: rgba(255, 140, 165, 0.45);
+   }
+
+   [data-theme="babypink"] ::selection {
+     background-color: #ffb6c1;
+     color: #0d070b;
+   }
+
+   [data-theme="babypink"] .hero__status-dot {
+     background-color: #ffb6c1;
+     box-shadow: 0 0 10px #ffb6c1;
+   }
+
+   [data-theme="babypink"] .hero__cta {
+     background-color: #ffb6c1;
+     color: #0d070b;
+     box-shadow: 0 0 25px rgba(255, 182, 193, 0.4);
+   }
+
+   [data-theme="babypink"] .hero__cta:hover {
+     background-color: #ffaec9;
+     box-shadow: 0 0 35px rgba(255, 182, 193, 0.6);
+   }
+
+   [data-theme="babypink"] .hero__cta--secondary {
+     border-color: rgba(255, 182, 193, 0.4);
+     color: #fff2f6;
+   }
+
+   [data-theme="babypink"] .hero__cta--secondary:hover {
+     border-color: #ffb6c1;
+     background-color: rgba(255, 182, 193, 0.1);
+     color: #ffb6c1;
+   }
+
+   [data-theme="babypink"] .nav__link.active {
+     color: #ffb6c1;
+     border-bottom-color: #ffb6c1;
+     text-shadow: 0 0 12px rgba(255, 182, 193, 0.5);
+   }
+
+   [data-theme="babypink"] .exp-card,
+   [data-theme="babypink"] .edu-card {
+     border-color: rgba(255, 182, 193, 0.22);
+     background: rgba(18, 9, 15, 0.72);
+   }
+
+   [data-theme="babypink"] .exp-card:hover,
+   [data-theme="babypink"] .edu-card:hover {
+     border-color: rgba(255, 182, 193, 0.6);
+     box-shadow: 0 25px 65px rgba(0, 0, 0, 0.65), 0 0 40px rgba(255, 182, 193, 0.35);
+   }
+
+   [data-theme="babypink"] .exp-card__glow,
+   [data-theme="babypink"] .edu-card__glow {
+     background: radial-gradient(500px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(255, 182, 193, 0.22), transparent 45%);
+   }
+
+   [data-theme="babypink"] .exp-card__cyber-grid {
+     background-image: radial-gradient(rgba(255, 182, 193, 0.15) 1px, transparent 1px);
+   }
+
+   [data-theme="babypink"] .exp-card::before {
+     background: linear-gradient(90deg, transparent, #ffb6c1, #ff8da1, transparent);
+   }
+
+   [data-theme="babypink"] .terminal {
+     border-color: rgba(255, 182, 193, 0.25);
+     box-shadow: 0 15px 45px rgba(0, 0, 0, 0.6), 0 0 25px rgba(255, 182, 193, 0.15);
+   }
+
    /* ─── Reset & Base ────────────────────────────────────────── */
    *, *::before, *::after {
      box-sizing: border-box;
@@ -1942,15 +2024,19 @@
 
    /* ─── TELEMETRY PANEL ───────────────────────────────────────── */
    .telemetry-panel {
+     --accent: #ffb6c1;
+     --accent-glow: rgba(255, 182, 193, 0.4);
+     --accent-dim: rgba(255, 182, 193, 0.25);
      background-color: var(--surface);
-     border: 1px solid var(--border);
-     border-radius: 4px;
+     border: 1px solid rgba(255, 182, 193, 0.2);
+     border-radius: 6px;
      padding: 1.5rem;
      display: flex;
      flex-direction: column;
      gap: 1.2rem;
      position: sticky;
      top: 1.5rem;
+     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 182, 193, 0.1);
    }
 
    .telemetry-panel__header {

@@ -22,6 +22,7 @@
     'precision highp float;',
     'uniform float uTime;',
     'uniform float uDark;',
+    'uniform float uThemePink;',
     'uniform vec2  uMouse;',
 
     'attribute vec3  aInstancePos;',
@@ -119,10 +120,14 @@
 
     '  gl_Position = projectionMatrix * mvPosition;',
 
-    '  // Red/Crimson Color palette interpolation',
+    '  // Red/Crimson & Baby Pink Color palette interpolation',
     '  vec3 darkCol = mix(aColor, vec3(1.0, 0.35, 0.2), sin(uTime * 0.5 + p.x * 0.1) * 0.4 + 0.4);',
     '  vec3 lightCol = mix(vec3(0.45, 0.1, 0.12), vec3(0.65, 0.12, 0.28), aColor.r);',
-    '  vColor = mix(lightCol, darkCol, uDark);',
+    '  vec3 pinkDark = mix(vec3(1.0, 0.70, 0.85), vec3(1.0, 0.40, 0.65), sin(uTime * 0.5 + p.x * 0.1) * 0.4 + 0.4);',
+    '  vec3 pinkLight = mix(vec3(0.55, 0.15, 0.30), vec3(0.85, 0.45, 0.65), aColor.r);',
+    '  vec3 finalDark = mix(darkCol, pinkDark, uThemePink);',
+    '  vec3 finalLight = mix(lightCol, pinkLight, uThemePink);',
+    '  vColor = mix(finalLight, finalDark, uDark);',
 
     '  vAlpha = (0.55 + 0.45 * sin(uTime * aSpeed * 1.5 + p.y));',
     '}'
@@ -219,12 +224,12 @@
       var phi = Math.acos(2.0 * v - 1.0);
       var r = 4.0 + Math.pow(Math.random(), 0.5) * 26.0;
 
-      instancePositions[i3]     = r * Math.sin(phi) * Math.cos(theta) * 1.4;
-      instancePositions[i3 + 1] = r * Math.sin(phi) * Math.sin(theta) * 0.9;
-      instancePositions[i3 + 2] = r * Math.cos(phi) * 0.8;
+      instancePositions[i3]     = r * Math.sin(phi) * Math.cos(theta);
+      instancePositions[i3 + 1] = (r * Math.sin(phi) * Math.sin(theta)) * 0.65;
+      instancePositions[i3 + 2] = r * Math.cos(phi) * 0.45;
 
-      sizes[i]  = 1.0 + Math.random() * 2.0;
-      speeds[i] = 0.5 + Math.random() * 1.0;
+      sizes[i]  = 0.12 + Math.pow(Math.random(), 2.0) * 0.45;
+      speeds[i] = 0.5 + Math.random() * 1.5;
 
       var col = palette[Math.floor(Math.random() * palette.length)];
       colors[i3]     = col.r;
@@ -238,13 +243,14 @@
     instGeo.setAttribute('aColor',       new THREE.InstancedBufferAttribute(colors, 3));
 
     this._material = new THREE.ShaderMaterial({
-      uniforms: {
-        uTime:  { value: 0 },
-        uDark:  { value: this._isDark ? 1.0 : 0.0 },
-        uMouse: { value: new THREE.Vector2(0, 0) },
-      },
       vertexShader:   INST_VERT,
       fragmentShader: INST_FRAG,
+      uniforms: {
+        uTime:      { value: 0 },
+        uDark:      { value: this._isDark ? 1.0 : 0.0 },
+        uThemePink: { value: 0.0 },
+        uMouse:     { value: new THREE.Vector2(0, 0) }
+      },
       transparent:    true,
       depthWrite:     false,
       blending:       THREE.AdditiveBlending,
@@ -260,11 +266,13 @@
     this.renderer.setClearColor(bgHex, 1);
   };
 
-  CinematicParticleSystem.prototype.setTheme = function (isDark) {
+  CinematicParticleSystem.prototype.setTheme = function (theme) {
     if (!this._ready) return;
+    var isPink = theme === 'babypink' || document.documentElement.getAttribute('data-theme') === 'babypink';
+    var isDark = theme === true || theme === 'dark' || document.documentElement.getAttribute('data-theme') !== 'light';
     this._isDark = isDark;
     var darkVal = isDark ? 1.0 : 0.0;
-    var bgHex   = isDark ? 0x120206 : 0xfcf4f4;
+    var bgHex   = isPink ? 0x0d070b : (isDark ? 0x120206 : 0xfcf4f4);
 
     if (this._material) {
       this._material.uniforms.uDark.value = darkVal;
