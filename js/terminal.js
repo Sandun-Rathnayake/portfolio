@@ -242,10 +242,6 @@
             "► THEME RESET: RESTORED TO DEFAULT THEME.",
             "terminal__line--accent",
           );
-          printLine(
-            "Hey youuuu",
-            "terminal__line--accent",
-          );
           if (window.__threeScene && window.__threeScene.setThemeColor) {
             window.__threeScene.setThemeColor("default");
           }
@@ -263,6 +259,10 @@
           );
           printLine(
             "► PALETTE SHIFTED: CYBER BABY PINK & SAKURA THEME APPLIED.",
+            "terminal__line--accent",
+          );
+          printLine(
+            "Hey youuuu",
             "terminal__line--accent",
           );
           if (window.__threeScene && window.__threeScene.setThemeColor) {
