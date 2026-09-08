@@ -253,18 +253,12 @@
           }
         } else {
           document.documentElement.setAttribute("data-theme", "babypink");
-          printLine(
-            "🌸 [BU OVERRIDE ACTIVATED] 🌸",
-            "terminal__line--accent",
-          );
+          printLine("🌸 [BU OVERRIDE ACTIVATED] 🌸", "terminal__line--accent");
           printLine(
             "► PALETTE SHIFTED: CYBER BABY PINK & SAKURA THEME APPLIED.",
             "terminal__line--accent",
           );
-          printLine(
-            "Hey youuuu",
-            "terminal__line--accent",
-          );
+          printLine("Hey youuuu :)", "terminal__line--accent");
           if (window.__threeScene && window.__threeScene.setThemeColor) {
             window.__threeScene.setThemeColor("babypink");
           }
