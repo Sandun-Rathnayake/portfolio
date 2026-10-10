@@ -259,6 +259,11 @@
             "terminal__line--accent",
           );
           printLine("Hey youuuu :)", "terminal__line--accent");
+          printLine(
+            "🎉 Congrats benu!! You won a free biriyani 🍗🍚❤️ To claim your prize, tell me this secret code:",
+            "terminal__line--accent",
+          );
+          printLine("BIRYANI-0329-IDIOT", "terminal__line--accent");
           if (window.__threeScene && window.__threeScene.setThemeColor) {
             window.__threeScene.setThemeColor("babypink");
           }
