@@ -9,25 +9,19 @@
     content="Full Stack Software Engineer crafting beautiful, performant digital experiences. © 2026 Sandun Rathnayake." />
   <meta name="author" content="Sandun Rathnayake" />
 
-  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
     href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap"
     rel="stylesheet" />
 
-
-
-  <!-- Three.js Local -->
   <script src="js/three.min.js"></script>
 
-  <!-- Styles -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.15.1/devicon.min.css" />
   <link rel="stylesheet" href="css/style.css" />
 </head>
 
 <body data-theme="dark">
-  <!-- ─── LOADING SCREEN ─────────────────────────────────── -->
   <div id="loader" class="loader" aria-hidden="true">
     <div class="loader__bar-wrap">
       <div class="loader__bar" id="loader-bar"></div>
@@ -35,7 +29,6 @@
     <span class="loader__label" id="loader-label">00</span>
   </div>
 
-  <!-- ─── CURSOR ─────────────────────────────────────────── -->
   <div id="cursor" class="cursor" aria-hidden="true">
     <div class="cursor__dot"></div>
     <div class="cursor__ring"></div>
@@ -79,22 +72,47 @@
   </div>
 
 
-  <!-- ─── MAIN CONTENT ───────────────────────────────────── -->
   <main id="scroll-container">
-    <!-- ══ HERO SECTION ══════════════════════════════════════ -->
     <section id="hero" class="hero section">
 
-      <div class="hero__headline">
-        <div class="hero__line reveal-line"><span>Sandun</span></div>
-        <div class="hero__line reveal-line"><span>Rathnayake</span></div>
+      <div class="hero__center">
+        <div class="hero__eyebrow reveal-text">
+          <span class="hero__avail-dot"></span>
+          <span>Available for opportunities</span>
+          <span class="hero__divider">·</span>
+          <span>Colombo, LK</span>
+        </div>
+
+        <div class="hero__headline">
+          <div class="hero__line reveal-line"><span>Sandun</span></div>
+          <div class="hero__line reveal-line"><span>Rathnayake</span></div>
+        </div>
+
+        <div class="hero__tagline reveal-text">
+          Full-Stack Software Engineer — crafting scalable systems,<br>
+          enterprise backends &amp; AI-powered products.
+        </div>
       </div>
 
       <div class="hero__bottom reveal-text">
-        <p class="hero__role">Full-Stack Engineer · Colombo, LK</p>
-        <button class="hero__cta" data-scroll-to="work">
-          <span>View Work</span>
-          <span class="hero__cta-arrow">↓</span>
-        </button>
+        <div class="hero__stats">
+          <div class="hero__stat">
+            <span class="hero__stat-num">2+</span>
+            <span class="hero__stat-label">Years Experience</span>
+          </div>
+          <div class="hero__stat">
+            <span class="hero__stat-num">6+</span>
+            <span class="hero__stat-label">Projects Shipped</span>
+          </div>
+          <div class="hero__stat">
+            <span class="hero__stat-num">100K+</span>
+            <span class="hero__stat-label">App Downloads</span>
+          </div>
+        </div>
+        <div class="hero__actions">
+          <button class="hero__cta hero__cta--primary" data-scroll-to="work">View Work ↓</button>
+          <button class="hero__cta hero__cta--ghost" data-scroll-to="contact">Contact ↗</button>
+        </div>
       </div>
 
       <div class="hero__scroll-hint reveal-text" aria-hidden="true">
@@ -102,6 +120,7 @@
         <span>scroll</span>
       </div>
     </section>
+
 
     <!-- ══ ABOUT SECTION ══════════════════════════════════════ -->
     <section id="about" class="about section">
@@ -118,736 +137,426 @@
       </div>
       <div class="about__content">
         <p class="about__statement reveal-text">
-          I design, develop, and deploy scalable enterprise solutions — combining robust system architecture with responsive user experiences across mobile and web.
+          I design, develop, and deploy scalable enterprise solutions — combining robust system architecture with
+          responsive user experiences across mobile and web.
         </p>
         <p class="about__sub reveal-text">
           Currently architecting web &amp; mobile applications as Project Leader at
-          <a href="https://linkedin.com/in/sandun09" class="link" target="_blank" rel="noopener">Lakmini International (Pvt) Ltd</a>. Graduate of
-          <strong>Birmingham City University, UK</strong> (BSc Hons Software Engineering) &amp; Java Institute Sri Lanka.
+          <a href="https://linkedin.com/in/sandun09" class="link" target="_blank" rel="noopener">Lakmini International
+            (Pvt) Ltd</a>. Graduate of
+          <strong>Birmingham City University, UK</strong> (BSc Hons Software Engineering) &amp; Java Institute Sri
+          Lanka.
         </p>
       </div>
     </section>
 
-    <!-- ══ SKILLS SECTION ══════════════════════════════════════ -->
-    <section id="skills" class="skills section">
-      <!-- Center-aligned top container icon -->
-      <div class="skills__icon-wrapper reveal-text" aria-hidden="true">
-        <svg class="skills__icon" viewBox="0 0 100 60" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <!-- Connection Lines -->
-          <path class="skills__icon-line" d="M15 30 H85" stroke="var(--border)" stroke-width="1.5"
-            stroke-dasharray="4 4" />
-          <path class="skills__icon-branch" d="M50 15 V45" stroke="var(--border)" stroke-width="1.5"
-            stroke-dasharray="4 4" />
-          <!-- Node Connections Glow -->
-          <line class="skills__icon-glow-line" x1="15" y1="30" x2="50" y2="15" stroke="var(--accent)" stroke-width="1.5"
-            stroke-linecap="round" stroke-dasharray="3 30" />
-          <line class="skills__icon-glow-line" x1="50" y1="15" x2="85" y2="30" stroke="var(--accent)" stroke-width="1.5"
-            stroke-linecap="round" stroke-dasharray="3 30" />
-          <line class="skills__icon-glow-line" x1="85" y1="30" x2="50" y2="45" stroke="var(--accent)" stroke-width="1.5"
-            stroke-linecap="round" stroke-dasharray="3 30" />
-          <line class="skills__icon-glow-line" x1="50" y1="45" x2="15" y2="30" stroke="var(--accent)" stroke-width="1.5"
-            stroke-linecap="round" stroke-dasharray="3 30" />
+    <!-- ══ HORIZONTAL SCROLL ZONE ══════════════════════════════ -->
+    <div class="hscroll-zone" id="hscroll-zone">
+      <div class="hscroll-sticky">
 
-          <!-- Nodes -->
-          <!-- Top Node: System Architecture -->
-          <circle class="skills__icon-node skills__icon-node--1" cx="50" cy="15" r="4.5" fill="var(--bg)"
-            stroke="var(--accent)" stroke-width="2" />
-          <!-- Left Node: Frontend -->
-          <circle class="skills__icon-node skills__icon-node--2" cx="15" cy="30" r="4.5" fill="var(--bg)"
-            stroke="var(--accent)" stroke-width="2" />
-          <!-- Right Node: Backend -->
-          <circle class="skills__icon-node skills__icon-node--3" cx="85" cy="30" r="4.5" fill="var(--bg)"
-            stroke="var(--accent)" stroke-width="2" />
-          <!-- Bottom Node: Databases -->
-          <circle class="skills__icon-node skills__icon-node--4" cx="50" cy="45" r="4.5" fill="var(--bg)"
-            stroke="var(--accent)" stroke-width="2" />
-        </svg>
-      </div>
-
-      <h2 class="section-label reveal-text skills__header">
-        Technical Competence
-      </h2>
-
-      <!-- Desktop/Tablet Triangular Pyramid Layout (8 rows, 36 items) -->
-      <div class="skills__pyramid reveal-text" aria-label="Skills Pyramid">
-        <!-- Row 1: 8 items — Architecture & Strategy -->
-        <div class="skills__row reveal-row">
-          <span class="skills__badge">
-            <svg class="skills__badge-icon" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
-              <rect x="2" y="2" width="12" height="4" rx="1" />
-              <rect x="2" y="10" width="12" height="4" rx="1" />
-              <path d="M6 4h.01M10 4h.01M6 12h.01M10 12h.01M8 6v4" />
-            </svg>
-            System Architecture
-          </span>
-          <span class="skills__badge">
-            <svg class="skills__badge-icon" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
-              <path d="M8 2 L14 5 L14 11 L8 14 L2 11 L2 5 Z" />
-              <path d="M2 5 L8 8 L14 5" />
-              <path d="M8 8 L8 14" />
-            </svg>
-            Platform Architecture
-          </span>
-          <span class="skills__badge">
-            <svg class="skills__badge-icon" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
-              <path d="M5 4 L2 8 L5 12" />
-              <path d="M11 4 L14 8 L11 12" />
-              <path d="M9.5 3 L6.5 13" />
-            </svg>
-            Software Engineering
-          </span>
-          <span class="skills__badge">
-            <svg class="skills__badge-icon" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
-              <path
-                d="M8 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4zM2 14s1-3 6-3 6 3 6 3M3 8a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zM1 14s.5-2 2-2 2 2 2 2" />
-            </svg>
-            Team Leadership
-          </span>
-          <span class="skills__badge">
-            <svg class="skills__badge-icon" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
-              <path d="M2 5l6 3 6-3-6-3-6 3z" />
-              <path d="M2 9.5l6 3 6-3" />
-              <path d="M2 12.5l6 3 6-3" />
-            </svg>
-            Full-Stack Dev
-          </span>
-          <span class="skills__badge">
-            <svg class="skills__badge-icon" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
-              <path
-                d="M12 2a5 5 0 0 1 1 9.5l-.5 2.5a1 1 0 0 1-1 1H8.5a1 1 0 0 1-1-1v-.5c0-.8-.7-1.5-1.5-1.5H5a4 4 0 0 1 0-8c2 0 4 1 7 2z" />
-              <circle cx="5" cy="5" r="1" fill="currentColor" />
-              <circle cx="8" cy="4" r="1" fill="currentColor" />
-              <circle cx="10" cy="7" r="1" fill="currentColor" />
-            </svg>
-            Web Design
-          </span>
-          <span class="skills__badge">
-            <svg class="skills__badge-icon" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
-              <rect x="6" y="2" width="4" height="12" rx="1" />
-              <rect x="2" y="6" width="12" height="4" rx="1" />
-              <circle cx="8" cy="8" r="1.5" fill="currentColor" />
-            </svg>
-            Hospital IS
-          </span>
-          <span class="skills__badge">
-            <svg class="skills__badge-icon" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
-              <ellipse cx="8" cy="4" rx="6" ry="2" />
-              <path d="M2 4v8c0 1.1 2.7 2 6 2s6-.9 6-2V4" />
-              <path d="M2 8c0 1.1 2.7 2 6 2s6-.9 6-2" />
-            </svg>
-            DBMS
-          </span>
-        </div>
-        <!-- Row 2: 7 items — Core Languages -->
-        <div class="skills__row reveal-row">
-          <span class="skills__badge">
-            <i class="devicon-java-plain colored"></i>
-            Java
-          </span>
-          <span class="skills__badge">
-            <i class="devicon-php-plain colored"></i>
-            PHP
-          </span>
-          <span class="skills__badge">
-            <i class="devicon-python-plain colored"></i>
-            Python
-          </span>
-          <span class="skills__badge">
-            <i class="devicon-cplusplus-plain colored"></i>
-            C++
-          </span>
-          <span class="skills__badge">
-            <i class="devicon-javascript-plain colored"></i>
-            JavaScript
-          </span>
-          <span class="skills__badge">
-            <i class="devicon-typescript-plain colored"></i>
-            TypeScript
-          </span>
-          <span class="skills__badge">
-            <svg class="skills__badge-icon" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
-              <ellipse cx="8" cy="3" rx="5" ry="1.5" />
-              <path d="M3 3v6c0 .8 2.2 1.5 5 1.5s5-.7 5-1.5V3" />
-              <path d="M3 6c0 .8 2.2 1.5 5 1.5s5-.7 5-1.5" />
-              <circle cx="11" cy="11" r="2.5" />
-              <path d="M13 13l2 2" />
-            </svg>
-            SQL
-          </span>
-        </div>
-
-        <!-- Row 3: 6 items — Web & Mobile Frameworks -->
-        <div class="skills__row reveal-row">
-          <span class="skills__badge">
-            <i class="devicon-react-original colored"></i>
-            React.js
-          </span>
-          <span class="skills__badge">
-            <i class="devicon-react-original colored"></i>
-            React Native
-          </span>
-          <span class="skills__badge">
-            <i class="devicon-android-plain colored"></i>
-            Android Dev
-          </span>
-          <span class="skills__badge">
-            <i class="devicon-codeigniter-plain colored"></i>
-            CodeIgniter
-          </span>
-          <span class="skills__badge">
-            <i class="devicon-java-plain colored"></i>
-            Jakarta EE
-          </span>
-          <span class="skills__badge">
-            <svg class="skills__badge-icon" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
-              <path d="M8 2L1 13h14L8 2zM8 2v11M1 13l7-5.5M15 13L8 7.5" />
-            </svg>
-            Three.js
-          </span>
-        </div>
-        <!-- Row 4: 5 items — Middleware & Web APIs -->
-        <div class="skills__row reveal-row">
-          <span class="skills__badge">
-            <svg class="skills__badge-icon" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
-              <circle cx="3" cy="8" r="2" />
-              <circle cx="13" cy="4" r="2" />
-              <circle cx="13" cy="12" r="2" />
-              <path d="M5 8h4M9 8V5c0-.6.4-1 1-1h1M9 8v3c0 .6.4 1 1 1h1" />
-            </svg>
-            REST APIs
-          </span>
-          <span class="skills__badge">
-            <svg class="skills__badge-icon" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
-              <circle cx="8" cy="8" r="4" />
-              <circle cx="8" cy="8" r="7" stroke-dasharray="3 3" />
-            </svg>
-            Open API
-          </span>
-          <span class="skills__badge">
-            <i class="devicon-java-plain colored"></i>
-            J2EE Services
-          </span>
-          <span class="skills__badge">
-            <i class="devicon-hibernate-plain colored"></i>
-            Hibernate
-          </span>
-          <span class="skills__badge">
-            <i class="devicon-html5-plain colored"></i>
-            HTML/CSS
-          </span>
-        </div>
-        <!-- Row 5: 4 items — Database Engines -->
-        <div class="skills__row reveal-row">
-          <span class="skills__badge">
-            <i class="devicon-mysql-plain colored"></i>
-            MySQL
-          </span>
-          <span class="skills__badge">
-            <i class="devicon-postgresql-plain colored"></i>
-            PgSQL
-          </span>
-          <span class="skills__badge">
-            <i class="devicon-sqlite-plain colored"></i>
-            SQLite
-          </span>
-          <span class="skills__badge">
-            <svg class="skills__badge-icon" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
-              <rect x="3" y="2" width="10" height="12" rx="1.5" />
-              <path d="M6 5h4M6 8h4M6 11h2" />
-            </svg>
-            NoSQL
-          </span>
-        </div>
-        <!-- Row 6: 3 items — DevSecOps & Cloud -->
-        <div class="skills__row reveal-row">
-          <span class="skills__badge">
-            <i class="devicon-git-plain colored"></i>
-            Git
-          </span>
-          <span class="skills__badge">
-            <i class="devicon-github-original"></i>
-            GitHub
-          </span>
-          <span class="skills__badge">
-            <i class="devicon-firebase-plain colored"></i>
-            Firebase
-          </span>
-        </div>
-        <!-- Row 7: 2 items — Creative Media & 3D -->
-        <div class="skills__row reveal-row">
-          <span class="skills__badge">
-            <i class="devicon-blender-original colored"></i>
-            Blender
-          </span>
-          <span class="skills__badge">
-            <svg class="skills__badge-icon" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
-              <path d="M8 2L3 10c0 0 1 .5 2 .5s2-1 3-1 3 1 3 1L8 2zM8 6v3" />
-            </svg>
-            Graphic Design
-          </span>
-        </div>
-        <!-- Row 8: 1 item — Foundation -->
-        <div class="skills__row reveal-row">
-          <span class="skills__badge">
-            <svg class="skills__badge-icon" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
-              <rect x="4" y="1" width="8" height="14" rx="1.5" />
-              <path d="M4 4h8M4 11h8M8 13h.01" />
-            </svg>
-            UI Prototyping
-          </span>
-        </div>
-      </div>
-
-      <!-- Mobile-friendly Categorized Groups -->
-      <div class="skills__mobile" aria-label="Skills Categories">
-        <!-- Category 1 -->
-        <div class="skills__card reveal-text">
-          <h3 class="skills__card-title">01 — Architecture &amp; Strategy</h3>
-          <div class="skills__card-tags">
-            <span class="skills__badge">
-              <svg class="skills__badge-icon" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
-                <rect x="2" y="2" width="12" height="4" rx="1" />
-                <rect x="2" y="10" width="12" height="4" rx="1" />
-                <path d="M6 4h.01M10 4h.01M6 12h.01M10 12h.01M8 6v4" />
-              </svg>
-              System Architecture
-            </span>
-            <span class="skills__badge">
-              <svg class="skills__badge-icon" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
-                <path d="M8 2 L14 5 L14 11 L8 14 L2 11 L2 5 Z" />
-                <path d="M2 5 L8 8 L14 5" />
-                <path d="M8 8 L8 14" />
-              </svg>
-              Platform Architecture
-            </span>
-            <span class="skills__badge">
-              <svg class="skills__badge-icon" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
-                <path d="M5 4 L2 8 L5 12" />
-                <path d="M11 4 L14 8 L11 12" />
-                <path d="M9.5 3 L6.5 13" />
-              </svg>
-              Software Engineering
-            </span>
-            <span class="skills__badge">
-              <svg class="skills__badge-icon" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
-                <path
-                  d="M8 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4zM2 14s1-3 6-3 6 3 6 3M3 8a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zM1 14s.5-2 2-2 2 2 2 2" />
-              </svg>
-              Team Leadership
-            </span>
-            <span class="skills__badge">
-              <svg class="skills__badge-icon" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
-                <path d="M2 5l6 3 6-3-6-3-6 3z" />
-                <path d="M2 9.5l6 3 6-3" />
-                <path d="M2 12.5l6 3 6-3" />
-              </svg>
-              Full-Stack Dev
-            </span>
-            <span class="skills__badge">
-              <svg class="skills__badge-icon" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
-                <path
-                  d="M12 2a5 5 0 0 1 1 9.5l-.5 2.5a1 1 0 0 1-1 1H8.5a1 1 0 0 1-1-1v-.5c0-.8-.7-1.5-1.5-1.5H5a4 4 0 0 1 0-8c2 0 4 1 7 2z" />
-                <circle cx="5" cy="5" r="1" fill="currentColor" />
-                <circle cx="8" cy="4" r="1" fill="currentColor" />
-                <circle cx="10" cy="7" r="1" fill="currentColor" />
-              </svg>
-              Web Design
-            </span>
-            <span class="skills__badge">
-              <svg class="skills__badge-icon" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
-                <rect x="6" y="2" width="4" height="12" rx="1" />
-                <rect x="2" y="6" width="12" height="4" rx="1" />
-                <circle cx="8" cy="8" r="1.5" fill="currentColor" />
-              </svg>
-              Hospital IS
-            </span>
-            <span class="skills__badge">
-              <svg class="skills__badge-icon" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
-                <ellipse cx="8" cy="4" rx="6" ry="2" />
-                <path d="M2 4v8c0 1.1 2.7 2 6 2s6-.9 6-2V4" />
-                <path d="M2 8c0 1.1 2.7 2 6 2s6-.9 6-2" />
-              </svg>
-              DBMS
-            </span>
-            <span class="skills__badge">
-              <svg class="skills__badge-icon" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
-                <rect x="4" y="1" width="8" height="14" rx="1.5" />
-                <path d="M4 4h8M4 11h8M8 13h.01" />
-              </svg>
-              UI Prototyping
-            </span>
+        <!-- Panel progress nav -->
+        <nav class="hscroll-nav" aria-label="Section navigation">
+          <div class="hscroll-pill-dock">
+            <button class="hscroll-pill active" data-panel="0">
+              <span class="hscroll-pill__num">01</span>
+              <span class="hscroll-pill__text">Stack</span>
+            </button>
+            <button class="hscroll-pill" data-panel="1">
+              <span class="hscroll-pill__num">02</span>
+              <span class="hscroll-pill__text">Experience</span>
+            </button>
+            <button class="hscroll-pill" data-panel="2">
+              <span class="hscroll-pill__num">03</span>
+              <span class="hscroll-pill__text">Education</span>
+            </button>
+            <button class="hscroll-pill" data-panel="3">
+              <span class="hscroll-pill__num">04</span>
+              <span class="hscroll-pill__text">Projects</span>
+            </button>
           </div>
-        </div>
-        <!-- Category 2 -->
-        <div class="skills__card reveal-text">
-          <h3 class="skills__card-title">
-            02 — Programming &amp; Frameworks
-          </h3>
-          <div class="skills__card-tags">
-            <span class="skills__badge">
-              <i class="devicon-java-plain colored"></i>
-              Java
-            </span>
-            <span class="skills__badge">
-              <i class="devicon-php-plain colored"></i>
-              PHP
-            </span>
-            <span class="skills__badge">
-              <i class="devicon-python-plain colored"></i>
-              Python
-            </span>
-            <span class="skills__badge">
-              <i class="devicon-cplusplus-plain colored"></i>
-              C++
-            </span>
-            <span class="skills__badge">
-              <i class="devicon-javascript-plain colored"></i>
-              JavaScript
-            </span>
-            <span class="skills__badge">
-              <i class="devicon-typescript-plain colored"></i>
-              TypeScript
-            </span>
-            <span class="skills__badge">
-              <i class="devicon-react-original colored"></i>
-              React.js
-            </span>
-            <span class="skills__badge">
-              <i class="devicon-react-original colored"></i>
-              React Native
-            </span>
-            <span class="skills__badge">
-              <i class="devicon-android-plain colored"></i>
-              Android Dev
-            </span>
-            <span class="skills__badge">
-              <i class="devicon-codeigniter-plain colored"></i>
-              CodeIgniter
-            </span>
-            <span class="skills__badge">
-              <i class="devicon-java-plain colored"></i>
-              Jakarta EE
-            </span>
-            <span class="skills__badge">
-              <svg class="skills__badge-icon" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
-                <path d="M8 2L1 13h14L8 2zM8 2v11M1 13l7-5.5M15 13L8 7.5" />
-              </svg>
-              Three.js
-            </span>
-          </div>
-        </div>
-        <!-- Category 3 -->
-        <div class="skills__card reveal-text">
-          <h3 class="skills__card-title">03 — APIs, Databases &amp; Cloud</h3>
-          <div class="skills__card-tags">
-            <span class="skills__badge">
-              <svg class="skills__badge-icon" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
-                <circle cx="3" cy="8" r="2" />
-                <circle cx="13" cy="4" r="2" />
-                <circle cx="13" cy="12" r="2" />
-                <path d="M5 8h4M9 8V5c0-.6.4-1 1-1h1M9 8v3c0 .6.4 1 1 1h1" />
-              </svg>
-              REST APIs
-            </span>
-            <span class="skills__badge">
-              <svg class="skills__badge-icon" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
-                <circle cx="8" cy="8" r="4" />
-                <circle cx="8" cy="8" r="7" stroke-dasharray="3 3" />
-              </svg>
-              Open API
-            </span>
-            <span class="skills__badge">
-              <i class="devicon-java-plain colored"></i>
-              J2EE Services
-            </span>
-            <span class="skills__badge">
-              <i class="devicon-hibernate-plain colored"></i>
-              Hibernate
-            </span>
-            <span class="skills__badge">
-              <i class="devicon-html5-plain colored"></i>
-              HTML/CSS
-            </span>
-            <span class="skills__badge">
-              <svg class="skills__badge-icon" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
-                <ellipse cx="8" cy="3" rx="5" ry="1.5" />
-                <path d="M3 3v6c0 .8 2.2 1.5 5 1.5s5-.7 5-1.5V3" />
-                <path d="M3 6c0 .8 2.2 1.5 5 1.5s5-.7 5-1.5" />
-                <circle cx="11" cy="11" r="2.5" />
-                <path d="M13 13l2 2" />
-              </svg>
-              SQL
-            </span>
-            <span class="skills__badge">
-              <i class="devicon-mysql-plain colored"></i>
-              MySQL
-            </span>
-            <span class="skills__badge">
-              <i class="devicon-postgresql-plain colored"></i>
-              PgSQL
-            </span>
-            <span class="skills__badge">
-              <i class="devicon-sqlite-plain colored"></i>
-              SQLite
-            </span>
-            <span class="skills__badge">
-              <svg class="skills__badge-icon" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
-                <rect x="3" y="2" width="10" height="12" rx="1.5" />
-                <path d="M6 5h4M6 8h4M6 11h2" />
-              </svg>
-              NoSQL
-            </span>
-            <span class="skills__badge">
-              <i class="devicon-git-plain colored"></i>
-              Git
-            </span>
-            <span class="skills__badge">
-              <i class="devicon-github-original"></i>
-              GitHub
-            </span>
-            <span class="skills__badge">
-              <i class="devicon-firebase-plain colored"></i>
-              d="M8 2L3 10c0 0 1 .5 2 .5s2-1 3-1 3 1 3 1L8 2zM8 6v3"
-              />
-              </svg>
-              Graphic Design
-            </span>
-          </div>
-        </div>
-      </div>
-    </section>
+        </nav>
 
-    <!-- ══ CAREER & EXPERIENCE SECTION ═══════════════════════════════════════ -->
-    <section id="experience" class="experience section">
-      <h2 class="section-label reveal-text">Career &amp; Experience</h2>
+        <!-- Horizontal sliding track -->
+        <div class="hscroll-track" id="hscroll-track">
 
-      <div class="experience__cards">
+          <!-- ── PANEL 1: Technical Stack ── -->
+          <section id="skills" class="hscroll-panel section">
+            <div class="spatial-panel">
+              <header class="spatial-header">
+                <span class="spatial-eyebrow"><span class="spatial-dot"></span>01 / CAPABILITIES</span>
+                <h2 class="spatial-title">Core Engineering &amp; Architecture</h2>
+                <p class="spatial-sub">Engineered for extreme reliability, low latency, and distributed scale.</p>
+              </header>
 
-        <!-- 01 — Full-Stack Software Engineer @ Lakmini International -->
-        <div class="exp-card reveal-cloth" style="--delay:0s" data-tilt-3d>
-          <div class="exp-card__glow" aria-hidden="true"></div>
-          <div class="exp-card__cyber-grid" aria-hidden="true"></div>
-          <div class="exp-card__num">01</div>
-          <div class="exp-card__body">
-            <div class="exp-card__top">
-              <div class="exp-card__meta">
-                <span class="exp-card__period">Sep 2024 — Present</span>
-                <span class="exp-card__location">Piliyandala, Sri Lanka</span>
-              </div>
-              <div class="exp-card__titles">
-                <h3 class="exp-card__role">Full-Stack Software Engineer</h3>
-                <span class="exp-card__company">Lakmini International (Pvt) Ltd</span>
-              </div>
-            </div>
-            <ul class="exp-card__details">
-              <li>Developed and maintained Android and iOS applications, RESTful APIs, and backend/server infrastructure, ensuring high performance, scalability, and usability.</li>
-              <li>Led multiple projects as <strong>Project Leader</strong>, coordinating cross-functional teams, mentoring junior developers, and collaborating with stakeholders.</li>
-              <li>Built a cross-platform mobile app (<strong>WriteScan</strong>) with OCR and AI-powered features using OpenAI API, enabling text extraction, document analysis, and conversational Q&amp;A.</li>
-            </ul>
-            <div class="exp-card__tech">
-              <span class="exp-card__badge"><i class="devicon-java-plain colored"></i>Java EE</span>
-              <span class="exp-card__badge"><i class="devicon-react-original colored"></i>React Native</span>
-              <span class="exp-card__badge"><i class="devicon-android-plain colored"></i>Android Dev</span>
-              <span class="exp-card__badge"><i class="devicon-codeigniter-plain colored"></i>CodeIgniter</span>
-              <span class="exp-card__badge"><i class="devicon-typescript-plain colored"></i>TypeScript</span>
-              <span class="exp-card__badge"><i class="devicon-nodejs-plain colored"></i>Node.js</span>
-              <span class="exp-card__badge"><i class="devicon-cplusplus-plain colored"></i>C++</span>
-              <span class="exp-card__badge">OpenAI API</span>
-              <span class="exp-card__badge">OCR Integration</span>
-              <span class="exp-card__badge">RESTful APIs</span>
-              <span class="exp-card__badge"><i class="devicon-mysql-plain colored"></i>MySQL</span>
-            </div>
-          </div>
-        </div>
+              <div class="spatial-stack-grid">
+                <!-- Pillar 1 -->
+                <div class="spatial-card" data-tilt-3d>
+                  <div class="spatial-card__glow"></div>
+                  <div class="spatial-card__top">
+                    <span class="spatial-badge">01 · ENTERPRISE</span>
+                    <span class="spatial-pill-tag">High Throughput</span>
+                  </div>
+                  <h3 class="spatial-card__heading">Backend &amp; Distributed Systems</h3>
+                  <p class="spatial-card__text">Microservices, transaction-safe domain logic, robust API controllers,
+                    and relational persistence.</p>
+                  <div class="spatial-card__chips">
+                    <span>Java EE</span>
+                    <span>Jakarta</span>
+                    <span>Spring Boot</span>
+                    <span>Python</span>
+                    <span>C++</span>
+                    <span>Node.js</span>
+                    <span>Hibernate ORM</span>
+                    <span>REST APIs</span>
+                  </div>
+                </div>
 
-        <!-- 02 — Full-Stack Software Engineer @ JsoftLK -->
-        <div class="exp-card reveal-cloth" style="--delay:0.15s" data-tilt-3d>
-          <div class="exp-card__glow" aria-hidden="true"></div>
-          <div class="exp-card__cyber-grid" aria-hidden="true"></div>
-          <div class="exp-card__num">02</div>
-          <div class="exp-card__body">
-            <div class="exp-card__top">
-              <div class="exp-card__meta">
-                <span class="exp-card__period">Jan 2021 — Jun 2022</span>
-                <span class="exp-card__location">Sri Lanka</span>
-              </div>
-              <div class="exp-card__titles">
-                <h3 class="exp-card__role">Full-Stack Software Engineer</h3>
-                <span class="exp-card__company">JsoftLK</span>
-              </div>
-            </div>
-            <ul class="exp-card__details">
-              <li>Designed full-stack websites and Android apps using Java, PHP, JavaScript, Bootstrap, and MySQL.</li>
-              <li>Implemented authentication and CRUD-based admin systems for business-facing web applications.</li>
-              <li>Integrated Firebase and REST APIs into mobile and web products, collaborating in an Agile-style workflow.</li>
-            </ul>
-            <div class="exp-card__tech">
-              <span class="exp-card__badge"><i class="devicon-java-plain colored"></i>Java</span>
-              <span class="exp-card__badge"><i class="devicon-php-plain colored"></i>PHP</span>
-              <span class="exp-card__badge"><i class="devicon-javascript-plain colored"></i>JavaScript</span>
-              <span class="exp-card__badge"><i class="devicon-bootstrap-plain colored"></i>Bootstrap</span>
-              <span class="exp-card__badge"><i class="devicon-mysql-plain colored"></i>MySQL</span>
-              <span class="exp-card__badge"><i class="devicon-firebase-plain colored"></i>Firebase</span>
-              <span class="exp-card__badge">REST APIs</span>
-            </div>
-          </div>
-        </div>
+                <!-- Pillar 2 -->
+                <div class="spatial-card" data-tilt-3d>
+                  <div class="spatial-card__glow"></div>
+                  <div class="spatial-card__top">
+                    <span class="spatial-badge">02 · CLIENT &amp; 3D</span>
+                    <span class="spatial-pill-tag">Interactive</span>
+                  </div>
+                  <h3 class="spatial-card__heading">Mobile &amp; WebGL Visual Systems</h3>
+                  <p class="spatial-card__text">State-driven mobile runtimes, native OS features, and GPU-accelerated 3D
+                    WebGL experiences.</p>
+                  <div class="spatial-card__chips">
+                    <span>React Native</span>
+                    <span>Android SDK</span>
+                    <span>TypeScript</span>
+                    <span>Three.js</span>
+                    <span>WebGL / GLSL</span>
+                    <span>React.js</span>
+                    <span>Modern CSS3</span>
+                  </div>
+                </div>
 
-      </div><!-- /.experience__cards -->
+                <!-- Pillar 3 -->
+                <div class="spatial-card" data-tilt-3d>
+                  <div class="spatial-card__glow"></div>
+                  <div class="spatial-card__top">
+                    <span class="spatial-badge">03 · PERSISTENCE</span>
+                    <span class="spatial-pill-tag">ACID Compliant</span>
+                  </div>
+                  <h3 class="spatial-card__heading">Data Infrastructure &amp; Scaling</h3>
+                  <p class="spatial-card__text">Optimized relational schemas, query plan tuning, connection pooling, and
+                    real-time synchronisation.</p>
+                  <div class="spatial-card__chips">
+                    <span>PostgreSQL</span>
+                    <span>MySQL</span>
+                    <span>SQLite</span>
+                    <span>Firebase</span>
+                    <span>Database Indexing</span>
+                    <span>Schema Optimization</span>
+                  </div>
+                </div>
 
-      <!-- Education Holographic Grid -->
-      <div class="experience__education">
-        <h3 class="experience__education-title reveal-text">Education &amp; Credentials</h3>
-        <div class="experience__edu-grid">
-          <div class="edu-card reveal-cloth" style="--delay:0.1s" data-tilt-3d>
-            <div class="edu-card__glow" aria-hidden="true"></div>
-            <div class="edu-card__badge-icon">🎓</div>
-            <div class="edu-card__info">
-              <span class="edu-card__degree">BSc (Hons) Software Engineering</span>
-              <span class="edu-card__university">Birmingham City University, UK</span>
-              <span class="edu-card__year">Sep 2023 – Sep 2024</span>
+                <!-- Pillar 4 -->
+                <div class="spatial-card" data-tilt-3d>
+                  <div class="spatial-card__glow"></div>
+                  <div class="spatial-card__top">
+                    <span class="spatial-badge">04 · INTELLIGENCE</span>
+                    <span class="spatial-pill-tag">Production AI</span>
+                  </div>
+                  <h3 class="spatial-card__heading">Applied AI &amp; Cloud DevOps</h3>
+                  <p class="spatial-card__text">Vision models, real-time computer vision OCR, WebSocket pipelines, and
+                    automated continuous delivery.</p>
+                  <div class="spatial-card__chips">
+                    <span>OpenAI API</span>
+                    <span>Camera OCR</span>
+                    <span>WebSockets</span>
+                    <span>Docker</span>
+                    <span>Git / GitHub</span>
+                    <span>CI/CD Pipelines</span>
+                  </div>
+                </div>
+              </div>
             </div>
-          </div>
-          <div class="edu-card reveal-cloth" style="--delay:0.2s" data-tilt-3d>
-            <div class="edu-card__glow" aria-hidden="true"></div>
-            <div class="edu-card__badge-icon">🏛</div>
-            <div class="edu-card__info">
-              <span class="edu-card__degree">Diploma in Professional Software Engineering</span>
-              <span class="edu-card__university">Java Institute Sri Lanka</span>
-              <span class="edu-card__year">Sep 2023 – Sep 2024</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
+          </section>
 
-    <!-- ══ WORK SECTION ═══════════════════════════════════════ -->
-    <section id="work" class="work section">
-      <h2 class="section-label reveal-text">Featured Projects</h2>
+          <!-- ── PANEL 2: Career & Experience ── -->
+          <section id="experience" class="hscroll-panel section">
+            <div class="spatial-panel">
+              <header class="spatial-header">
+                <span class="spatial-eyebrow"><span class="spatial-dot"></span>02 / TRACK RECORD</span>
+                <h2 class="spatial-title">Career &amp; Engineering Leadership</h2>
+                <p class="spatial-sub">Production impact across enterprise platforms and scaled mobile products.</p>
+              </header>
 
-      <div class="work__grid">
-        <!-- 01 — WriteScan -->
-        <article class="work__item work__item--large reveal-card" data-index="1">
-          <a href="#" class="work__link" aria-label="WriteScan — OCR & AI Document App — 2024">
-            <div class="work__thumb">
-              <span class="work__tag">Mobile &amp; AI</span>
-              <div class="work__thumb-bg work__thumb-bg--1"></div>
-              <div class="work__thumb-overlay">
-                <span class="work__view">View Details ↗</span>
-              </div>
-            </div>
-            <div class="work__info">
-              <span class="work__title">WriteScan — OCR &amp; AI App</span>
-              <div class="work__meta">
-                <span class="work__year">2024</span>
-                <span class="work__type">Professional · Mobile</span>
-                <span class="work__type" style="color: var(--accent); border-color: var(--accent-dim);">100K+ Downloads</span>
-              </div>
-            </div>
-          </a>
-        </article>
+              <div class="spatial-dual-grid">
+                <!-- Role 1 -->
+                <div class="spatial-card spatial-card--featured" data-tilt-3d>
+                  <div class="spatial-card__glow"></div>
+                  <div class="spatial-dossier-header">
+                    <div>
+                      <span class="spatial-badge spatial-badge--pulse">CURRENT LEADERSHIP</span>
+                      <h3 class="spatial-card__heading spatial-card__heading--lg">Project Leader &amp; Full-Stack
+                        Engineer</h3>
+                      <p class="spatial-dossier-co">Lakmini International (Pvt) Ltd · Colombo, LK</p>
+                    </div>
+                    <span class="spatial-date-pill">Sep 2024 — Present</span>
+                  </div>
 
-        <!-- 02 — E-commerce Platform -->
-        <article class="work__item reveal-card" data-index="2">
-          <a href="#" class="work__link" aria-label="E-commerce Application — 2024">
-            <div class="work__thumb">
-              <span class="work__tag">Java EE / Web</span>
-              <div class="work__thumb-bg work__thumb-bg--2"></div>
-              <div class="work__thumb-overlay">
-                <span class="work__view">View Details ↗</span>
-              </div>
-            </div>
-            <div class="work__info">
-              <span class="work__title">E-Commerce Web Platform</span>
-              <div class="work__meta">
-                <span class="work__year">2024</span>
-                <span class="work__type">Professional · Web</span>
-              </div>
-            </div>
-          </a>
-        </article>
+                  <div class="spatial-metric-strip">
+                    <div class="spatial-metric">
+                      <span class="spatial-metric__value">100K+</span>
+                      <span class="spatial-metric__label">Active Downloads</span>
+                    </div>
+                    <div class="spatial-metric">
+                      <span class="spatial-metric__value">&lt;350ms</span>
+                      <span class="spatial-metric__label">API Latency</span>
+                    </div>
+                    <div class="spatial-metric">
+                      <span class="spatial-metric__value">Core</span>
+                      <span class="spatial-metric__label">Architecture Lead</span>
+                    </div>
+                  </div>
 
-        <!-- 03 — Food Waste Reduction App -->
-        <article class="work__item reveal-card" data-index="3">
-          <a href="#" class="work__link" aria-label="Food Waste Reduction App — 2024">
-            <div class="work__thumb">
-              <span class="work__tag">Android</span>
-              <div class="work__thumb-bg work__thumb-bg--3"></div>
-              <div class="work__thumb-overlay">
-                <span class="work__view">View Details ↗</span>
-              </div>
-            </div>
-            <div class="work__info">
-              <span class="work__title">M-Commerce Food Waste App</span>
-              <div class="work__meta">
-                <span class="work__year">2024</span>
-                <span class="work__type">Professional · Android</span>
-              </div>
-            </div>
-          </a>
-        </article>
+                  <p class="spatial-card__text">Spearheading end-to-end engineering for <strong>WriteScan</strong>, an
+                    AI-powered document scanner and OCR mobile platform with over 100K+ production installs.
+                    Orchestrating sprint delivery, conducting architectural reviews, and hardening Java EE backend
+                    services.</p>
 
-        <!-- 04 — Real-Time Chat App -->
-        <article class="work__item work__item--wide reveal-card" data-index="4">
-          <a href="#" class="work__link" aria-label="Real-Time Chat App — 2024">
-            <div class="work__thumb">
-              <span class="work__tag">React Native + WS</span>
-              <div class="work__thumb-bg work__thumb-bg--4"></div>
-              <div class="work__thumb-overlay">
-                <span class="work__view">View Details ↗</span>
-              </div>
-            </div>
-            <div class="work__info">
-              <span class="work__title">Real-Time Messaging App</span>
-              <div class="work__meta">
-                <span class="work__year">2024</span>
-                <span class="work__type">Professional · Mobile</span>
-              </div>
-            </div>
-          </a>
-        </article>
+                  <div class="spatial-card__chips">
+                    <span>Java EE</span>
+                    <span>React Native</span>
+                    <span>OpenAI API</span>
+                    <span>Android SDK</span>
+                    <span>TypeScript</span>
+                    <span>MySQL</span>
+                  </div>
+                </div>
 
-        <!-- 05 — Hospital Management System -->
-        <article class="work__item reveal-card" data-index="5">
-          <a href="#" class="work__link" aria-label="Hospital Management System — 2023">
-            <div class="work__thumb">
-              <span class="work__tag">Java Swing</span>
-              <div class="work__thumb-bg work__thumb-bg--5"></div>
-              <div class="work__thumb-overlay">
-                <span class="work__view">View Details ↗</span>
-              </div>
-            </div>
-            <div class="work__info">
-              <span class="work__title">Hospital Management System</span>
-              <div class="work__meta">
-                <span class="work__year">2023</span>
-                <span class="work__type">Professional · Desktop</span>
-              </div>
-            </div>
-          </a>
-        </article>
+                <!-- Role 2 -->
+                <div class="spatial-card" data-tilt-3d>
+                  <div class="spatial-card__glow"></div>
+                  <div class="spatial-dossier-header">
+                    <div>
+                      <span class="spatial-badge">FOUNDATIONAL ROLE</span>
+                      <h3 class="spatial-card__heading spatial-card__heading--lg">Full-Stack Software Engineer</h3>
+                      <p class="spatial-dossier-co">JsoftLK · Sri Lanka</p>
+                    </div>
+                    <span class="spatial-date-pill">Jan 2021 — Jun 2022</span>
+                  </div>
 
-        <!-- 06 — Real-Time Cargo Tracking -->
-        <article class="work__item reveal-card" data-index="6">
-          <a href="#" class="work__link" aria-label="Real-Time Cargo Tracking System — 2023">
-            <div class="work__thumb">
-              <span class="work__tag">Java EE + EJB</span>
-              <div class="work__thumb-bg work__thumb-bg--6"></div>
-              <div class="work__thumb-overlay">
-                <span class="work__view">View Details ↗</span>
+                  <div class="spatial-metric-strip">
+                    <div class="spatial-metric">
+                      <span class="spatial-metric__value">100%</span>
+                      <span class="spatial-metric__label">On-Time Delivery</span>
+                    </div>
+                    <div class="spatial-metric">
+                      <span class="spatial-metric__value">RBAC</span>
+                      <span class="spatial-metric__label">Security Layer</span>
+                    </div>
+                    <div class="spatial-metric">
+                      <span class="spatial-metric__value">Live</span>
+                      <span class="spatial-metric__label">Firebase Sync</span>
+                    </div>
+                  </div>
+
+                  <p class="spatial-card__text">Engineered commercial client web portals and native Android apps.
+                    Designed role-based authentication hierarchies, real-time Firebase datastores, and responsive
+                    administrative dashboards under agile sprints.</p>
+
+                  <div class="spatial-card__chips">
+                    <span>Java</span>
+                    <span>PHP</span>
+                    <span>JavaScript</span>
+                    <span>MySQL</span>
+                    <span>Firebase Realtime</span>
+                    <span>Bootstrap</span>
+                  </div>
+                </div>
               </div>
             </div>
-            <div class="work__info">
-              <span class="work__title">Real-Time Cargo Tracking</span>
-              <div class="work__meta">
-                <span class="work__year">2023</span>
-                <span class="work__type">Professional · Logistics</span>
+          </section>
+
+          <!-- ── PANEL 3: Education ── -->
+          <section id="education" class="hscroll-panel section">
+            <div class="spatial-panel">
+              <header class="spatial-header">
+                <span class="spatial-eyebrow"><span class="spatial-dot"></span>03 / QUALIFICATIONS</span>
+                <h2 class="spatial-title">Academic &amp; Professional Credentials</h2>
+                <p class="spatial-sub">British university degree in software engineering and enterprise systems
+                  specialization.</p>
+              </header>
+
+              <div class="spatial-dual-grid">
+                <!-- Degree 1 -->
+                <div class="spatial-card spatial-card--featured" data-tilt-3d>
+                  <div class="spatial-card__glow"></div>
+                  <div class="spatial-dossier-header">
+                    <div>
+                      <span class="spatial-badge spatial-badge--gold">UK HONOURS DEGREE</span>
+                      <h3 class="spatial-card__heading spatial-card__heading--lg">BSc (Hons) in Software Engineering
+                      </h3>
+                      <p class="spatial-dossier-co">Birmingham City University · United Kingdom</p>
+                    </div>
+                    <span class="spatial-date-pill">2023 — 2024</span>
+                  </div>
+
+                  <p class="spatial-card__text">Rigorous British university curriculum with deep theoretical and
+                    practical focus on high-reliability distributed systems, software engineering economics, complex
+                    algorithmic analysis, and cloud architectures.</p>
+
+                  <div class="spatial-card__chips">
+                    <span>Distributed Systems</span>
+                    <span>Software Architecture</span>
+                    <span>Algorithm Design</span>
+                    <span>Cloud Computing</span>
+                    <span>Concurrent Programming</span>
+                  </div>
+                </div>
+
+                <!-- Degree 2 -->
+                <div class="spatial-card" data-tilt-3d>
+                  <div class="spatial-card__glow"></div>
+                  <div class="spatial-dossier-header">
+                    <div>
+                      <span class="spatial-badge spatial-badge--purple">ENTERPRISE DIPLOMA</span>
+                      <h3 class="spatial-card__heading spatial-card__heading--lg">Diploma in Professional Software
+                        Engineering</h3>
+                      <p class="spatial-dossier-co">Java Institute Sri Lanka</p>
+                    </div>
+                    <span class="spatial-date-pill">2023 — 2024</span>
+                  </div>
+
+                  <p class="spatial-card__text">Intensive enterprise software engineering program focusing on Enterprise
+                    JavaBeans (EJB), Jakarta EE specifications, enterprise design patterns, ACID transactional
+                    isolation, and relational database modeling.</p>
+
+                  <div class="spatial-card__chips">
+                    <span>Enterprise Java (EE)</span>
+                    <span>EJB Architecture</span>
+                    <span>Jakarta Persistence</span>
+                    <span>Relational Database Modeling</span>
+                    <span>Design Patterns</span>
+                  </div>
+                </div>
               </div>
             </div>
-          </a>
-        </article>
-      </div>
-    </section>
+          </section>
+
+          <!-- ── PANEL 4: Selected Work ── -->
+          <section id="work" class="hscroll-panel section">
+            <div class="spatial-panel spatial-panel--wide">
+              <header class="spatial-header spatial-header--split">
+                <div>
+                  <span class="spatial-eyebrow"><span class="spatial-dot"></span>04 / PRODUCTION WORK</span>
+                  <h2 class="spatial-title">Selected Software Systems</h2>
+                  <p class="spatial-sub">High-traffic mobile applications, enterprise platforms, and real-time clients.
+                  </p>
+                </div>
+                <span class="spatial-action-hint">Click card to inspect telemetry &amp; architecture ↗</span>
+              </header>
+
+              <div class="spatial-work-grid">
+                <!-- 01: WriteScan -->
+                <article class="work__item spatial-work-card" data-tilt-3d data-index="1">
+                  <a href="#" class="work__link spatial-work-card__link" aria-label="WriteScan — AI Document Scanner">
+                    <div class="spatial-work-card__media">
+                      <div class="spatial-work-card__bg" style="background-image: url('img/projects/writescan.jpg');">
+                      </div>
+                      <span class="spatial-pill-tag spatial-pill-tag--accent">100K+ DOWNLOADS</span>
+                    </div>
+                    <div class="spatial-work-card__body">
+                      <div class="spatial-work-card__meta">
+                        <span>Mobile · AI Platform</span>
+                        <span>2024</span>
+                      </div>
+                      <h3 class="spatial-work-card__title">WriteScan — OCR &amp; AI Mobile App</h3>
+                      <p class="spatial-work-card__desc">AI scanner with native camera OCR and OpenAI conversational
+                        intelligence.</p>
+                      <div class="spatial-card__chips">
+                        <span>React Native</span>
+                        <span>OpenAI</span>
+                        <span>Java EE</span>
+                      </div>
+                    </div>
+                  </a>
+                </article>
+
+                <!-- 02: E-Commerce -->
+                <article class="work__item spatial-work-card" data-tilt-3d data-index="2">
+                  <a href="#" class="work__link spatial-work-card__link" aria-label="E-Commerce Web Platform">
+                    <div class="spatial-work-card__media">
+                      <div class="spatial-work-card__bg" style="background-image: url('img/projects/ecommerce.jpg');">
+                      </div>
+                      <span class="spatial-pill-tag">ENTERPRISE MVC</span>
+                    </div>
+                    <div class="spatial-work-card__body">
+                      <div class="spatial-work-card__meta">
+                        <span>Web Platform</span>
+                        <span>2024</span>
+                      </div>
+                      <h3 class="spatial-work-card__title">E-Commerce Web Platform</h3>
+                      <p class="spatial-work-card__desc">Complete Model-View-Controller commercial storefront with
+                        catalog and payment gateway.</p>
+                      <div class="spatial-card__chips">
+                        <span>Java EE</span>
+                        <span>Hibernate</span>
+                        <span>MySQL</span>
+                      </div>
+                    </div>
+                  </a>
+                </article>
+
+                <!-- 03: Chat App -->
+                <article class="work__item spatial-work-card" data-tilt-3d data-index="4">
+                  <a href="#" class="work__link spatial-work-card__link" aria-label="Real-Time Messaging Client">
+                    <div class="spatial-work-card__media">
+                      <div class="spatial-work-card__bg" style="background-image: url('img/projects/chat.jpg');"></div>
+                      <span class="spatial-pill-tag">LOW LATENCY</span>
+                    </div>
+                    <div class="spatial-work-card__body">
+                      <div class="spatial-work-card__meta">
+                        <span>Real-Time Messaging</span>
+                        <span>2024</span>
+                      </div>
+                      <h3 class="spatial-work-card__title">Real-Time Messaging Client</h3>
+                      <p class="spatial-work-card__desc">High-speed mobile chat client with duplex WebSocket channels
+                        and instant sync.</p>
+                      <div class="spatial-card__chips">
+                        <span>React Native</span>
+                        <span>WebSocket</span>
+                        <span>TypeScript</span>
+                      </div>
+                    </div>
+                  </a>
+                </article>
+
+                <!-- 04: Food Waste -->
+                <article class="work__item spatial-work-card" data-tilt-3d data-index="3">
+                  <a href="#" class="work__link spatial-work-card__link" aria-label="Food Waste Reduction App">
+                    <div class="spatial-work-card__media">
+                      <div class="spatial-work-card__bg" style="background-image: url('img/projects/foodwaste.jpg');">
+                      </div>
+                      <span class="spatial-pill-tag">SUSTAINABILITY</span>
+                    </div>
+                    <div class="spatial-work-card__body">
+                      <div class="spatial-work-card__meta">
+                        <span>Android App</span>
+                        <span>2024</span>
+                      </div>
+                      <h3 class="spatial-work-card__title">Food Waste Reduction System</h3>
+                      <p class="spatial-work-card__desc">Native Android commercial app reducing retail waste through
+                        dynamic pricing feeds.</p>
+                      <div class="spatial-card__chips">
+                        <span>Android SDK</span>
+                        <span>Java</span>
+                        <span>REST API</span>
+                      </div>
+                    </div>
+                  </a>
+                </article>
+              </div>
+            </div>
+          </section>
+
+        </div><!-- /.hscroll-track -->
+      </div><!-- /.hscroll-sticky -->
+    </div><!-- /.hscroll-zone -->
 
     <!-- ══ MANIFESTO SECTION ══════════════════════════════════ -->
     <section id="manifesto" class="manifesto section">
@@ -863,15 +572,11 @@
     <!-- ══ CONTACT / FOOTER ═══════════════════════════════════ -->
     <footer id="contact" class="contact section">
       <div class="contact__cta">
-        <div class="contact__line reveal-line"><span>Let's</span></div>
-        <div class="contact__line reveal-line contact__line--right">
-          <span>Connect</span>
-        </div>
-        <div class="contact__line reveal-line"><span>&amp; Build</span></div>
-        <div class="contact__line reveal-line contact__line--right">
-          <span>Together.</span>
-        </div>
+        <div class="contact__line reveal-line"><span>Get In</span></div>
+        <div class="contact__line reveal-line"><span>Touch.</span></div>
+        <p class="contact__sub reveal-text">Open to full-time roles, freelance projects &amp; collaborations.</p>
       </div>
+
 
       <!-- Interactive Command Shell Terminal -->
       <div class="contact__terminal-wrap reveal-text">
@@ -937,6 +642,7 @@
   <script src="js/three-scene.js"></script>
   <!-- <script src="js/control-panel.js"></script> -->
   <script src="js/animations.js"></script>
+  <script src="js/hscroll.js"></script>
   <script src="js/ui.js"></script>
   <script src="js/projects.js"></script>
   <script src="js/terminal.js"></script>

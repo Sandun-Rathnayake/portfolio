@@ -233,7 +233,7 @@
         printLine("Please specify your name:");
         break;
 
-      case "bu": {
+      case "benu": {
         const isPink =
           document.documentElement.getAttribute("data-theme") === "babypink";
         if (isPink) {

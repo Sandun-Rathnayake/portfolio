@@ -1656,10 +1656,24 @@
     sparkMat.uniforms.uT.value = spawnT * Math.min(1, pulse);
   }
 
+  /* ─── Horizontal Scroll 3D Camera & Parallax State ─── */
+  let hscrollTgt = 0.0;
+  let hscrollCurr = 0.0;
+  let mouseCamX = 0.0;
+  let mouseCamY = 0.0;
+
+  window.addEventListener("mousemove", (e) => {
+    const nx = (e.clientX / window.innerWidth) * 2 - 1;
+    const ny = -(e.clientY / window.innerHeight) * 2 + 1;
+    mouseCamX = nx * 3.2;
+    mouseCamY = ny * 1.8;
+  }, { passive: true });
+
   /* ─── Master Animate Loop ─── */
   function masterAnimate() {
     requestAnimationFrame(masterAnimate);
     clock += 0.007;
+
 
     /* Scroll-velocity-adaptive lerp —
        slow scroll  → rate ~0.12 (fast but smooth)
@@ -2075,6 +2089,18 @@
     colAttr.needsUpdate = true;
     rectGeo.attributes.normal.needsUpdate = true;
 
+    // ── 3D Camera & Scene Choreography across Horizontal Panels ──
+    hscrollCurr += (hscrollTgt - hscrollCurr) * 0.06;
+    const camAngle = (hscrollCurr - 0.5) * Math.PI * 0.4;
+    const targetCamX = Math.sin(camAngle) * 12.0 + mouseCamX;
+    const targetCamY = Math.cos(hscrollCurr * Math.PI * 2) * 1.5 + mouseCamY;
+    const targetCamZ = 42.0 - Math.sin(hscrollCurr * Math.PI) * 4.0;
+
+    camera.position.x += (targetCamX - camera.position.x) * 0.05;
+    camera.position.y += (targetCamY - camera.position.y) * 0.05;
+    camera.position.z += (targetCamZ - camera.position.z) * 0.05;
+    camera.lookAt(0, 0, 0);
+
     if (fluidEffect) {
       fluidEffect.render();
     } else {
@@ -2083,6 +2109,7 @@
   }
 
   masterAnimate();
+
 
   /* ── Public API ── */
   window.__threeControls = {
@@ -2155,6 +2182,10 @@
         fluidEffect.setLiquidColor(hex);
       }
     },
+    setHScrollProgress(p) {
+      hscrollTgt = Math.max(0, Math.min(1, p));
+    },
     setNebulaTheme() {},
   };
+
 })();
