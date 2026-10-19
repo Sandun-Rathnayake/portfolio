@@ -2,13 +2,14 @@
 <html lang="en">
 
 <head>
+
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>SANDUN — Full Stack Software Engineer</title>
   <meta name="description"
     content="Full Stack Software Engineer crafting beautiful, performant digital experiences. © 2026 Sandun Rathnayake." />
-  <meta name="author" content="Sandun Rathnayake" />
 
+  <meta name="author" content="Sandun Rathnayake" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
@@ -16,17 +17,22 @@
     rel="stylesheet" />
 
   <script src="js/three.min.js"></script>
-
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.15.1/devicon.min.css" />
   <link rel="stylesheet" href="css/style.css" />
+
 </head>
 
 <body data-theme="dark">
+
   <div id="loader" class="loader" aria-hidden="true">
-    <div class="loader__bar-wrap">
-      <div class="loader__bar" id="loader-bar"></div>
+    <div class="loader__center">
+      <div class="loader__ball-container">
+        <div class="loader__ball-aura"></div>
+        <div class="loader__ball-ripple"></div>
+        <div class="loader__white-ball" id="loader-ball"></div>
+      </div>
+      <span class="loader__label" id="loader-label">0%</span>
     </div>
-    <span class="loader__label" id="loader-label">00</span>
   </div>
 
   <div id="cursor" class="cursor" aria-hidden="true">
@@ -34,14 +40,10 @@
     <div class="cursor__ring"></div>
   </div>
 
-
-
-  <!-- ─── CANVAS OVERLAY (pointer events layer) ─────────── -->
   <div id="canvas-overlay" class="canvas-overlay" aria-hidden="true">
     <canvas id="three-canvas"></canvas>
   </div>
 
-  <!-- ─── NAVIGATION ─────────────────────────────────────── -->
   <header class="nav" id="nav">
     <div class="nav__left">
       <a href="#hero" class="nav__logo" id="nav-logo" aria-label="Sandun Rathnayake — Home">
@@ -64,7 +66,6 @@
     </nav>
   </header>
 
-  <!-- ─── BOTTOM STATUS BAR ──────────────────────────────── -->
   <div class="status-bar" id="status-bar" aria-hidden="true">
     <span class="status-bar__time" id="live-clock">--:--:--</span>
     <span class="status-bar__coords" id="mouse-coords">0000 X / 0000 Y</span>
@@ -121,8 +122,6 @@
       </div>
     </section>
 
-
-    <!-- ══ ABOUT SECTION ══════════════════════════════════════ -->
     <section id="about" class="about section">
       <div class="about__signature-wrap" aria-hidden="true">
         <!-- SVG animated signature -->
@@ -136,7 +135,7 @@
         </svg>
       </div>
       <div class="about__content">
-        <p class="about__statement reveal-text">
+        <p class="about__statement reveal-text" style="text-transform: uppercase;">
           I design, develop, and deploy scalable enterprise solutions — combining robust system architecture with
           responsive user experiences across mobile and web.
         </p>
@@ -150,7 +149,6 @@
       </div>
     </section>
 
-    <!-- ══ HORIZONTAL SCROLL ZONE ══════════════════════════════ -->
     <div class="hscroll-zone" id="hscroll-zone">
       <div class="hscroll-sticky">
 
@@ -176,12 +174,11 @@
           </div>
         </nav>
 
-        <!-- Horizontal sliding track -->
         <div class="hscroll-track" id="hscroll-track">
 
-          <!-- ── PANEL 1: Technical Stack ── -->
           <section id="skills" class="hscroll-panel section">
             <div class="spatial-panel">
+
               <header class="spatial-header">
                 <span class="spatial-eyebrow"><span class="spatial-dot"></span>01 / CAPABILITIES</span>
                 <h2 class="spatial-title">Core Engineering &amp; Architecture</h2>
@@ -189,7 +186,6 @@
               </header>
 
               <div class="spatial-stack-grid">
-                <!-- Pillar 1 -->
                 <div class="spatial-card" data-tilt-3d>
                   <div class="spatial-card__glow"></div>
                   <div class="spatial-card__top">
@@ -211,7 +207,6 @@
                   </div>
                 </div>
 
-                <!-- Pillar 2 -->
                 <div class="spatial-card" data-tilt-3d>
                   <div class="spatial-card__glow"></div>
                   <div class="spatial-card__top">
@@ -232,7 +227,6 @@
                   </div>
                 </div>
 
-                <!-- Pillar 3 -->
                 <div class="spatial-card" data-tilt-3d>
                   <div class="spatial-card__glow"></div>
                   <div class="spatial-card__top">
@@ -252,7 +246,6 @@
                   </div>
                 </div>
 
-                <!-- Pillar 4 -->
                 <div class="spatial-card" data-tilt-3d>
                   <div class="spatial-card__glow"></div>
                   <div class="spatial-card__top">
@@ -275,7 +268,6 @@
             </div>
           </section>
 
-          <!-- ── PANEL 2: Career & Experience ── -->
           <section id="experience" class="hscroll-panel section">
             <div class="spatial-panel">
               <header class="spatial-header">
@@ -285,7 +277,6 @@
               </header>
 
               <div class="spatial-dual-grid">
-                <!-- Role 1 -->
                 <div class="spatial-card spatial-card--featured" data-tilt-3d>
                   <div class="spatial-card__glow"></div>
                   <div class="spatial-dossier-header">
@@ -328,7 +319,6 @@
                   </div>
                 </div>
 
-                <!-- Role 2 -->
                 <div class="spatial-card" data-tilt-3d>
                   <div class="spatial-card__glow"></div>
                   <div class="spatial-dossier-header">
@@ -372,7 +362,6 @@
             </div>
           </section>
 
-          <!-- ── PANEL 3: Education ── -->
           <section id="education" class="hscroll-panel section">
             <div class="spatial-panel">
               <header class="spatial-header">
@@ -383,7 +372,6 @@
               </header>
 
               <div class="spatial-dual-grid">
-                <!-- Degree 1 -->
                 <div class="spatial-card spatial-card--featured" data-tilt-3d>
                   <div class="spatial-card__glow"></div>
                   <div class="spatial-dossier-header">
@@ -409,7 +397,6 @@
                   </div>
                 </div>
 
-                <!-- Degree 2 -->
                 <div class="spatial-card" data-tilt-3d>
                   <div class="spatial-card__glow"></div>
                   <div class="spatial-dossier-header">
@@ -438,7 +425,6 @@
             </div>
           </section>
 
-          <!-- ── PANEL 4: Selected Work ── -->
           <section id="work" class="hscroll-panel section">
             <div class="spatial-panel spatial-panel--wide">
               <header class="spatial-header spatial-header--split">
@@ -452,7 +438,6 @@
               </header>
 
               <div class="spatial-work-grid">
-                <!-- 01: WriteScan -->
                 <article class="work__item spatial-work-card" data-tilt-3d data-index="1">
                   <a href="#" class="work__link spatial-work-card__link" aria-label="WriteScan — AI Document Scanner">
                     <div class="spatial-work-card__media">
@@ -477,7 +462,6 @@
                   </a>
                 </article>
 
-                <!-- 02: E-Commerce -->
                 <article class="work__item spatial-work-card" data-tilt-3d data-index="2">
                   <a href="#" class="work__link spatial-work-card__link" aria-label="E-Commerce Web Platform">
                     <div class="spatial-work-card__media">
@@ -496,13 +480,12 @@
                       <div class="spatial-card__chips">
                         <span>Java EE</span>
                         <span>Hibernate</span>
-                        <span>MySQL</span>
+                        <span>MySQL</span> 
                       </div>
                     </div>
                   </a>
                 </article>
 
-                <!-- 03: Chat App -->
                 <article class="work__item spatial-work-card" data-tilt-3d data-index="4">
                   <a href="#" class="work__link spatial-work-card__link" aria-label="Real-Time Messaging Client">
                     <div class="spatial-work-card__media">
@@ -526,7 +509,6 @@
                   </a>
                 </article>
 
-                <!-- 04: Food Waste -->
                 <article class="work__item spatial-work-card" data-tilt-3d data-index="3">
                   <a href="#" class="work__link spatial-work-card__link" aria-label="Food Waste Reduction App">
                     <div class="spatial-work-card__media">
@@ -554,9 +536,9 @@
             </div>
           </section>
 
-        </div><!-- /.hscroll-track -->
-      </div><!-- /.hscroll-sticky -->
-    </div><!-- /.hscroll-zone -->
+        </div>
+      </div>
+    </div>
 
     <!-- ══ MANIFESTO SECTION ══════════════════════════════════ -->
     <section id="manifesto" class="manifesto section">
@@ -578,7 +560,6 @@
       </div>
 
 
-      <!-- Interactive Command Shell Terminal -->
       <div class="contact__terminal-wrap reveal-text">
         <div class="terminal" id="contact-terminal">
           <div class="terminal__header">
@@ -631,7 +612,6 @@
         <span>[ESC] CLOSE ×</span>
       </button>
       <div class="project-drawer__scroll" id="project-drawer-scroll">
-        <!-- Injected dynamically via js/projects.js -->
       </div>
     </div>
   </div>

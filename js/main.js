@@ -6,27 +6,34 @@
 (function () {
   'use strict';
 
-  const loader    = document.getElementById('loader');
-  const loaderBar = document.getElementById('loader-bar');
+  const loader      = document.getElementById('loader');
   const loaderLabel = document.getElementById('loader-label');
+
+  function syncSphereSize() {
+    const fovRad = (55 * Math.PI) / 360;
+    const frustumH = 2 * 42 * Math.tan(fovRad);
+    const sphereD = 2 * (2.4 * (2.4 / 2.2));
+    const pixelD = (sphereD / frustumH) * window.innerHeight;
+    document.documentElement.style.setProperty('--sphere-size', `${pixelD.toFixed(2)}px`);
+  }
+  syncSphereSize();
+  window.addEventListener('resize', syncSphereSize);
 
   // ── Simulate loading progress ─────────────────────────────
   function simulateLoad() {
     let progress = 0;
 
     function step() {
-      // Ease into 90% quickly, then slow down
       const increment = progress < 70
-        ? 2 + Math.random() * 4
-        : 0.5 + Math.random() * 1;
+        ? 2.5 + Math.random() * 4
+        : 0.6 + Math.random() * 1.2;
 
       progress = Math.min(progress + increment, 99);
 
-      if (loaderBar)   loaderBar.style.width  = `${progress}%`;
-      if (loaderLabel) loaderLabel.textContent = String(Math.floor(progress)).padStart(2, '0');
+      if (loaderLabel) loaderLabel.textContent = `${Math.floor(progress)}%`;
 
       if (progress < 99) {
-        setTimeout(step, 50 + Math.random() * 80);
+        setTimeout(step, 45 + Math.random() * 70);
       }
     }
 
@@ -35,22 +42,25 @@
 
   // ── Complete loading ──────────────────────────────────────
   function completeLoad() {
-    if (loaderBar)   loaderBar.style.width  = '100%';
-    if (loaderLabel) loaderLabel.textContent = '100';
+    if (loaderLabel) loaderLabel.textContent = '100%';
 
     setTimeout(() => {
-      loader.classList.add('hidden');
-      window.dispatchEvent(new CustomEvent('portfolioLoaded'));
+      if (loader) loader.classList.add('loaded');
 
-      // Trigger hero animations after loader hides
-      document.querySelectorAll('.hero__line').forEach((el) => {
-        el.classList.add('in-view');
-      });
+      setTimeout(() => {
+        if (loader) loader.classList.add('hidden');
+        window.dispatchEvent(new CustomEvent('portfolioLoaded'));
 
-      document.querySelectorAll('.hero .reveal-text').forEach((el) => {
-        el.classList.add('in-view');
-      });
-    }, 600);
+        // Trigger hero animations after loader hides
+        document.querySelectorAll('.hero__line').forEach((el) => {
+          el.classList.add('in-view');
+        });
+
+        document.querySelectorAll('.hero .reveal-text').forEach((el) => {
+          el.classList.add('in-view');
+        });
+      }, 450);
+    }, 250);
   }
 
   // ── Page load sequence ────────────────────────────────────
