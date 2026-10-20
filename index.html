@@ -106,7 +106,7 @@
             <span class="hero__stat-label">Projects Shipped</span>
           </div>
           <div class="hero__stat">
-            <span class="hero__stat-num">100K+</span>
+            <span class="hero__stat-num">700K+</span>
             <span class="hero__stat-label">App Downloads</span>
           </div>
         </div>
@@ -123,29 +123,97 @@
     </section>
 
     <section id="about" class="about section">
-      <div class="about__signature-wrap" aria-hidden="true">
-        <!-- SVG animated signature -->
-        <svg class="svg-sign" viewBox="0 0 320 154" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-          <path class="svg-sign__path"
-            d="M20 80 C40 20, 80 20, 100 80 C120 140, 160 140, 180 80 C200 20, 240 20, 260 80" stroke="var(--accent)"
-            stroke-width="3" fill="none" />
-          <path class="svg-sign__path" d="M50 100 C80 60, 140 110, 200 70 C240 45, 270 75, 300 60"
-            stroke="var(--accent)" stroke-width="3" fill="none" />
-          <path class="svg-sign__path" d="M260 55 L265 70" stroke="var(--accent)" stroke-width="4" fill="none" />
-        </svg>
-      </div>
-      <div class="about__content">
-        <p class="about__statement reveal-text" style="text-transform: uppercase;">
-          I design, develop, and deploy scalable enterprise solutions — combining robust system architecture with
-          responsive user experiences across mobile and web.
-        </p>
-        <p class="about__sub reveal-text">
-          Currently architecting web &amp; mobile applications as Project Leader at
-          <a href="https://linkedin.com/in/sandun09" class="link" target="_blank" rel="noopener">Lakmini International
-            (Pvt) Ltd</a>. Graduate of
-          <strong>Birmingham City University, UK</strong> (BSc Hons Software Engineering) &amp; Java Institute Sri
-          Lanka.
-        </p>
+      <div class="hud-container">
+
+        <div class="hud-top-rail reveal-text">
+          <div class="hud-rail-item">
+            <span class="hud-status-led"></span>
+            <span class="hud-mono">SYS.SPEC // SANDUN RATHNAYAKE</span>
+          </div>
+          <div class="hud-rail-item hud-mono">
+            <span>LAT 06°55'N · LON 79°53'E</span>
+            <span class="hud-sep">/</span>
+            <span>GMT+5:30 LK</span>
+          </div>
+        </div>
+
+        <div class="hud-spatial-grid">
+
+          <div class="hud-beacon hud-beacon--tl reveal-text">
+            <div class="hud-beacon-reticle"></div>
+            <span class="hud-beacon-idx">[01 // TRACTION]</span>
+            <div class="hud-beacon-val">700K+</div>
+            <div class="hud-beacon-title">Production Installs</div>
+            <div class="hud-beacon-desc">Across Built Applications</div>
+          </div>
+
+          <div class="hud-beacon hud-beacon--tr reveal-text">
+            <div class="hud-beacon-reticle"></div>
+            <span class="hud-beacon-idx">[02 // CREDENTIALS]</span>
+            <div class="hud-beacon-val">BSc (Hons)</div>
+            <div class="hud-beacon-title">Software Engineering</div>
+            <div class="hud-beacon-desc">Birmingham City University, UK</div>
+          </div>
+
+          <div class="hud-core-center">
+            <div class="hud-frame">
+              <span class="hud-bracket hud-bracket--tl"></span>
+              <span class="hud-bracket hud-bracket--tr"></span>
+              <span class="hud-bracket hud-bracket--bl"></span>
+              <span class="hud-bracket hud-bracket--br"></span>
+
+              <div class="hud-frame-header">
+                <span class="hud-pill-tag">ENGINEERING PHILOSOPHY</span>
+                <span class="hud-mono-tag">LEVEL 04 // LEAD</span>
+              </div>
+
+              <h2 class="hud-statement reveal-text">
+                I DESIGN, DEVELOP, AND DEPLOY <span class="hud-glow-word">SCALABLE ENTERPRISE SOLUTIONS</span> —
+                COMBINING ROBUST ARCHITECTURE WITH <span class="hud-glow-word">RESPONSIVE CLIENT EXPERIENCES</span>
+                ACROSS MOBILE AND WEB.
+              </h2>
+
+              <p class="hud-bio reveal-text">
+                Project Leader at <a href="https://linkedin.com/in/sandun09" class="hud-link" target="_blank"
+                  rel="noopener">Lakmini International (Pvt) Ltd</a>. Specializing in high-throughput enterprise
+                backends, mobile systems, and computer vision AI pipelines.
+              </p>
+            </div>
+          </div>
+
+          <div class="hud-beacon hud-beacon--bl reveal-text">
+            <div class="hud-beacon-reticle"></div>
+            <span class="hud-beacon-idx">[03 // LEADERSHIP]</span>
+            <div class="hud-beacon-val">02+ Yrs</div>
+            <div class="hud-beacon-title">Engineering Leadership</div>
+            <div class="hud-beacon-desc">Sprint &amp; Architecture Delivery</div>
+          </div>
+
+          <div class="hud-beacon hud-beacon--br reveal-text">
+            <div class="hud-beacon-reticle"></div>
+            <span class="hud-beacon-idx">[04 // TECH STACK]</span>
+            <div class="hud-beacon-val">ENTERPRISE</div>
+            <div class="hud-beacon-title">Distributed Core</div>
+            <div class="hud-beacon-desc">Java EE · React Native · WebGL</div>
+          </div>
+
+        </div>
+
+        <div class="hud-bottom-rail reveal-text">
+          <div class="hud-spectrum-box">
+            <div class="hud-spectrum-meta">
+              <span class="hud-mono">QUANTUM FREQUENCY HARMONIC SCANNER</span>
+              <span class="hud-freq-val" id="hud-freq-display">1420.405 MHz</span>
+            </div>
+            <canvas id="hud-spectrum-canvas" class="hud-spectrum-canvas" width="460" height="36"
+              aria-hidden="true"></canvas>
+          </div>
+          <button class="hud-nav-cta" data-scroll-to="skills">
+            <span>Explore Technical Stack</span>
+            <span class="hud-cta-arrow">↓</span>
+          </button>
+        </div>
+
       </div>
     </section>
 
@@ -480,7 +548,7 @@
                       <div class="spatial-card__chips">
                         <span>Java EE</span>
                         <span>Hibernate</span>
-                        <span>MySQL</span> 
+                        <span>MySQL</span>
                       </div>
                     </div>
                   </a>

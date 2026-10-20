@@ -341,6 +341,8 @@
   sphereMesh.renderOrder = 10;
   scene.add(sphereMesh);
 
+
+
   /* ══════════════════════════════════════════════════════════════
      RECTANGLE SWARM — filled quads, up to MAX_P particles
   ══════════════════════════════════════════════════════════════ */
@@ -2089,7 +2091,8 @@
     colAttr.needsUpdate = true;
     rectGeo.attributes.normal.needsUpdate = true;
 
-    // ── 3D Camera & Scene Choreography across Horizontal Panels ──
+
+
     hscrollCurr += (hscrollTgt - hscrollCurr) * 0.06;
     const camAngle = (hscrollCurr - 0.5) * Math.PI * 0.4;
     const targetCamX = Math.sin(camAngle) * 12.0 + mouseCamX;
