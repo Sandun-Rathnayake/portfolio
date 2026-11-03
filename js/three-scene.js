@@ -1671,17 +1671,50 @@
   /* ─── Scroll Camera Journey ───
      Each section has a viewpoint around the eclipse. The section crossing
      the middle of the viewport decides where the camera flies to, blending
-     smoothly into the next one as it scrolls past. */
+     smoothly into the next one as it scrolls past.
+
+     sx / sy say where the eclipse should sit on screen (0..1 from the top
+     left), so it lands clear of that section's text whatever the window
+     shape. The look-at point that achieves it is solved per aspect ratio. */
   const CAM_STATIONS = [
-    { id: "hero",       x: -7,  y: 1.5, z: 42, lx: 0,  ly: 0 },
-    { id: "about",      x: -16, y: 5,   z: 27, lx: -9, ly: 1 },
-    { id: "work",       x: 14,  y: -4,  z: 48, lx: -8, ly: 2 },
-    { id: "experience", x: -12, y: 9,   z: 34, lx: 6,  ly: -2 },
-    { id: "skills",     x: 18,  y: -8,  z: 30, lx: -5, ly: 3 },
-    { id: "education",  x: 0,   y: 14,  z: 40, lx: 0,  ly: -3 },
-    { id: "contact",    x: 2,   y: 0,   z: 19, lx: 0,  ly: 0 },
-  ].map((st) => Object.assign(st, { el: document.getElementById(st.id) }))
+    { id: "hero",       x: -7,  y: 1.5, z: 42, sx: 0.66, sy: 0.42 },
+    { id: "about",      x: -16, y: 5,   z: 27, sx: 0.84, sy: 0.42 },
+    { id: "work",       x: 14,  y: -4,  z: 48, sx: 0.9,  sy: 0.2 },
+    { id: "experience", x: -12, y: 9,   z: 34, sx: 0.94, sy: 0.22 },
+    { id: "skills",     x: 18,  y: -8,  z: 30, sx: 1.04, sy: 0.72 },
+    { id: "education",  x: 0,   y: 14,  z: 40, sx: 0.97, sy: 0.12 },
+    { id: "contact",    x: 2,   y: 0,   z: 19, sx: 0.8,  sy: 0.26 },
+  ].map((st) => Object.assign(st, { el: document.getElementById(st.id), lx: 0, ly: 0 }))
     .filter((st) => st.el);
+
+  // Find the look-at point that puts the origin at (sx, sy) on screen
+  const solveCam = new THREE.PerspectiveCamera();
+  const solveOrigin = new THREE.Vector3();
+  function solveStationLooks() {
+    solveCam.copy(camera);
+    solveCam.updateProjectionMatrix();
+    const tanHalf = Math.tan(THREE.MathUtils.degToRad(solveCam.fov / 2));
+    CAM_STATIONS.forEach((st) => {
+      solveCam.position.set(st.x, st.y, st.z);
+      const k = solveCam.position.length() * tanHalf;
+      let lx = 0;
+      let ly = 0;
+      for (let i = 0; i < 16; i++) {
+        solveCam.lookAt(lx, ly, 0);
+        solveCam.updateMatrixWorld();
+        const v = solveOrigin.set(0, 0, 0).project(solveCam);
+        const ex = st.sx * 2 - 1 - v.x;
+        const ey = 1 - st.sy * 2 - v.y;
+        if (Math.abs(ex) + Math.abs(ey) < 0.002) break;
+        lx -= ex * k * solveCam.aspect * 0.8;
+        ly -= ey * k * 0.8;
+      }
+      st.lx = lx;
+      st.ly = ly;
+    });
+  }
+  solveStationLooks();
+  window.addEventListener("resize", solveStationLooks);
 
   const camGoal = { x: -7, y: 1.5, z: 42, lx: 0, ly: 0 };
   const camLook = { x: 0, y: 0 };

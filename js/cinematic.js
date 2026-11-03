@@ -11,6 +11,8 @@
  *   [data-scrub-tilt]    Card tilts back in depth, settling flat at screen centre
  *   [data-depth="n"]     Parallax layer; positive n drifts slower than the page
  *   .hero__line          The name splits apart and pushes towards the viewer
+ *   [data-rise]          Rises and fades in as it enters the screen
+ *   [data-focus-row]     Its heading brightens and steps forward at screen centre
  *   [data-pin-scene]     Pinned scene: its [data-reveal-words] text lights up over
  *                        the first half, then [data-scene-fade] and each
  *                        [data-scene-credit] roll in one after another
@@ -95,6 +97,11 @@
       el, depth: parseFloat(el.dataset.depth) || 0,
     }));
 
+    const rises = Array.from(document.querySelectorAll('[data-rise]'));
+    const focusRows = Array.from(document.querySelectorAll('[data-focus-row]')).map((row) => ({
+      row, name: row.querySelector('h3') || row,
+    }));
+
     const scene = document.querySelector('[data-pin-scene]');
     const sceneFades = scene ? Array.from(scene.querySelectorAll('[data-scene-fade]')) : [];
     const sceneCredits = scene ? Array.from(scene.querySelectorAll('[data-scene-credit]')) : [];
@@ -112,7 +119,7 @@
       const y = window.scrollY;
       // Tilted cards are measured without their transform so the motion
       // doesn't feed back into its own input
-      [...tilts, ...sceneFades, ...sceneCredits].forEach((el) => {
+      [...tilts, ...sceneFades, ...sceneCredits, ...rises].forEach((el) => {
         el.style.transform = '';
         if (el.__cine) el.__cine.transform = undefined;
       });
@@ -124,6 +131,8 @@
         ...(scene ? [scene] : []),
         ...sceneFades,
         ...sceneCredits,
+        ...rises,
+        ...focusRows.map((f) => f.row),
       ];
       targets.forEach((el) => {
         const r = el.getBoundingClientRect();
@@ -170,6 +179,25 @@
           setStyle(el, 'transform', `translate3d(0, ${((1 - t) * 48).toFixed(1)}px, 0)`);
         });
       }
+
+      // ── Rows that rise in as they arrive
+      rises.forEach((el) => {
+        const r = box(el);
+        if (r.bottom < -200 || r.top > H + 200) return;
+        const t = easeOut(enterProgress(el));
+        setStyle(el, 'opacity', t.toFixed(2));
+        setStyle(el, 'transform', `translate3d(0, ${((1 - t) * 56).toFixed(1)}px, 0)`);
+      });
+
+      // ── Index rows: the name is brightest and furthest forward at screen centre
+      focusRows.forEach(({ row, name }) => {
+        const r = box(row);
+        if (r.bottom < -200 || r.top > H + 200) return;
+        const c = Math.abs(r.top + r.height / 2 - H / 2) / H;
+        const f = clamp(1.2 - c * 2.4, 0, 1);
+        setStyle(name, 'opacity', (0.25 + f * 0.75).toFixed(2));
+        setStyle(name, 'transform', `translate3d(${((1 - f) * -18).toFixed(1)}px, 0, 0)`);
+      });
 
       // ── Titles: letters rise and unfold as the title travels up the screen
       titles.forEach(({ el, chars }) => {
