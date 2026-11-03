@@ -4698,3 +4698,92 @@
 
      .timeline__years { flex-direction: row; gap: 0.3em; font-size: clamp(3rem, 16vw, 4.5rem); }
    }
+
+/* ═════════════════════════════════════════════════════════════
+   POLISH PASS (Nov 2026)
+   Lens vignette, a nav that fades into the scene instead of a
+   hard bar, and the last template details removed.
+   ═════════════════════════════════════════════════════════════ */
+
+   /* ─── Lens vignette over the 3D scene (static, no blend mode) ─── */
+   .canvas-overlay::after {
+     content: '';
+     position: absolute;
+     inset: 0;
+     pointer-events: none;
+     background: radial-gradient(ellipse 85% 75% at 50% 45%, transparent 55%, rgba(1, 2, 10, 0.62) 100%);
+   }
+
+   /* ─── Nav: fades into the scene rather than cutting it off ─── */
+   .nav.scrolled {
+     background: transparent;
+     border-bottom: 0;
+   }
+
+   .nav::before {
+     content: '';
+     position: absolute;
+     inset: 0 0 -90% 0;
+     z-index: -1;
+     pointer-events: none;
+     /* Near-opaque behind the links, then a long fade into the scene */
+     background: linear-gradient(to bottom, rgb(3, 4, 14) 0%, rgba(3, 4, 14, 0.97) 48%, rgba(3, 4, 14, 0.6) 72%, rgba(3, 4, 14, 0) 100%);
+     opacity: 0;
+     transition: opacity 0.4s var(--ease-out);
+   }
+
+   .nav.scrolled::before { opacity: 1; }
+
+   /* Active section: a small accent dot instead of a dotted box */
+   .nav__link::before,
+   .nav__link:hover::before,
+   .nav__link.active::before { border-color: transparent; }
+
+   .nav__link.active { color: var(--text-primary); }
+
+   .nav__link:not(.nav__link--cta)::after {
+     content: '';
+     position: absolute;
+     left: 50%;
+     bottom: 0.1rem;
+     width: 4px;
+     height: 4px;
+     margin-left: -2px;
+     border-radius: 50%;
+     background: var(--accent);
+     opacity: 0;
+     transform: scale(0);
+     transition: opacity 0.3s, transform 0.3s var(--ease-out);
+   }
+
+   .nav__link.active::after { opacity: 1; transform: scale(1); }
+
+   /* ─── Project tools as a plain line, like the timeline ─── */
+   .spatial-work-card .spatial-card__chips {
+     display: block;
+     border-top: 0;
+     padding-top: 0.25rem;
+     font-size: 0.95rem;
+     color: var(--text-secondary);
+   }
+
+   .spatial-work-card .spatial-card__chips span {
+     font-family: var(--font-sans);
+     font-size: inherit;
+     letter-spacing: 0;
+     color: inherit;
+     background: none;
+     border: 0;
+     padding: 0;
+   }
+
+   .spatial-work-card .spatial-card__chips span:not(:last-child)::after { content: ', '; }
+
+   /* ─── No accent bars down the side of body copy ─── */
+   .hero__tagline,
+   .contact__sub {
+     border-left: 0;
+     padding-left: 0;
+   }
+
+   .spatial-work-card .spatial-card__chips span:hover { background: none; border: 0; color: inherit; }

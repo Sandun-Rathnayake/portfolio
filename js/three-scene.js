@@ -1317,23 +1317,21 @@
         float e2 = fbm(uv2 + e1 * 0.6);
         float energy = clamp(e1*0.6 + e2*0.4, 0.0, 1.0);
 
-        /* Core */
-        vec3 defaultCore = mix(vec3(0.30,0.62,1.00), vec3(0.92,0.97,1.00), pow(NdotV,0.45));
-        vec3 pinkCore    = mix(vec3(1.00,0.45,0.70), vec3(1.00,0.88,0.95), pow(NdotV,0.45));
-        vec3 coreCol = mix(defaultCore, pinkCore, uThemePink) * (0.95 + energy * 0.30) * uPulse;
+        /* Limb darkening: hottest where the surface faces you, cooling to deep
+           blue at the edge, so it reads as a ball rather than a flat white disc */
+        float limb = pow(NdotV, 0.6);
+        vec3 deepC = mix(vec3(0.06,0.16,0.62), vec3(0.55,0.10,0.40), uThemePink);
+        vec3 hotC  = mix(vec3(0.78,0.90,1.00), vec3(1.00,0.84,0.93), uThemePink);
 
-        /* Rim */
-        float fres    = pow(1.0 - NdotV, 2.8);
-        vec3  defaultRim = mix(vec3(0.00, 0.85, 1.00) * fres * 1.8, vec3(0.55, 0.18, 1.00) * pow(fres,1.6) * 1.2, energy);
-        vec3  pinkRim    = mix(vec3(1.00, 0.40, 0.70) * fres * 2.0, vec3(1.00, 0.75, 0.90) * pow(fres,1.6) * 1.5, energy);
-        vec3  rimCol  = mix(defaultRim, pinkRim, uThemePink);
+        /* Plasma granulation drifting across the surface */
+        float gran = 0.72 + energy * 0.42;
+        vec3 surface = mix(deepC, hotC, limb) * gran * (0.92 + 0.08 * uPulse);
 
-        /* Energy surface shimmer */
-        vec3  defaultShimmer = vec3(0.15,0.55,1.00) * energy * 0.35;
-        vec3  pinkShimmer    = vec3(1.00,0.40,0.70) * energy * 0.35;
-        vec3  shimmer = mix(defaultShimmer, pinkShimmer, uThemePink);
+        /* A thin bright edge where the corona starts */
+        float edge = pow(1.0 - NdotV, 3.2);
+        vec3 rimCol = mix(vec3(0.30,0.72,1.00), vec3(1.00,0.55,0.80), uThemePink) * edge * 0.85;
 
-        vec3 starCol = clamp(coreCol + rimCol + shimmer, 0.0, 1.0);
+        vec3 starCol = min(surface + rimCol, vec3(1.0));
 
         vec3 finalCol = mix(eclipseCol, starCol, uT);
         gl_FragColor  = vec4(finalCol, 1.0);
@@ -1352,21 +1350,22 @@
       uThemePink: { value: 0.0 },
     },
     vertexShader: `
-      varying vec3 vWorldPos;
+      varying vec2 vLocal;
       void main() {
-        vec4 wp = modelMatrix * vec4(position,1.0);
-        vWorldPos = wp.xyz;
-        gl_Position = projectionMatrix * viewMatrix * wp;
+        vLocal = position.xy;
+        gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0);
       }
     `,
     fragmentShader: `
-      varying vec3 vWorldPos;
+      varying vec2 vLocal;
       uniform float uT;
       uniform float uPulse;
       uniform float uTime;
       uniform float uThemePink;
       void main() {
-        float r = length(vWorldPos.xy);
+        // Distance from the glow's own centre. The plane now sits right behind
+        // the sphere instead of 35 units back, so scale up to keep its size.
+        float r = length(vLocal) * 1.7;
         float inner = exp(-0.048 * r);
         float mid   = exp(-0.018 * r);
         float outer = exp(-0.008 * r);
@@ -1381,14 +1380,15 @@
     `,
     transparent: true,
     depthWrite: false,
-    depthTest: false,
+    // Depth-tested so the sphere covers the glow's centre instead of being
+    // washed out to white by it
+    depthTest: true,
     blending: THREE.AdditiveBlending,
   });
   const starCoronaMesh = new THREE.Mesh(
     new THREE.PlaneGeometry(250, 250),
     starCoronaMat,
   );
-  starCoronaMesh.position.z = -35.0;
   starCoronaMesh.renderOrder = 0;
   scene.add(starCoronaMesh);
 
@@ -1675,15 +1675,17 @@
 
      sx / sy say where the eclipse should sit on screen (0..1 from the top
      left), so it lands clear of that section's text whatever the window
-     shape. The look-at point that achieves it is solved per aspect ratio. */
+     shape. The look-at point that achieves it is solved per aspect ratio.
+     Portrait screens stack text full width, so they use px / py instead:
+     above the hero text, then mostly off the edge. */
   const CAM_STATIONS = [
-    { id: "hero",       x: -7,  y: 1.5, z: 42, sx: 0.66, sy: 0.42 },
-    { id: "about",      x: -16, y: 5,   z: 27, sx: 0.84, sy: 0.42 },
-    { id: "work",       x: 14,  y: -4,  z: 48, sx: 0.9,  sy: 0.2 },
-    { id: "experience", x: -12, y: 9,   z: 34, sx: 0.94, sy: 0.22 },
-    { id: "skills",     x: 18,  y: -8,  z: 30, sx: 1.04, sy: 0.72 },
-    { id: "education",  x: 0,   y: 14,  z: 40, sx: 0.97, sy: 0.12 },
-    { id: "contact",    x: 2,   y: 0,   z: 19, sx: 0.8,  sy: 0.26 },
+    { id: "hero",       x: -7,  y: 1.5, z: 42, sx: 0.73, sy: 0.4,  px: 0.58, py: 0.23 },
+    { id: "about",      x: -16, y: 5,   z: 27, sx: 0.84, sy: 0.42, px: 1.08, py: 0.12 },
+    { id: "work",       x: 14,  y: -4,  z: 48, sx: 1.12, sy: 0.3,  px: 1.15, py: 0.3 },
+    { id: "experience", x: -12, y: 9,   z: 34, sx: 0.94, sy: 0.22, px: 1.1,  py: 0.2 },
+    { id: "skills",     x: 18,  y: -8,  z: 30, sx: 1.04, sy: 0.72, px: 1.1,  py: 0.7 },
+    { id: "education",  x: 0,   y: 14,  z: 40, sx: 1.1,  sy: 0.15, px: 1.1,  py: 0.12 },
+    { id: "contact",    x: 2,   y: 0,   z: 28, sx: 0.8,  sy: 0.2,  px: 1.02, py: 0.08 },
   ].map((st) => Object.assign(st, { el: document.getElementById(st.id), lx: 0, ly: 0 }))
     .filter((st) => st.el);
 
@@ -1694,7 +1696,10 @@
     solveCam.copy(camera);
     solveCam.updateProjectionMatrix();
     const tanHalf = Math.tan(THREE.MathUtils.degToRad(solveCam.fov / 2));
+    const portrait = solveCam.aspect < 0.85;
     CAM_STATIONS.forEach((st) => {
+      const tx = portrait ? st.px : st.sx;
+      const ty = portrait ? st.py : st.sy;
       solveCam.position.set(st.x, st.y, st.z);
       const k = solveCam.position.length() * tanHalf;
       let lx = 0;
@@ -1703,8 +1708,8 @@
         solveCam.lookAt(lx, ly, 0);
         solveCam.updateMatrixWorld();
         const v = solveOrigin.set(0, 0, 0).project(solveCam);
-        const ex = st.sx * 2 - 1 - v.x;
-        const ey = 1 - st.sy * 2 - v.y;
+        const ex = tx * 2 - 1 - v.x;
+        const ey = 1 - ty * 2 - v.y;
         if (Math.abs(ex) + Math.abs(ey) < 0.002) break;
         lx -= ex * k * solveCam.aspect * 0.8;
         ly -= ey * k * 0.8;
@@ -1751,9 +1756,10 @@
       if (st.top - y <= mid) {
         from = st;
         to = CAM_STATIONS[Math.min(i + 1, CAM_STATIONS.length - 1)];
-        // 0 while the section fills the middle, ramps to 1 over its last screen
+        // 0 while the section's bottom edge is below the screen, then ramps to 1
+        // as that edge rises from the bottom of the screen to the middle
         const leftToGo = st.bottom - y - mid;
-        t = 1 - Math.max(0, Math.min(1, leftToGo / window.innerHeight));
+        t = 1 - Math.max(0, Math.min(1, leftToGo / mid));
       }
     }
 
@@ -1904,6 +1910,8 @@
 
     /* ── Star corona fades in ── */
     starCoronaMesh.quaternion.copy(camera.quaternion);
+    // Keep the glow centred on the sphere from wherever the camera is
+    starCoronaMesh.position.copy(camera.position).normalize().multiplyScalar(-sphereR * 1.25);
     starCoronaMat.uniforms.uT.value = sT;
     starCoronaMat.uniforms.uPulse.value = pulse;
     starCoronaMat.uniforms.uTime.value = clock;
