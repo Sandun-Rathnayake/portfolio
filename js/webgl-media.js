@@ -39,6 +39,7 @@
     uniform float uTime;
     uniform float uRadius;
     uniform float uReveal;
+    uniform float uParallax;
     varying vec2 vUv;
 
     vec2 cover(vec2 uv) {
@@ -50,6 +51,10 @@
 
     void main() {
       vec2 uv = vUv;
+
+      // Over-scan the image so it can drift inside its frame as the page scrolls
+      uv = (uv - 0.5) / 1.14 + 0.5;
+      uv.y += uParallax * 0.1;
 
       // Ease the image towards the cursor on hover
       uv = (uv - uMouse) * (1.0 - 0.07 * uHover) + uMouse;
@@ -136,6 +141,7 @@
         uTime: { value: 0 },
         uRadius: { value: 14 },
         uReveal: { value: 0 },
+        uParallax: { value: 0 },
       };
       const material = new THREE.ShaderMaterial({
         uniforms,
@@ -191,17 +197,23 @@
 
         if (!item.seen && r.top < H * 0.92) item.seen = true;
 
-        item.mesh.scale.set(r.width, r.height, 1);
+        // Zoom up from 84% as the image travels into view
+        const enter = Math.min(1, Math.max(0, (H - r.top) / (H * 0.75)));
+        const zoom = 0.84 + 0.16 * (1 - Math.pow(1 - enter, 3));
+        const w = r.width * zoom;
+        const h = r.height * zoom;
+        item.mesh.scale.set(w, h, 1);
         item.mesh.position.set(r.left + r.width / 2 - W / 2, H / 2 - (r.top + r.height / 2), 0);
 
         item.hover += (item.hoverTarget - item.hover) * 0.08;
         const u = item.uniforms;
-        u.uRes.value.set(r.width, r.height);
+        u.uRes.value.set(w, h);
+        u.uParallax.value = Math.max(-1, Math.min(1, (r.top + r.height / 2 - H / 2) / H));
         u.uMouse.value.lerp(item.mouse, 0.12);
         u.uHover.value = item.hover;
         u.uTime.value = t;
         // Bend is in unit-plane space; scale by height so tall and short planes curl alike
-        u.uVel.value += ((-vel * 0.9) / r.height - u.uVel.value) * 0.15;
+        u.uVel.value += ((-vel * 0.9) / h - u.uVel.value) * 0.15;
         u.uShift.value = Math.abs(vel) * 0.00045;
         u.uReveal.value += ((item.seen ? 1.08 : 0) - u.uReveal.value) * 0.05;
       }

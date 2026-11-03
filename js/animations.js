@@ -228,7 +228,7 @@
           const y = window.scrollY;
           const vh = window.innerHeight;
           if (y < vh) {
-            const op = Math.max(0, 1 - y / (vh * 0.75));
+            const op = Math.max(0, 1 - y / (vh * 1.05));
             hero.style.opacity = op.toFixed(3);
           } else {
             hero.style.opacity = '0';

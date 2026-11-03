@@ -4297,3 +4297,88 @@
      .spatial-work-grid { grid-template-columns: 1fr; }
      .spatial-work-card:nth-child(even) { margin-top: 0; }
    }
+
+/* ═════════════════════════════════════════════════════════════
+   CINEMATIC PASS (Nov 2026)
+   Scroll-scrubbed content motion driven by js/cinematic.js.
+   With reduced motion the script doesn't run and everything
+   below simply renders static.
+   ═════════════════════════════════════════════════════════════ */
+
+   .sr-only {
+     position: absolute;
+     width: 1px;
+     height: 1px;
+     padding: 0;
+     margin: -1px;
+     overflow: hidden;
+     clip: rect(0 0 0 0);
+     white-space: nowrap;
+     border: 0;
+   }
+
+   /* ─── Title cards ─── */
+   .spatial-title {
+     font-size: clamp(3rem, 9vw, 8.5rem);
+     line-height: 0.95;
+     letter-spacing: -0.045em;
+     font-weight: 700;
+   }
+
+   .spatial-header { gap: 1rem; margin-bottom: clamp(1rem, 4vh, 3rem); }
+
+   [data-split] .cine-word {
+     display: inline-block;
+     white-space: nowrap;
+     perspective: 700px;
+   }
+
+   [data-split] .cine-char {
+     display: inline-block;
+     transform-origin: 50% 100%;
+     will-change: transform, opacity;
+   }
+
+   /* ─── Contact title ─── */
+   .contact__row {
+     display: block;
+     font-size: clamp(3.5rem, 12vw, 12rem);
+     font-weight: 700;
+     text-transform: uppercase;
+     letter-spacing: -0.045em;
+     line-height: 0.9;
+   }
+
+   /* ─── Statement lit word by word ─── */
+   .hud-statement[data-reveal-words] {
+     font-size: clamp(1.6rem, 3vw, 2.6rem);
+     line-height: 1.25;
+     letter-spacing: -0.02em;
+     max-width: 24ch;
+   }
+
+   [data-reveal-words] .cine-word { transition: opacity 0.2s linear; }
+
+   /* ─── Depth-tilted cards: script owns transform, so no CSS transitions on it ─── */
+   [data-scrub-tilt] {
+     transition: border-color 0.3s, background-color 0.3s;
+     transform-origin: 50% 50%;
+     will-change: transform, opacity;
+   }
+
+   .hud-beacon:hover,
+   .hud-beacon--tr:hover,
+   .hud-beacon--br:hover { transform: none; }
+
+   [data-depth],
+   .hero__line,
+   .hero__center { will-change: transform; }
+
+   /* One column: the 1024px rules leave two beacons sharing grid row 2 */
+   @media (max-width: 640px) {
+     .hud-core-center,
+     .hud-beacon--tl,
+     .hud-beacon--tr,
+     .hud-beacon--bl,
+     .hud-beacon--br { grid-row: auto; }
+   }
