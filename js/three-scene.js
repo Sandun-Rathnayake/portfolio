@@ -45,7 +45,8 @@
     coronaRim: 3.0, // Eclipse rim ring intensity
 
     /* ── rectangles ── */
-    particleCount: 20000, // 500–5000 (requires rebuildCount)
+    // Sized to the device; adaptQuality() steps it down further if frames run slow
+    particleCount: window.innerWidth < 768 ? 4000 : (navigator.hardwareConcurrency || 4) >= 8 ? 10000 : 7000,
     minLen: 0.6,
     maxLen: 7.5,
     minWid: 0.066,
@@ -100,24 +101,24 @@
       fy = y - iy;
     const ux = fx * fx * (3 - 2 * fx),
       uy = fy * fy * (3 - 2 * fy);
-    return (
-      hash21(ix, iy) +
-      (hash21(ix + 1, iy) - hash21(ix, iy)) * ux +
-      (hash21(ix, iy + 1) - hash21(ix, iy)) * uy +
-      (hash21(ix + 1, iy + 1) -
-        hash21(ix + 1, iy) -
-        hash21(ix, iy + 1) +
-        hash21(ix, iy)) *
-        ux *
-        uy
-    );
+    // Hash each corner once (was 9 sin() calls per lookup, now 4)
+    const a = hash21(ix, iy),
+      b = hash21(ix + 1, iy),
+      c = hash21(ix, iy + 1),
+      d = hash21(ix + 1, iy + 1);
+    return a + (b - a) * ux + (c - a) * uy + (d - b - c + a) * ux * uy;
   }
+  // Writes into curlX / curlY instead of returning an object: this runs for
+  // every particle every frame, and 20k short-lived objects caused GC stutter
+  let curlX = 0,
+    curlY = 0;
   function curl2(x, y, t) {
     const e = 0.08;
     const n0 = vnoise(x, y + t),
       nx = vnoise(x + e, y + t),
       ny = vnoise(x, y + e + t);
-    return { cx: (ny - n0) / e, cy: -(nx - n0) / e };
+    curlX = (ny - n0) / e;
+    curlY = -(nx - n0) / e;
   }
 
   /* ══════════════════════════════════════════════════════════════
@@ -1000,11 +1001,13 @@
 
       /* upward + noise */
       pvy[i] += upward;
-      const { cx, cy } = curl2(
+      curl2(
         x * noiseS + clock * noiseT,
         y * noiseS,
         i * 0.00015,
       );
+      const cx = curlX,
+        cy = curlY;
       pvx[i] += cx * noiseF;
       pvy[i] += cy * noiseF * 0.35;
 
@@ -1597,6 +1600,8 @@
     "  rgba(0,0,20,0.0) 70%)",
   ].join(";");
   document.body.appendChild(bloomOverlay);
+  let appliedTheme = null;
+  let appliedBloomOpacity = "";
 
   /* ─── Scroll Progress Driver ─── */
   const skillsSection = document.getElementById("work");
@@ -1669,7 +1674,7 @@
      smoothly into the next one as it scrolls past. */
   const CAM_STATIONS = [
     { id: "hero",       x: -7,  y: 1.5, z: 42, lx: 0,  ly: 0 },
-    { id: "about",      x: -16, y: 5,   z: 27, lx: 2,  ly: 1 },
+    { id: "about",      x: -16, y: 5,   z: 27, lx: -9, ly: 1 },
     { id: "work",       x: 14,  y: -4,  z: 48, lx: -8, ly: 2 },
     { id: "experience", x: -12, y: 9,   z: 34, lx: 6,  ly: -2 },
     { id: "skills",     x: 18,  y: -8,  z: 30, lx: -5, ly: 3 },
@@ -1685,20 +1690,36 @@
     return t * t * (3 - 2 * t);
   }
 
+  // Section positions in page coordinates, refreshed when the layout changes,
+  // so the per-frame camera update never has to force a layout
+  function measureStations() {
+    const y = window.scrollY;
+    CAM_STATIONS.forEach((st) => {
+      const r = st.el.getBoundingClientRect();
+      st.top = r.top + y;
+      st.bottom = r.bottom + y;
+    });
+  }
+  measureStations();
+  window.addEventListener("resize", measureStations);
+  window.addEventListener("load", measureStations);
+  if (window.ResizeObserver) new ResizeObserver(measureStations).observe(document.body);
+
   function updateCameraGoal() {
     if (!CAM_STATIONS.length) return;
     const mid = window.innerHeight * 0.5;
+    const y = window.scrollY;
     let from = CAM_STATIONS[0];
     let to = CAM_STATIONS[0];
     let t = 0;
 
     for (let i = 0; i < CAM_STATIONS.length; i++) {
-      const rect = CAM_STATIONS[i].el.getBoundingClientRect();
-      if (rect.top <= mid) {
-        from = CAM_STATIONS[i];
+      const st = CAM_STATIONS[i];
+      if (st.top - y <= mid) {
+        from = st;
         to = CAM_STATIONS[Math.min(i + 1, CAM_STATIONS.length - 1)];
         // 0 while the section fills the middle, ramps to 1 over its last screen
-        const leftToGo = rect.bottom - mid;
+        const leftToGo = st.bottom - y - mid;
         t = 1 - Math.max(0, Math.min(1, leftToGo / window.innerHeight));
       }
     }
@@ -1721,8 +1742,35 @@
   }, { passive: true });
 
   /* ─── Master Animate Loop ─── */
+  /* ─── Adaptive quality ───
+     Watches real frame times (CPU + GPU). If the page stays below ~45fps,
+     shed particles first, then render resolution, until it holds. */
+  let qLast = performance.now();
+  let qAvg = 16.7;
+  let qFrames = 0;
+  let qPixelRatio = Math.min(window.devicePixelRatio, 1.5);
+
+  function adaptQuality() {
+    const now = performance.now();
+    const dt = now - qLast;
+    qLast = now;
+    if (dt > 250 || document.hidden) return; // tab switch or stall, not a real frame
+    qAvg += (dt - qAvg) * 0.05;
+    if (++qFrames < 90 || qAvg < 22) return;
+    qFrames = 0;
+    if (CFG.particleCount > 3500) {
+      CFG.particleCount = Math.max(3500, Math.floor(CFG.particleCount * 0.7));
+    } else if (qPixelRatio > 1) {
+      qPixelRatio = 1;
+      renderer.setPixelRatio(qPixelRatio);
+      onResize();
+    }
+    qAvg = 16.7;
+  }
+
   function masterAnimate() {
     requestAnimationFrame(masterAnimate);
+    adaptQuality();
     clock += REDUCED_MOTION ? 0.0015 : 0.007;
 
 
@@ -1838,7 +1886,10 @@
     neb1Mat.uniforms.uTime.value = clock;
     neb2Mat.uniforms.uT.value = sT;
     neb2Mat.uniforms.uTime.value = clock;
-    if (isPink) {
+    // Colour parsing and a full-screen CSS gradient: only redo them when the theme flips
+    if (themeMode !== appliedTheme) {
+     appliedTheme = themeMode;
+     if (isPink) {
       neb1Mat.uniforms.uC1.value.set("#3d0824");
       neb1Mat.uniforms.uC2.value.set("#ff8da1");
       neb2Mat.uniforms.uC1.value.set("#200514");
@@ -1852,6 +1903,7 @@
       neb2Mat.uniforms.uC2.value.set("#004b8f");
       bloomOverlay.style.background =
         "radial-gradient(ellipse 55% 55% at 50% 50%, rgba(0,120,255,0.10) 0%, rgba(80,0,180,0.06) 40%, rgba(0,0,20,0.0) 70%)";
+     }
     }
     neb1.rotation.z += 0.00004;
     neb2.rotation.z -= 0.00003;
@@ -1860,7 +1912,11 @@
     bgFogMat.uniforms.uPulse.value = pulse;
 
     /* ── CSS bloom overlay ── */
-    bloomOverlay.style.opacity = (sT * 0.28).toFixed(3);
+    const bloomOpacity = (sT * 0.28).toFixed(2);
+    if (bloomOpacity !== appliedBloomOpacity) {
+      appliedBloomOpacity = bloomOpacity;
+      bloomOverlay.style.opacity = bloomOpacity;
+    }
 
     /* ── Energy sparks ── */
     sparkMat.uniforms.uThemePink.value = isPink;
@@ -1872,7 +1928,8 @@
     // Gravity + spiral collapse — scaled by scroll velocity so fast scrolls
     // snap particles in immediately while slow scrolls feel elegant
     const velBoost = 1.0 + Math.min(scrollVel * 55.0, 11.0); // 1x slow → 12x fast
-    if (sT > 0.005) {
+    const swarmHidden = sT > 0.75;
+    if (sT > 0.005 && !swarmHidden) {
       for (let i = 0; i < particleCount; i++) {
         const dx = px[i],
           dy = py[i],
@@ -1899,20 +1956,22 @@
     let sumVX = 0,
       sumVY = 0,
       sumVZ = 0;
-    for (let i = 0; i < particleCount; i++) {
-      sumVX += pvx[i];
-      sumVY += pvy[i];
-      sumVZ += pvz[i];
+    if (!swarmHidden) {
+      for (let i = 0; i < particleCount; i++) {
+        sumVX += pvx[i];
+        sumVY += pvy[i];
+        sumVZ += pvz[i];
+      }
+      avgVX = avgVX * 0.97 + (sumVX / particleCount) * 0.03;
+      avgVY = avgVY * 0.97 + (sumVY / particleCount) * 0.03;
+      avgVZ = avgVZ * 0.97 + (sumVZ / particleCount) * 0.03;
     }
-    avgVX = avgVX * 0.97 + (sumVX / particleCount) * 0.03;
-    avgVY = avgVY * 0.97 + (sumVY / particleCount) * 0.03;
-    avgVZ = avgVZ * 0.97 + (sumVZ / particleCount) * 0.03;
 
     const posAttr = rectGeo.attributes.position;
     const colAttr = rectGeo.attributes.color;
 
     // If collapsed enough, kill draw entirely so nothing lingers
-    if (sT > 0.75) {
+    if (swarmHidden) {
       rectGeo.setDrawRange(0, 0);
     } else {
       for (let i = 0; i < particleCount; i++) {
@@ -1924,11 +1983,13 @@
         // Upward + noise (suppressed during collapse)
         const physScale = 1.0 - Math.min(sT * 1.5, 1.0);
         pvy[i] += upward * physScale;
-        const { cx, cy } = curl2(
+        curl2(
           x * noiseS + clock * noiseT,
           y * noiseS,
           i * 0.00015,
         );
+        const cx = curlX,
+          cy = curlY;
         pvx[i] += cx * noiseF * physScale;
         pvy[i] += cy * noiseF * 0.35 * physScale;
 
@@ -2134,11 +2195,16 @@
           0.022,
         );
       }
-    }
 
-    posAttr.needsUpdate = true;
-    colAttr.needsUpdate = true;
-    rectGeo.attributes.normal.needsUpdate = true;
+      // Buffers are sized for MAX_P; re-uploading all of them (~30MB) every
+      // frame was the main source of lag. Send only the strips being drawn.
+      const liveFloats = particleCount * VPR * 3;
+      [posAttr, colAttr, rectGeo.attributes.normal].forEach((attr) => {
+        attr.updateRange.offset = 0;
+        attr.updateRange.count = liveFloats;
+        attr.needsUpdate = true;
+      });
+    }
 
 
 

@@ -4382,3 +4382,132 @@
      .hud-beacon--bl,
      .hud-beacon--br { grid-row: auto; }
    }
+
+/* ═════════════════════════════════════════════════════════════
+   PERFORMANCE (Nov 2026)
+   Layers composited over the WebGL canvases are re-blended or
+   re-blurred every frame; keep them cheap.
+   ═════════════════════════════════════════════════════════════ */
+
+   /* Grain without a full-screen blend mode */
+   body::after { mix-blend-mode: normal; opacity: 0.018; }
+
+   /* Solid bar instead of blurring the live scene behind it */
+   .nav.scrolled {
+     background: rgba(6, 6, 14, 0.86);
+     backdrop-filter: none;
+     -webkit-backdrop-filter: none;
+   }
+
+   .hud-frame,
+   .spatial-work-card__media .spatial-pill-tag {
+     backdrop-filter: none;
+     -webkit-backdrop-filter: none;
+   }
+
+   .spatial-work-card__media .spatial-pill-tag { background: rgba(0, 0, 0, 0.8); }
+   .hud-frame { background: rgba(6, 6, 16, 0.5); }
+
+/* ═════════════════════════════════════════════════════════════
+   ABOUT SCENE (Nov 2026)
+   A pinned "title credits" scene: the frame holds for one extra
+   screen while the statement lights up word by word and the four
+   facts roll in like opening credits (js/cinematic.js).
+   ═════════════════════════════════════════════════════════════ */
+
+   .about-scene {
+     position: relative;
+     z-index: var(--z-content);
+     padding: 0 var(--pad-x);
+   }
+
+   .about-scene__frame {
+     max-width: 1380px;
+     margin: 0 auto;
+     display: flex;
+     flex-direction: column;
+     justify-content: space-between;
+     gap: clamp(3rem, 8vh, 6rem);
+     padding: clamp(6rem, 14vh, 9rem) 0 clamp(2rem, 6vh, 4rem);
+   }
+
+   .about-scene__copy {
+     display: flex;
+     flex-direction: column;
+     gap: clamp(1.25rem, 3vh, 2rem);
+   }
+
+   .about-scene__statement {
+     font-size: clamp(2.2rem, 4.8vw, 5.25rem);
+     font-weight: 600;
+     line-height: 1.06;
+     letter-spacing: -0.035em;
+     color: var(--text-primary);
+     max-width: 19ch;
+     margin: 0;
+   }
+
+   .about-scene__bio {
+     font-size: clamp(1rem, 1.2vw, 1.15rem);
+     line-height: 1.65;
+     color: rgba(240, 240, 238, 0.8);
+     max-width: 56ch;
+   }
+
+   .about-scene__credits {
+     display: grid;
+     grid-template-columns: repeat(4, minmax(0, 1fr));
+     gap: 2rem clamp(1.5rem, 3vw, 3rem);
+     margin: 0;
+     padding-top: 1.5rem;
+     border-top: 1px solid rgba(255, 255, 255, 0.18);
+   }
+
+   .about-credit {
+     display: flex;
+     flex-direction: column;
+     gap: 0.3rem;
+   }
+
+   .about-credit dd { margin: 0; }
+
+   .about-credit__value {
+     order: -1;
+     font-size: clamp(1.6rem, 2.6vw, 2.6rem);
+     font-weight: 700;
+     letter-spacing: -0.03em;
+     line-height: 1.05;
+     color: var(--text-primary);
+   }
+
+   .about-credit__label {
+     font-size: 0.95rem;
+     font-weight: 600;
+     color: var(--text-primary);
+   }
+
+   .about-credit__note {
+     font-size: 0.88rem;
+     line-height: 1.45;
+     color: var(--text-secondary);
+   }
+
+   /* Pinned on screens with room for it */
+   @media (min-width: 769px) and (min-height: 561px) {
+     .about-scene { height: 220vh; }
+
+     .about-scene__frame {
+       position: sticky;
+       top: 0;
+       height: 100vh;
+     }
+   }
+
+   @media (max-width: 768px) {
+     .about-scene__credits { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+   }
+
+   @media (prefers-reduced-motion: reduce) {
+     .about-scene { height: auto; }
+     .about-scene__frame { position: static; height: auto; }
+   }

@@ -96,51 +96,44 @@
       </div>
     </section>
 
-    <section id="about" class="about section" aria-labelledby="about-title">
-      <div class="hud-container">
+    <section id="about" class="about-scene section" aria-labelledby="about-title" data-pin-scene>
+      <div class="about-scene__frame">
 
-        <div class="hud-spatial-grid">
+        <div class="about-scene__copy">
+          <h2 class="about-scene__statement" id="about-title" data-reveal-words>
+            I design, build and ship scalable backend systems, and the mobile and web apps people use on top
+            of them.
+          </h2>
 
-          <div class="hud-beacon hud-beacon--tl" data-scrub-tilt>
-            <div class="hud-beacon-val">700K+</div>
-            <div class="hud-beacon-title">App installs</div>
-            <div class="hud-beacon-desc">Across all the apps I've shipped</div>
-          </div>
-
-          <div class="hud-beacon hud-beacon--tr" data-scrub-tilt>
-            <div class="hud-beacon-val">BSc (Hons)</div>
-            <div class="hud-beacon-title">Software Engineering</div>
-            <div class="hud-beacon-desc">Birmingham City University, UK</div>
-          </div>
-
-          <div class="hud-core-center">
-            <div class="hud-frame">
-              <h2 class="hud-statement" data-reveal-words id="about-title">
-                I design, build and ship scalable backend systems, and the mobile and web apps people use on top
-                of them.
-              </h2>
-
-              <p class="hud-bio reveal-text">
-                I'm Project Leader at <a href="https://linkedin.com/in/sandun09" class="hud-link" target="_blank"
-                  rel="noopener">Lakmini International (Pvt) Ltd</a>, where I run sprints, review architecture and
-                work on Java EE backends, React Native apps and computer-vision features.
-              </p>
-            </div>
-          </div>
-
-          <div class="hud-beacon hud-beacon--bl" data-scrub-tilt>
-            <div class="hud-beacon-val">Since 2024</div>
-            <div class="hud-beacon-title">Leading a team</div>
-            <div class="hud-beacon-desc">Sprint planning and architecture reviews</div>
-          </div>
-
-          <div class="hud-beacon hud-beacon--br" data-scrub-tilt>
-            <div class="hud-beacon-val">Full stack</div>
-            <div class="hud-beacon-title">Backend to mobile</div>
-            <div class="hud-beacon-desc">Java EE, React Native, Three.js</div>
-          </div>
-
+          <p class="about-scene__bio" data-scene-fade>
+            I'm Project Leader at <a href="https://linkedin.com/in/sandun09" class="hud-link" target="_blank"
+              rel="noopener">Lakmini International (Pvt) Ltd</a>, where I run sprints, review architecture and
+            work on Java EE backends, React Native apps and computer-vision features.
+          </p>
         </div>
+
+        <dl class="about-scene__credits">
+          <div class="about-credit" data-scene-credit>
+            <dt class="about-credit__label">App installs</dt>
+            <dd class="about-credit__value">700K+</dd>
+            <dd class="about-credit__note">Across all the apps I've shipped</dd>
+          </div>
+          <div class="about-credit" data-scene-credit>
+            <dt class="about-credit__label">Software Engineering</dt>
+            <dd class="about-credit__value">BSc (Hons)</dd>
+            <dd class="about-credit__note">Birmingham City University, UK</dd>
+          </div>
+          <div class="about-credit" data-scene-credit>
+            <dt class="about-credit__label">Leading a team</dt>
+            <dd class="about-credit__value">Since 2024</dd>
+            <dd class="about-credit__note">Sprint planning and architecture reviews</dd>
+          </div>
+          <div class="about-credit" data-scene-credit>
+            <dt class="about-credit__label">Backend to mobile</dt>
+            <dd class="about-credit__value">Full stack</dd>
+            <dd class="about-credit__note">Java EE, React Native, Three.js</dd>
+          </div>
+        </dl>
 
       </div>
     </section>

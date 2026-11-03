@@ -96,12 +96,12 @@
     canvas.className = 'webgl-media';
     canvas.setAttribute('aria-hidden', 'true');
     try {
-      renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+      renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: false });
     } catch (err) {
       return; // DOM images stay visible
     }
     document.body.appendChild(canvas);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
     renderer.setClearColor(0x000000, 0);
 
     const scene = new THREE.Scene();
@@ -182,10 +182,16 @@
       return item;
     }).filter(Boolean);
 
+    let lastSignature = '';
+    let wasVisible = false;
+
     function frame(time) {
       const t = time * 0.001;
       const vel = Math.max(-60, Math.min(60, window.__scrollVelocity || 0));
       let anyVisible = false;
+      // Anything that changes the picture; when it's unchanged, skip the redraw
+      let signature = '';
+      let animating = Math.abs(vel) > 0.05;
 
       for (const item of items) {
         if (!item.ready) continue;
@@ -216,10 +222,20 @@
         u.uVel.value += ((-vel * 0.9) / h - u.uVel.value) * 0.15;
         u.uShift.value = Math.abs(vel) * 0.00045;
         u.uReveal.value += ((item.seen ? 1.08 : 0) - u.uReveal.value) * 0.05;
+
+        signature += `${r.left | 0},${r.top | 0},${r.width | 0};`;
+        if (item.hover > 0.002 || Math.abs(item.hoverTarget - item.hover) > 0.002) animating = true;
+        if (item.seen && u.uReveal.value < 1.07) animating = true;
+        if (Math.abs(u.uVel.value) > 0.0005) animating = true;
       }
 
-      if (anyVisible) renderer.render(scene, camera);
-      else renderer.clear();
+      if (anyVisible) {
+        if (animating || signature !== lastSignature) renderer.render(scene, camera);
+      } else if (wasVisible) {
+        renderer.clear();
+      }
+      lastSignature = signature;
+      wasVisible = anyVisible;
     }
 
     if (window.__onFrame) window.__onFrame(frame);
