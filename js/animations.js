@@ -6,6 +6,8 @@
 (function () {
   'use strict';
 
+  const REDUCED_MOTION = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
   // ── 1. Text Scramble / Character Decryption Engine ─────────
   const GLYPHS = '01#[]/\\<>_+=*!~%&@$ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
@@ -111,6 +113,12 @@
 
   // ── 3. Initialize All Observers ────────────────────────────
   function initObservers() {
+    if (REDUCED_MOTION) {
+      document.querySelectorAll('.reveal-text, .reveal-line, .reveal-cloth, .reveal-card, .reveal-row')
+        .forEach((el) => el.classList.add('in-view'));
+      return;
+    }
+
     // Text reveals
     document.querySelectorAll('.reveal-text').forEach((el, i) => {
       el.style.transitionDelay = `${Math.min(i * 0.04, 0.4)}s`;
@@ -124,12 +132,6 @@
 
     // Hero / contact line reveals
     document.querySelectorAll('.reveal-line').forEach((el) => {
-      revealObserver.observe(el);
-    });
-
-    // Manifesto words
-    document.querySelectorAll('.reveal-manifesto').forEach((el, i) => {
-      el.style.setProperty('--i', i);
       revealObserver.observe(el);
     });
 
@@ -170,7 +172,11 @@
         const targetId = btn.dataset.scrollTo;
         const target = document.getElementById(targetId);
         if (target) {
-          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          if (window.__lenis) window.__lenis.scrollTo(target, { offset: -70 });
+          else target.scrollIntoView({ behavior: REDUCED_MOTION ? 'auto' : 'smooth', block: 'start' });
+          if (!target.hasAttribute('tabindex')) target.setAttribute('tabindex', '-1');
+          target.focus({ preventScroll: true });
+          history.replaceState(null, '', `#${targetId}`);
         }
       });
     });
@@ -178,19 +184,18 @@
 
   // ── 6. Active Navigation Link Spy ──────────────────────────
   function setupNavSpy() {
-    const sections = ['hero', 'about', 'skills', 'experience', 'work', 'contact'];
+    const sections = ['work', 'experience', 'skills', 'education', 'contact'];
     const navLinks = document.querySelectorAll('.nav__link[data-scroll-to]');
 
     function updateActiveNav() {
-      const scrollPos = window.scrollY + 200;
+      const probe = 200;
       let currentSection = '';
 
       for (let i = 0; i < sections.length; i++) {
         const el = document.getElementById(sections[i]);
         if (el) {
-          const top = el.offsetTop;
-          const height = el.offsetHeight;
-          if (scrollPos >= top && scrollPos < top + height) {
+          const rect = el.getBoundingClientRect();
+          if (rect.top <= probe && rect.bottom > probe) {
             currentSection = sections[i];
             break;
           }
@@ -209,34 +214,6 @@
 
     window.addEventListener('scroll', updateActiveNav, { passive: true });
     updateActiveNav();
-  }
-
-  // ── 7. Magnetic Button Physics Hover ───────────────────────
-  function setupMagneticButtons() {
-    // Only apply on fine-pointer devices (mouse)
-    if (window.matchMedia('(pointer: coarse)').matches) return;
-
-    const magnetics = document.querySelectorAll(
-      '.hero__cta, .hero__cta--secondary, .nav__link, .project-drawer__close'
-    );
-
-    magnetics.forEach((btn) => {
-      btn.addEventListener('mousemove', (e) => {
-        const rect = btn.getBoundingClientRect();
-        const x = e.clientX - (rect.left + rect.width / 2);
-        const y = e.clientY - (rect.top + rect.height / 2);
-        btn.style.transform = `translate3d(${x * 0.22}px, ${y * 0.22}px, 0)`;
-      });
-
-      btn.addEventListener('mouseleave', () => {
-        btn.style.transform = 'translate3d(0, 0, 0)';
-        btn.style.transition = 'transform 0.4s cubic-bezier(0.16, 1, 0.3, 1)';
-      });
-
-      btn.addEventListener('mouseenter', () => {
-        btn.style.transition = 'none';
-      });
-    });
   }
 
   // ── 8. Unified Hero Scroll Fade ────────────────────────────
@@ -263,54 +240,13 @@
     }, { passive: true });
   }
 
-  // ── 9. Hover Cursor Effects ────────────────────────────────
-  function setupCursorEffects() {
-    const hoverEls = document.querySelectorAll(
-      'a, button, .work__link, .contact__email, .contact__social, .nav__link, .skills__badge, .exp-card'
-    );
-    hoverEls.forEach((el) => {
-      el.addEventListener('mouseenter', () => document.body.classList.add('cursor-hover'));
-      el.addEventListener('mouseleave', () => document.body.classList.remove('cursor-hover'));
-    });
-  }
-
-  // ── 10. 3D Card Interactive Gyroscopic Mouse Tilt ──────────
-  function setup3DCardTilt() {
-    if (window.matchMedia('(pointer: coarse)').matches) return;
-
-    const tiltCards = document.querySelectorAll('[data-tilt-3d]');
-    tiltCards.forEach((card) => {
-      card.addEventListener('mousemove', (e) => {
-        const rect = card.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
-        const centerX = rect.width / 2;
-        const centerY = rect.height / 2;
-
-        const rotateX = ((y - centerY) / centerY) * -7;
-        const rotateY = ((x - centerX) / centerX) * 7;
-
-        card.style.setProperty('--mouse-x', `${(x / rect.width) * 100}%`);
-        card.style.setProperty('--mouse-y', `${(y / rect.height) * 100}%`);
-        card.style.transform = `perspective(1200px) rotateX(${rotateX.toFixed(2)}deg) rotateY(${rotateY.toFixed(2)}deg) translateY(-4px)`;
-      });
-
-      card.addEventListener('mouseleave', () => {
-        card.style.transform = 'perspective(1200px) rotateX(0deg) rotateY(0deg) translateY(0)';
-      });
-    });
-  }
-
   // ── 11. Initialise ─────────────────────────────────────────
   function init() {
     initObservers();
     setupHeroReveal();
     setupNavScroll();
     setupNavSpy();
-    setupMagneticButtons();
-    setup3DCardTilt();
     setupParallax();
-    setupCursorEffects();
   }
 
   if (document.readyState === 'loading') {

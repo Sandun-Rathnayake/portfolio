@@ -14,8 +14,8 @@
      --surface-2: #1a1a1a;
      --border: rgba(255, 255, 255, 0.08);
      --text-primary: #f0f0ee;
-     --text-secondary: rgba(240, 240, 238, 0.45);
-     --text-tertiary: rgba(240, 240, 238, 0.2);
+     --text-secondary: rgba(240, 240, 238, 0.74);
+     --text-tertiary: rgba(240, 240, 238, 0.55);
      --accent: #8b38ff;
      --accent-glow: rgba(149, 0, 255, 0.15);
      --accent-dim: rgba(111, 0, 255, 0.5);
@@ -172,9 +172,6 @@
      transition: background-color 0.4s var(--ease-out), color 0.4s var(--ease-out);
    }
 
-   /* Hide default scrollbar */
-   ::-webkit-scrollbar { width: 0; background: transparent; }
-   * { scrollbar-width: none; }
 
    a {
      color: inherit;
@@ -439,7 +436,7 @@
 
    .nav__link {
      font-family: var(--font-mono);
-     font-size: 0.7rem;
+     font-size: 0.8rem;
      text-transform: uppercase;
      letter-spacing: 0.1em;
      color: var(--text-secondary);
@@ -486,7 +483,7 @@
      align-items: center;
      padding: 1rem var(--pad-x);
      font-family: var(--font-mono);
-     font-size: 0.65rem;
+     font-size: 0.8rem;
      text-transform: uppercase;
      letter-spacing: 0.12em;
      color: var(--text-tertiary);
@@ -508,7 +505,7 @@
 
    .section-label {
      font-family: var(--font-mono);
-     font-size: 0.7rem;
+     font-size: 0.8rem;
      letter-spacing: 0.2em;
      text-transform: uppercase;
      color: var(--accent);
@@ -541,7 +538,7 @@
      align-items: center;
      gap: 0.6rem;
      font-family: var(--font-mono);
-     font-size: 0.68rem;
+     font-size: 0.8rem;
      letter-spacing: 0.12em;
      text-transform: uppercase;
      color: var(--text-secondary);
@@ -635,7 +632,7 @@
 
    .hero__stat-label {
      font-family: var(--font-mono);
-     font-size: 0.62rem;
+     font-size: 0.8rem;
      letter-spacing: 0.1em;
      text-transform: uppercase;
      color: var(--text-secondary);
@@ -649,7 +646,7 @@
 
    .hero__cta {
      font-family: var(--font-mono);
-     font-size: 0.72rem;
+     font-size: 0.8rem;
      font-weight: 600;
      letter-spacing: 0.08em;
      text-transform: uppercase;
@@ -691,7 +688,7 @@
      align-items: center;
      gap: 0.5rem;
      font-family: var(--font-mono);
-     font-size: 0.62rem;
+     font-size: 0.8rem;
      letter-spacing: 0.15em;
      text-transform: uppercase;
      color: var(--text-tertiary);
@@ -737,7 +734,7 @@
      justify-content: space-between;
      padding-bottom: 1rem;
      border-bottom: 1px dashed rgba(255, 255, 255, 0.15);
-     font-size: 0.68rem;
+     font-size: 0.8rem;
      color: var(--text-secondary);
      letter-spacing: 0.12em;
      text-transform: uppercase;
@@ -833,7 +830,7 @@
 
    .hud-beacon-idx {
      font-family: var(--font-mono);
-     font-size: 0.62rem;
+     font-size: 0.8rem;
      letter-spacing: 0.15em;
      color: var(--accent);
    }
@@ -856,7 +853,7 @@
 
    .hud-beacon-desc {
      font-family: var(--font-mono);
-     font-size: 0.64rem;
+     font-size: 0.8rem;
      color: var(--text-secondary);
    }
 
@@ -926,7 +923,7 @@
 
    .hud-pill-tag {
      font-family: var(--font-mono);
-     font-size: 0.62rem;
+     font-size: 0.8rem;
      letter-spacing: 0.14em;
      padding: 0.25rem 0.75rem;
      background: rgba(139, 56, 255, 0.15);
@@ -937,7 +934,7 @@
 
    .hud-mono-tag {
      font-family: var(--font-mono);
-     font-size: 0.62rem;
+     font-size: 0.8rem;
      letter-spacing: 0.14em;
      color: var(--text-secondary);
    }
@@ -999,7 +996,7 @@
      display: flex;
      align-items: center;
      justify-content: space-between;
-     font-size: 0.6rem;
+     font-size: 0.8rem;
      letter-spacing: 0.12em;
      color: var(--text-secondary);
    }
@@ -1024,7 +1021,7 @@
      align-items: center;
      gap: 0.6rem;
      font-family: var(--font-mono);
-     font-size: 0.72rem;
+     font-size: 0.8rem;
      font-weight: 600;
      letter-spacing: 0.1em;
      text-transform: uppercase;
@@ -1277,7 +1274,7 @@
 
     .exp-card__period {
       font-family: var(--font-mono);
-      font-size: 0.72rem;
+      font-size: 0.8rem;
       font-weight: 600;
       color: var(--accent);
       background: rgba(139, 56, 255, 0.12);
@@ -1290,7 +1287,7 @@
 
     .exp-card__location {
       font-family: var(--font-mono);
-      font-size: 0.68rem;
+      font-size: 0.8rem;
       color: var(--text-secondary);
       letter-spacing: 0.05em;
     }
@@ -1319,7 +1316,7 @@
 
     .exp-card__company {
       font-family: var(--font-mono);
-      font-size: 0.75rem;
+      font-size: 0.8rem;
       color: var(--text-secondary);
       text-transform: uppercase;
       letter-spacing: 0.1em;
@@ -1351,7 +1348,7 @@
       content: '◆';
       position: absolute;
       left: 0;
-      font-size: 0.65rem;
+      font-size: 0.8rem;
       top: 0.35rem;
       color: var(--accent);
       text-shadow: 0 0 8px var(--accent);
@@ -1370,7 +1367,7 @@
       align-items: center;
       gap: 0.45rem;
       font-family: var(--font-mono);
-      font-size: 0.66rem;
+      font-size: 0.8rem;
       padding: 0.35rem 0.75rem;
       background: rgba(255, 255, 255, 0.03);
       border: 1px solid rgba(255, 255, 255, 0.08);
@@ -1402,7 +1399,7 @@
 
     .experience__education-title {
       font-family: var(--font-mono);
-      font-size: 0.75rem;
+      font-size: 0.8rem;
       font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 0.15em;
@@ -1489,7 +1486,7 @@
 
     .edu-card__year {
       font-family: var(--font-mono);
-      font-size: 0.72rem;
+      font-size: 0.8rem;
       color: var(--accent);
       font-weight: 600;
       letter-spacing: 0.05em;
@@ -1627,7 +1624,7 @@
      border: none;
      color: var(--text-secondary);
      font-family: var(--font-mono);
-     font-size: 0.65rem;
+     font-size: 0.8rem;
      letter-spacing: 0.08em;
      text-transform: uppercase;
      cursor: pointer;
@@ -1709,7 +1706,7 @@
      align-items: center;
      gap: 0.5rem;
      font-family: var(--font-mono);
-     font-size: 0.65rem;
+     font-size: 0.8rem;
      letter-spacing: 0.22em;
      text-transform: uppercase;
      color: var(--accent);
@@ -1751,7 +1748,7 @@
 
    .spatial-action-hint {
      font-family: var(--font-mono);
-     font-size: 0.62rem;
+     font-size: 0.8rem;
      letter-spacing: 0.1em;
      text-transform: uppercase;
      color: var(--text-secondary);
@@ -1811,7 +1808,7 @@
 
    .spatial-badge {
      font-family: var(--font-mono);
-     font-size: 0.62rem;
+     font-size: 0.8rem;
      letter-spacing: 0.14em;
      text-transform: uppercase;
      color: var(--accent);
@@ -1840,7 +1837,7 @@
 
    .spatial-pill-tag {
      font-family: var(--font-mono);
-     font-size: 0.58rem;
+     font-size: 0.8rem;
      letter-spacing: 0.08em;
      text-transform: uppercase;
      padding: 0.22rem 0.6rem;
@@ -1893,7 +1890,7 @@
 
    .spatial-card__chips span {
      font-family: var(--font-mono);
-     font-size: 0.65rem;
+     font-size: 0.8rem;
      letter-spacing: 0.02em;
      color: rgba(240, 240, 246, 0.9);
      background: rgba(255, 255, 255, 0.05);
@@ -1935,14 +1932,14 @@
 
    .spatial-dossier-co {
      font-family: var(--font-mono);
-     font-size: 0.76rem;
+     font-size: 0.8rem;
      color: var(--text-secondary);
      margin: 0.2rem 0 0 0;
    }
 
    .spatial-date-pill {
      font-family: var(--font-mono);
-     font-size: 0.65rem;
+     font-size: 0.8rem;
      font-weight: 600;
      color: var(--accent);
      letter-spacing: 0.06em;
@@ -1979,7 +1976,7 @@
 
    .spatial-metric__label {
      font-family: var(--font-mono);
-     font-size: 0.58rem;
+     font-size: 0.8rem;
      letter-spacing: 0.08em;
      text-transform: uppercase;
      color: var(--text-secondary);
@@ -2065,7 +2062,7 @@
      justify-content: space-between;
      align-items: center;
      font-family: var(--font-mono);
-     font-size: 0.58rem;
+     font-size: 0.8rem;
      letter-spacing: 0.08em;
      text-transform: uppercase;
      color: var(--text-secondary);
@@ -2249,7 +2246,7 @@
      flex-wrap: wrap;
      gap: 1rem;
      font-family: var(--font-mono);
-     font-size: 0.75rem;
+     font-size: 0.8rem;
      letter-spacing: 0.1em;
      text-transform: uppercase;
    }
@@ -2294,7 +2291,7 @@
      display: flex;
      justify-content: space-between;
      font-family: var(--font-mono);
-     font-size: 0.6rem;
+     font-size: 0.8rem;
      letter-spacing: 0.1em;
      text-transform: uppercase;
      color: var(--text-tertiary);
@@ -2398,7 +2395,7 @@
    .skills__group-title {
      display: block;
      font-family: var(--font-mono);
-     font-size: 0.62rem;
+     font-size: 0.8rem;
      letter-spacing: 0.14em;
      text-transform: uppercase;
      color: var(--accent);
@@ -2531,7 +2528,7 @@
 
    .skills__badge {
      font-family: var(--font-mono);
-     font-size: 0.68rem;
+     font-size: 0.8rem;
      text-transform: uppercase;
      letter-spacing: 0.08em;
      color: var(--text-secondary);
@@ -2600,7 +2597,7 @@
      font-weight: 700;
      color: var(--accent);
      text-shadow: 0 0 8px var(--accent-dim);
-     font-size: 0.75rem;
+     font-size: 0.8rem;
    }
 
    .skills__mobile {
@@ -2655,7 +2652,7 @@
      }
 
      .skills__card-tags .skills__badge {
-       font-size: 0.65rem;
+       font-size: 0.8rem;
        padding: 0.45rem 0.75rem;
      }
    }
@@ -2715,7 +2712,7 @@
      right: var(--pad-x);
      z-index: 10;
      font-family: var(--font-mono);
-     font-size: 0.75rem;
+     font-size: 0.8rem;
      color: var(--text-secondary);
      letter-spacing: 0.1em;
      transition: color 0.25s var(--ease-out);
@@ -2808,7 +2805,7 @@
 
    .project-detail__sub {
      font-family: var(--font-mono);
-     font-size: 0.75rem;
+     font-size: 0.8rem;
      text-transform: uppercase;
      letter-spacing: 0.15em;
      color: var(--text-tertiary);
@@ -2860,7 +2857,7 @@
 
    .project-detail__btn {
      font-family: var(--font-mono);
-     font-size: 0.7rem;
+     font-size: 0.8rem;
      letter-spacing: 0.12em;
      text-transform: uppercase;
      color: var(--bg);
@@ -2933,7 +2930,7 @@
 
    .telemetry-panel__title {
      font-family: var(--font-mono);
-     font-size: 0.65rem;
+     font-size: 0.8rem;
      text-transform: uppercase;
      letter-spacing: 0.12em;
      color: var(--text-secondary);
@@ -2962,7 +2959,7 @@
      display: flex;
      justify-content: space-between;
      font-family: var(--font-mono);
-     font-size: 0.6rem;
+     font-size: 0.8rem;
      letter-spacing: 0.08em;
      color: var(--text-tertiary);
      text-transform: uppercase;
@@ -2979,7 +2976,7 @@
 
    .reflow-widget__info {
      font-family: var(--font-mono);
-     font-size: 0.62rem;
+     font-size: 0.8rem;
      color: var(--text-secondary);
      text-transform: uppercase;
    }
@@ -3006,7 +3003,7 @@
      align-items: center;
      justify-content: center;
      font-family: var(--font-mono);
-     font-size: 0.58rem;
+     font-size: 0.8rem;
      color: var(--text-secondary);
      text-transform: uppercase;
      border-radius: 2px;
@@ -3045,7 +3042,7 @@
 
    .reflow-widget__width {
      font-family: var(--font-mono);
-     font-size: 0.62rem;
+     font-size: 0.8rem;
      color: var(--accent);
      min-width: 45px;
      text-align: right;
@@ -3102,7 +3099,7 @@
      left: 50%;
      transform: translateX(-50%);
      font-family: var(--font-mono);
-     font-size: 0.6rem;
+     font-size: 0.8rem;
      color: rgba(255, 255, 255, 0.35);
      text-transform: uppercase;
      letter-spacing: 0.08em;
@@ -3114,7 +3111,7 @@
      overflow-y: auto;
      padding: 1.25rem;
      font-family: var(--font-mono);
-     font-size: 0.72rem;
+     font-size: 0.8rem;
      line-height: 1.5;
      color: rgba(255, 255, 255, 0.75);
      display: flex;
@@ -3152,7 +3149,7 @@
      color: var(--accent);
      white-space: nowrap;
      font-family: var(--font-mono);
-     font-size: 0.75rem;
+     font-size: 0.8rem;
      user-select: none;
    }
 
@@ -3167,7 +3164,7 @@
    .terminal__typed {
      color: #ffffff;
      font-family: var(--font-mono);
-     font-size: 0.75rem;
+     font-size: 0.8rem;
      white-space: pre;
      user-select: none;
    }
@@ -3200,7 +3197,7 @@
      outline: none !important;
      background: transparent !important;
      font-family: var(--font-mono) !important;
-     font-size: 0.75rem !important;
+     font-size: 0.8rem !important;
      padding: 0 !important;
      margin: 0 !important;
      cursor: text;
@@ -3255,7 +3252,7 @@
       border: none;
       color: var(--text-secondary);
       font-family: var(--font-mono);
-      font-size: 0.65rem;
+      font-size: 0.8rem;
       letter-spacing: 0.08em;
       text-transform: uppercase;
       cursor: pointer;
@@ -3325,7 +3322,7 @@
 
     .el-kicker {
       font-family: var(--font-mono);
-      font-size: 0.65rem;
+      font-size: 0.8rem;
       letter-spacing: 0.2em;
       text-transform: uppercase;
       color: var(--accent);
@@ -3352,7 +3349,7 @@
 
     .el-panel__note {
       font-family: var(--font-mono);
-      font-size: 0.62rem;
+      font-size: 0.8rem;
       letter-spacing: 0.1em;
       text-transform: uppercase;
       color: var(--text-secondary);
@@ -3430,7 +3427,7 @@
 
     .el-stack-cell__idx {
       font-family: var(--font-mono);
-      font-size: 0.72rem;
+      font-size: 0.8rem;
       color: var(--accent);
       font-weight: 600;
     }
@@ -3457,7 +3454,7 @@
       align-items: center;
       gap: 0.35rem 0.6rem;
       font-family: var(--font-mono);
-      font-size: 0.72rem;
+      font-size: 0.8rem;
       color: var(--text-primary);
       line-height: 1.6;
     }
@@ -3519,7 +3516,7 @@
 
     .el-exp-card__tag {
       font-family: var(--font-mono);
-      font-size: 0.62rem;
+      font-size: 0.8rem;
       letter-spacing: 0.1em;
       text-transform: uppercase;
       color: var(--text-secondary);
@@ -3567,7 +3564,7 @@
 
     .el-exp-card__tech span {
       font-family: var(--font-mono);
-      font-size: 0.62rem;
+      font-size: 0.8rem;
       color: var(--text-secondary);
       background: rgba(255, 255, 255, 0.03);
       border: 1px solid rgba(255, 255, 255, 0.07);
@@ -3605,7 +3602,7 @@
 
     .el-edu-card__badge {
       font-family: var(--font-mono);
-      font-size: 0.6rem;
+      font-size: 0.8rem;
       letter-spacing: 0.16em;
       text-transform: uppercase;
       color: var(--accent);
@@ -3614,7 +3611,7 @@
 
     .el-edu-card__period {
       font-family: var(--font-mono);
-      font-size: 0.72rem;
+      font-size: 0.8rem;
       color: var(--text-secondary);
     }
 
@@ -3651,7 +3648,7 @@
 
     .el-edu-card__tags span {
       font-family: var(--font-mono);
-      font-size: 0.6rem;
+      font-size: 0.8rem;
       color: var(--text-secondary);
       background: rgba(255, 255, 255, 0.03);
       border: 1px solid rgba(255, 255, 255, 0.06);
@@ -3726,7 +3723,7 @@
       top: 0.65rem;
       left: 0.65rem;
       font-family: var(--font-mono);
-      font-size: 0.58rem;
+      font-size: 0.8rem;
       letter-spacing: 0.08em;
       text-transform: uppercase;
       padding: 0.22rem 0.55rem;
@@ -3763,7 +3760,7 @@
 
     .el-work-card__overlay span {
       font-family: var(--font-mono);
-      font-size: 0.68rem;
+      font-size: 0.8rem;
       letter-spacing: 0.1em;
       text-transform: uppercase;
       color: #ffffff;
@@ -3792,7 +3789,7 @@
       justify-content: space-between;
       align-items: center;
       font-family: var(--font-mono);
-      font-size: 0.62rem;
+      font-size: 0.8rem;
       color: var(--text-secondary);
     }
 
@@ -3811,7 +3808,7 @@
     }
 
     .el-work-card__snippet {
-      font-size: 0.76rem;
+      font-size: 0.8rem;
       line-height: 1.45;
       color: var(--text-secondary);
       margin: 0;
@@ -3826,7 +3823,7 @@
       padding-top: 0.55rem;
       border-top: 1px solid rgba(255, 255, 255, 0.05);
       font-family: var(--font-mono);
-      font-size: 0.58rem;
+      font-size: 0.8rem;
       color: var(--text-secondary);
     }
 
@@ -3870,3 +3867,433 @@
     }
 
 }
+/* ═════════════════════════════════════════════════════════════
+   USABILITY PASS (Nov 2026)
+   Readable labels, plain vertical layout, mobile nav, focus
+   styles, reduced motion. Kept last so it wins over the older
+   rules above without !important.
+   ═════════════════════════════════════════════════════════════ */
+
+   /* ─── Skip link ─── */
+   .skip-link {
+     position: fixed;
+     top: 0.75rem;
+     left: 0.75rem;
+     z-index: calc(var(--z-loader) + 1);
+     padding: 0.6rem 1rem;
+     background: var(--text-primary);
+     color: var(--bg);
+     font-weight: 600;
+     border-radius: 4px;
+     transform: translateY(-200%);
+   }
+
+   .skip-link:focus { transform: none; }
+
+   /* ─── Visible keyboard focus everywhere ─── */
+   :focus-visible {
+     outline: 2px solid var(--accent);
+     outline-offset: 3px;
+   }
+
+   .terminal:focus-within {
+     border-color: var(--accent);
+     box-shadow: 0 0 0 2px var(--accent-dim);
+   }
+
+   section[tabindex="-1"]:focus,
+   footer[tabindex="-1"]:focus { outline: none; }
+
+   /* Sections land below the fixed nav when jumped to */
+   .section { scroll-margin-top: 4.5rem; }
+
+   /* ─── Sentence-case labels instead of tracked all-caps mono ─── */
+   .nav__link,
+   .hero__eyebrow,
+   .hero__stat-label,
+   .hero__cta,
+   .hud-beacon-desc,
+   .spatial-badge,
+   .spatial-pill-tag,
+   .spatial-action-hint,
+   .spatial-work-card__meta,
+   .spatial-metric__label,
+   .spatial-date-pill,
+   .contact__footer-bar,
+   .project-detail__sub,
+   .project-drawer__close,
+   .telemetry-panel__title {
+     font-family: var(--font-sans);
+     text-transform: none;
+     letter-spacing: 0;
+   }
+
+   .project-detail__title { text-transform: none; }
+
+   /* ─── Nav ─── */
+   .nav__link {
+     font-size: 0.9rem;
+     color: var(--text-secondary);
+   }
+
+   .nav__link--cta {
+     color: var(--text-primary);
+     border: 1px solid rgba(255, 255, 255, 0.25);
+     border-radius: 4px;
+   }
+
+   .nav__link--cta::before { display: none; }
+
+   @media (max-width: 600px) {
+     .nav { padding: 1rem var(--pad-x); }
+     #nav-experience,
+     #nav-skills { display: none; }
+     .nav__links { gap: 0.25rem; }
+   }
+
+   /* ─── Hero ─── */
+   .hero__headline,
+   .hero__line,
+   .contact__title,
+   .contact__line { display: block; }
+
+   .hero__headline { font-size: inherit; font-weight: inherit; margin: 0; }
+
+   .hero__eyebrow { font-size: 0.9rem; }
+
+   .hero__tagline {
+     font-size: clamp(1rem, 1.4vw, 1.15rem);
+     color: rgba(240, 240, 238, 0.85);
+     max-width: 60ch;
+   }
+
+   .hero__stat { flex-direction: column-reverse; }
+   .hero__stat-label { font-size: 0.85rem; }
+
+   .hero__cta {
+     display: inline-flex;
+     align-items: center;
+     font-size: 0.95rem;
+     padding: 0.8rem 1.5rem;
+     border-radius: 4px;
+   }
+
+   .hero__cta--ghost { border-color: rgba(255, 255, 255, 0.3); }
+
+   @media (max-width: 600px) {
+     .hero__stats { gap: 1.5rem; flex-wrap: wrap; }
+     .hero__actions { width: 100%; }
+     .hero__cta { flex: 1; justify-content: center; }
+   }
+
+   /* ─── About ─── */
+   .about { min-height: auto; }
+
+   .hud-statement {
+     font-size: clamp(1.3rem, 2.2vw, 1.9rem);
+     line-height: 1.35;
+     max-width: 28ch;
+   }
+
+   .hud-beacon-desc { font-size: 0.85rem; }
+
+   /* ─── Projects / Experience / Skills / Education: normal vertical flow ─── */
+   .hscroll-zone { height: auto; }
+
+   .hscroll-sticky {
+     position: relative;
+     height: auto;
+     overflow: visible;
+   }
+
+   .hscroll-track {
+     flex-direction: column;
+     width: 100%;
+     height: auto;
+     transform: none;
+   }
+
+   .hscroll-panel {
+     width: 100%;
+     height: auto;
+     overflow: visible;
+     padding: clamp(4rem, 9vh, 6rem) var(--pad-x);
+   }
+
+   .hscroll-sticky::before { display: none; }
+
+   .spatial-title { font-size: clamp(2rem, 4vw, 3rem); }
+
+   .spatial-action-hint {
+     font-size: 0.9rem;
+     border: 0;
+     padding: 0;
+   }
+
+   .spatial-card__text,
+   .spatial-work-card__desc {
+     font-size: 0.98rem;
+     line-height: 1.6;
+     color: rgba(240, 240, 238, 0.82);
+   }
+
+   .spatial-work-card__more {
+     display: inline-block;
+     margin-top: 1rem;
+     font-weight: 600;
+     color: var(--text-primary);
+     text-decoration: underline;
+     text-decoration-color: var(--accent);
+     text-underline-offset: 4px;
+   }
+
+   .spatial-work-card:hover .spatial-work-card__more { color: var(--accent); }
+
+   .spatial-metric__value { margin: 0; }
+
+   /* ─── Contact ─── */
+   .contact {
+     min-height: auto;
+     justify-content: flex-start;
+     padding-bottom: 6rem;
+   }
+
+   .contact__cta { margin-bottom: 2rem; }
+
+   .contact__title { margin: 0; font-size: inherit; font-weight: inherit; }
+
+   .contact__sub {
+     font-size: 1.05rem;
+     color: rgba(240, 240, 238, 0.85);
+   }
+
+   .contact__actions {
+     display: flex;
+     flex-wrap: wrap;
+     align-items: center;
+     gap: 0.75rem;
+     margin-bottom: 1.25rem;
+   }
+
+   .contact__primary {
+     font-size: clamp(1.05rem, 2.2vw, 1.5rem);
+     font-weight: 600;
+     padding: 0.85rem 1.4rem;
+     background: var(--accent);
+     color: #fff;
+     border-radius: 4px;
+     word-break: break-all;
+     transition: opacity 0.2s;
+   }
+
+   .contact__primary:hover { opacity: 0.85; }
+
+   .contact__copy {
+     font-size: 0.95rem;
+     padding: 0.85rem 1.2rem;
+     border: 1px solid rgba(255, 255, 255, 0.3);
+     border-radius: 4px;
+     transition: border-color 0.2s;
+   }
+
+   .contact__copy:hover { border-color: var(--text-primary); }
+
+   .contact__copy-status {
+     font-size: 0.9rem;
+     color: var(--text-secondary);
+   }
+
+   .contact__socials {
+     list-style: none;
+     display: flex;
+     flex-wrap: wrap;
+     gap: 0.5rem 1.5rem;
+     margin-bottom: 4rem;
+   }
+
+   .contact__social {
+     font-size: 1rem;
+     padding: 0.4rem 0;
+     color: var(--text-secondary);
+     text-decoration: underline;
+     text-decoration-color: rgba(255, 255, 255, 0.25);
+     text-underline-offset: 4px;
+   }
+
+   .contact__social:hover { color: var(--text-primary); }
+
+   .contact__terminal-wrap { margin: 0 0 3rem; }
+
+   .contact__terminal-hint {
+     font-size: 0.95rem;
+     color: var(--text-secondary);
+     margin-bottom: 0.75rem;
+   }
+
+   .contact__terminal-hint code {
+     font-family: var(--font-mono);
+     color: var(--text-primary);
+   }
+
+   .terminal { aspect-ratio: auto; min-height: 260px; }
+
+   .contact__footer-bar { font-size: 0.85rem; }
+
+   /* ─── Project drawer ─── */
+   .project-drawer__close {
+     font-size: 0.95rem;
+     color: var(--text-primary);
+     padding: 0.5rem 0.9rem;
+     border: 1px solid rgba(255, 255, 255, 0.25);
+     border-radius: 4px;
+   }
+
+   .project-detail__sub {
+     font-size: 1rem;
+     font-weight: 600;
+     color: var(--text-primary);
+   }
+
+   .project-detail__links { margin-top: 2rem; }
+
+   .project-detail__link {
+     display: inline-block;
+     font-weight: 600;
+     padding: 0.75rem 1.2rem;
+     border: 1px solid rgba(255, 255, 255, 0.3);
+     border-radius: 4px;
+   }
+
+   .project-detail__link:hover { border-color: var(--accent); color: var(--accent); }
+
+   /* ─── Reduced motion ─── */
+   @media (prefers-reduced-motion: reduce) {
+     html { scroll-behavior: auto; }
+
+     *, *::before, *::after {
+       animation-duration: 0.01ms !important;
+       animation-iteration-count: 1 !important;
+       transition-duration: 0.01ms !important;
+     }
+
+     .reveal-text,
+     .hero__line span,
+     .contact__line span {
+       opacity: 1;
+       transform: none;
+       filter: none;
+     }
+   }
+
+/* ═════════════════════════════════════════════════════════════
+   3D PASS (Nov 2026)
+   The WebGL scene is the page: inertial scroll, content floating
+   over the scene, project images rendered as WebGL planes
+   (js/webgl-media.js) in a staggered editorial grid.
+   ═════════════════════════════════════════════════════════════ */
+
+   /* ─── Lenis ─── */
+   html.lenis, html.lenis body { height: auto; }
+   .lenis.lenis-smooth { scroll-behavior: auto; }
+   .lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
+   .lenis.lenis-stopped { overflow: hidden; }
+
+   /* ─── WebGL media layer: above the scene, below the content ─── */
+   .webgl-media {
+     position: fixed;
+     inset: 0;
+     width: 100vw;
+     height: 100vh;
+     z-index: 5;
+     pointer-events: none;
+   }
+
+   /* ─── Content floats over the scene ─── */
+   .spatial-card {
+     background: rgba(6, 6, 16, 0.42);
+     backdrop-filter: none;
+     -webkit-backdrop-filter: none;
+     box-shadow: none;
+     border-color: rgba(255, 255, 255, 0.14);
+   }
+
+   .spatial-card:hover {
+     background: rgba(6, 6, 16, 0.55);
+     border-color: rgba(255, 255, 255, 0.28);
+     box-shadow: none;
+     transform: none;
+   }
+
+   .hud-frame {
+     background: rgba(6, 6, 16, 0.3);
+     backdrop-filter: blur(6px);
+     -webkit-backdrop-filter: blur(6px);
+   }
+
+   .hud-beacon {
+     background: transparent;
+     backdrop-filter: none;
+     -webkit-backdrop-filter: none;
+   }
+
+   /* ─── Projects: staggered editorial grid, big images ─── */
+   .spatial-work-grid {
+     display: grid;
+     grid-template-columns: repeat(2, minmax(0, 1fr));
+     column-gap: clamp(2rem, 6vw, 6rem);
+     row-gap: clamp(3rem, 8vh, 6rem);
+     align-items: start;
+   }
+
+   .spatial-work-card {
+     background: none;
+     border: 0;
+     border-radius: 0;
+     box-shadow: none;
+     backdrop-filter: none;
+     -webkit-backdrop-filter: none;
+     overflow: visible;
+   }
+
+   .spatial-work-card:nth-child(even) { margin-top: clamp(4rem, 14vh, 10rem); }
+
+   /* Older .work__item rules span 12 columns below 1024px; these cards use the 2-column grid */
+   .spatial-work-grid > .work__item { grid-column: auto; }
+
+   .spatial-work-card:hover {
+     background: none;
+     box-shadow: none;
+     transform: none;
+   }
+
+   .spatial-work-card__media {
+     height: auto;
+     aspect-ratio: 4 / 3;
+     border-radius: 14px;
+     background: rgba(255, 255, 255, 0.04);
+   }
+
+   /* Once the WebGL plane has its texture, it draws the image instead */
+   .spatial-work-card.is-webgl .spatial-work-card__media { background: transparent; }
+   .spatial-work-card.is-webgl .spatial-work-card__bg { opacity: 0; }
+
+   .spatial-work-card__body {
+     padding: 1.25rem 0 0;
+     background: none;
+   }
+
+   .spatial-work-card__title {
+     font-size: clamp(1.5rem, 2.6vw, 2.25rem);
+     font-weight: 600;
+     letter-spacing: -0.02em;
+     line-height: 1.15;
+   }
+
+   .spatial-work-card__desc { max-width: 46ch; }
+
+   .spatial-work-card__link:focus-visible { outline-offset: 8px; }
+
+   @media (max-width: 768px) {
+     .spatial-work-grid { grid-template-columns: 1fr; }
+     .spatial-work-card:nth-child(even) { margin-top: 0; }
+   }

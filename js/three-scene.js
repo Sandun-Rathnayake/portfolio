@@ -1599,8 +1599,10 @@
   document.body.appendChild(bloomOverlay);
 
   /* ─── Scroll Progress Driver ─── */
-  const skillsSection = document.getElementById("skills");
+  const skillsSection = document.getElementById("work");
   let scrollVel = 0.0; // scroll velocity (delta per frame)
+  // Visitors who ask for reduced motion get no warp streaks or speed-ups
+  const REDUCED_MOTION = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   let prevScrollTgt = 0.0; // previous frame's scrollTarget for velocity calc
 
   function updateScrollTarget() {
@@ -1660,7 +1662,54 @@
 
   /* ─── Horizontal Scroll 3D Camera & Parallax State ─── */
   let hscrollTgt = 0.0;
-  let hscrollCurr = 0.0;
+
+  /* ─── Scroll Camera Journey ───
+     Each section has a viewpoint around the eclipse. The section crossing
+     the middle of the viewport decides where the camera flies to, blending
+     smoothly into the next one as it scrolls past. */
+  const CAM_STATIONS = [
+    { id: "hero",       x: -7,  y: 1.5, z: 42, lx: 0,  ly: 0 },
+    { id: "about",      x: -16, y: 5,   z: 27, lx: 2,  ly: 1 },
+    { id: "work",       x: 14,  y: -4,  z: 48, lx: -8, ly: 2 },
+    { id: "experience", x: -12, y: 9,   z: 34, lx: 6,  ly: -2 },
+    { id: "skills",     x: 18,  y: -8,  z: 30, lx: -5, ly: 3 },
+    { id: "education",  x: 0,   y: 14,  z: 40, lx: 0,  ly: -3 },
+    { id: "contact",    x: 2,   y: 0,   z: 19, lx: 0,  ly: 0 },
+  ].map((st) => Object.assign(st, { el: document.getElementById(st.id) }))
+    .filter((st) => st.el);
+
+  const camGoal = { x: -7, y: 1.5, z: 42, lx: 0, ly: 0 };
+  const camLook = { x: 0, y: 0 };
+
+  function smoothstep(t) {
+    return t * t * (3 - 2 * t);
+  }
+
+  function updateCameraGoal() {
+    if (!CAM_STATIONS.length) return;
+    const mid = window.innerHeight * 0.5;
+    let from = CAM_STATIONS[0];
+    let to = CAM_STATIONS[0];
+    let t = 0;
+
+    for (let i = 0; i < CAM_STATIONS.length; i++) {
+      const rect = CAM_STATIONS[i].el.getBoundingClientRect();
+      if (rect.top <= mid) {
+        from = CAM_STATIONS[i];
+        to = CAM_STATIONS[Math.min(i + 1, CAM_STATIONS.length - 1)];
+        // 0 while the section fills the middle, ramps to 1 over its last screen
+        const leftToGo = rect.bottom - mid;
+        t = 1 - Math.max(0, Math.min(1, leftToGo / window.innerHeight));
+      }
+    }
+
+    const k = smoothstep(t);
+    camGoal.x = from.x + (to.x - from.x) * k;
+    camGoal.y = from.y + (to.y - from.y) * k;
+    camGoal.z = from.z + (to.z - from.z) * k;
+    camGoal.lx = from.lx + (to.lx - from.lx) * k;
+    camGoal.ly = from.ly + (to.ly - from.ly) * k;
+  }
   let mouseCamX = 0.0;
   let mouseCamY = 0.0;
 
@@ -1674,13 +1723,13 @@
   /* ─── Master Animate Loop ─── */
   function masterAnimate() {
     requestAnimationFrame(masterAnimate);
-    clock += 0.007;
+    clock += REDUCED_MOTION ? 0.0015 : 0.007;
 
 
     /* Scroll-velocity-adaptive lerp —
        slow scroll  → rate ~0.12 (fast but smooth)
        fast scroll  → rate up to 0.92 (nearly instant) */
-    scrollVel = Math.abs(scrollTarget - prevScrollTgt);
+    scrollVel = REDUCED_MOTION ? 0 : Math.abs(scrollTarget - prevScrollTgt);
     prevScrollTgt = scrollTarget;
     const adaptRate = 0.12 + Math.min(scrollVel * 28.0, 0.8);
     scrollT += (scrollTarget - scrollT) * adaptRate;
@@ -2093,16 +2142,18 @@
 
 
 
-    hscrollCurr += (hscrollTgt - hscrollCurr) * 0.06;
-    const camAngle = (hscrollCurr - 0.5) * Math.PI * 0.4;
-    const targetCamX = Math.sin(camAngle) * 12.0 + mouseCamX;
-    const targetCamY = Math.cos(hscrollCurr * Math.PI * 2) * 1.5 + mouseCamY;
-    const targetCamZ = 42.0 - Math.sin(hscrollCurr * Math.PI) * 4.0;
+    updateCameraGoal();
+    const targetCamX = camGoal.x + mouseCamX;
+    const targetCamY = camGoal.y + mouseCamY;
+    const targetCamZ = camGoal.z;
+    const camEase = REDUCED_MOTION ? 0.2 : 0.045;
 
-    camera.position.x += (targetCamX - camera.position.x) * 0.05;
-    camera.position.y += (targetCamY - camera.position.y) * 0.05;
-    camera.position.z += (targetCamZ - camera.position.z) * 0.05;
-    camera.lookAt(0, 0, 0);
+    camera.position.x += (targetCamX - camera.position.x) * camEase;
+    camera.position.y += (targetCamY - camera.position.y) * camEase;
+    camera.position.z += (targetCamZ - camera.position.z) * camEase;
+    camLook.x += (camGoal.lx - camLook.x) * camEase;
+    camLook.y += (camGoal.ly - camLook.y) * camEase;
+    camera.lookAt(camLook.x, camLook.y, 0);
 
     if (fluidEffect) {
       fluidEffect.render();

@@ -5,9 +5,9 @@
 
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SANDUN — Full Stack Software Engineer</title>
+  <title>Sandun Rathnayake — Full-Stack Software Engineer</title>
   <meta name="description"
-    content="Full Stack Software Engineer crafting beautiful, performant digital experiences. © 2026 Sandun Rathnayake." />
+    content="Sandun Rathnayake is a full-stack software engineer in Colombo building enterprise backends, mobile apps and AI features." />
 
   <meta name="author" content="Sandun Rathnayake" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -24,6 +24,8 @@
 
 <body data-theme="dark">
 
+  <a class="skip-link" href="#work">Skip to projects</a>
+
   <div id="loader" class="loader" aria-hidden="true">
     <div class="loader__center">
       <div class="loader__ball-container">
@@ -31,13 +33,7 @@
         <div class="loader__ball-ripple"></div>
         <div class="loader__white-ball" id="loader-ball"></div>
       </div>
-      <span class="loader__label" id="loader-label">0%</span>
     </div>
-  </div>
-
-  <div id="cursor" class="cursor" aria-hidden="true">
-    <div class="cursor__dot"></div>
-    <div class="cursor__ring"></div>
   </div>
 
   <div id="canvas-overlay" class="canvas-overlay" aria-hidden="true">
@@ -46,110 +42,72 @@
 
   <header class="nav" id="nav">
     <div class="nav__left">
-      <a href="#hero" class="nav__logo" id="nav-logo" aria-label="Sandun Rathnayake — Home">
+      <a href="#hero" class="nav__logo" id="nav-logo" aria-label="Sandun Rathnayake — back to top">
         <span class="nav__logo-name">sandun</span><span class="nav__logo-dot">.dev</span>
       </a>
     </div>
     <nav class="nav__links" aria-label="Main navigation">
-      <button class="nav__link" data-scroll-to="skills" id="nav-skills">
-        Skills
-      </button>
-      <button class="nav__link" data-scroll-to="experience" id="nav-experience">
-        Experience
-      </button>
-      <button class="nav__link" data-scroll-to="work" id="nav-work">
-        Work
-      </button>
-      <button class="nav__link" data-scroll-to="contact" id="nav-contact">
-        Contact
-      </button>
+      <a href="#work" class="nav__link" data-scroll-to="work" id="nav-work">Projects</a>
+      <a href="#experience" class="nav__link" data-scroll-to="experience" id="nav-experience">Experience</a>
+      <a href="#skills" class="nav__link" data-scroll-to="skills" id="nav-skills">Skills</a>
+      <a href="#contact" class="nav__link nav__link--cta" data-scroll-to="contact" id="nav-contact">Contact</a>
     </nav>
   </header>
-
-  <div class="status-bar" id="status-bar" aria-hidden="true">
-    <span class="status-bar__time" id="live-clock">--:--:--</span>
-    <span class="status-bar__coords" id="mouse-coords">0000 X / 0000 Y</span>
-    <span class="status-bar__tz">GMT+5:30 LK</span>
-  </div>
-
 
   <main id="scroll-container">
     <section id="hero" class="hero section">
 
       <div class="hero__center">
-        <div class="hero__eyebrow reveal-text">
-          <span class="hero__avail-dot"></span>
-          <span>Available for opportunities</span>
-          <span class="hero__divider">·</span>
-          <span>Colombo, LK</span>
-        </div>
+        <p class="hero__eyebrow reveal-text">
+          <span class="hero__avail-dot" aria-hidden="true"></span>
+          Open to new roles, based in Colombo, Sri Lanka
+        </p>
 
-        <div class="hero__headline">
-          <div class="hero__line reveal-line"><span>Sandun</span></div>
-          <div class="hero__line reveal-line"><span>Rathnayake</span></div>
-        </div>
+        <h1 class="hero__headline">
+          <span class="hero__line reveal-line"><span>Sandun</span></span>
+          <span class="hero__line reveal-line"><span>Rathnayake</span></span>
+        </h1>
 
-        <div class="hero__tagline reveal-text">
-          Full-Stack Software Engineer — crafting scalable systems,<br>
-          enterprise backends &amp; AI-powered products.
-        </div>
+        <p class="hero__tagline reveal-text">
+          Full-stack software engineer. I build enterprise backends, mobile apps and AI features,
+          and I currently lead engineering on WriteScan, an OCR app with 100K+ installs.
+        </p>
       </div>
 
       <div class="hero__bottom reveal-text">
-        <div class="hero__stats">
+        <dl class="hero__stats">
           <div class="hero__stat">
-            <span class="hero__stat-num">2+</span>
-            <span class="hero__stat-label">Years Experience</span>
+            <dt class="hero__stat-label">Years building software</dt>
+            <dd class="hero__stat-num">3+</dd>
           </div>
           <div class="hero__stat">
-            <span class="hero__stat-num">6+</span>
-            <span class="hero__stat-label">Projects Shipped</span>
+            <dt class="hero__stat-label">Apps shipped</dt>
+            <dd class="hero__stat-num">6+</dd>
           </div>
           <div class="hero__stat">
-            <span class="hero__stat-num">700K+</span>
-            <span class="hero__stat-label">App Downloads</span>
+            <dt class="hero__stat-label">Installs across all apps</dt>
+            <dd class="hero__stat-num">700K+</dd>
           </div>
-        </div>
+        </dl>
         <div class="hero__actions">
-          <button class="hero__cta hero__cta--primary" data-scroll-to="work">View Work ↓</button>
-          <button class="hero__cta hero__cta--ghost" data-scroll-to="contact">Contact ↗</button>
+          <a href="#work" class="hero__cta hero__cta--primary" data-scroll-to="work">See my work</a>
+          <a href="mailto:sandunbuddika09@gmail.com" class="hero__cta hero__cta--ghost">Email me</a>
         </div>
-      </div>
-
-      <div class="hero__scroll-hint reveal-text" aria-hidden="true">
-        <span class="hero__scroll-line"></span>
-        <span>scroll</span>
       </div>
     </section>
 
-    <section id="about" class="about section">
+    <section id="about" class="about section" aria-labelledby="about-title">
       <div class="hud-container">
-
-        <div class="hud-top-rail reveal-text">
-          <div class="hud-rail-item">
-            <span class="hud-status-led"></span>
-            <span class="hud-mono">SYS.SPEC // SANDUN RATHNAYAKE</span>
-          </div>
-          <div class="hud-rail-item hud-mono">
-            <span>LAT 06°55'N · LON 79°53'E</span>
-            <span class="hud-sep">/</span>
-            <span>GMT+5:30 LK</span>
-          </div>
-        </div>
 
         <div class="hud-spatial-grid">
 
           <div class="hud-beacon hud-beacon--tl reveal-text">
-            <div class="hud-beacon-reticle"></div>
-            <span class="hud-beacon-idx">[01 // TRACTION]</span>
             <div class="hud-beacon-val">700K+</div>
-            <div class="hud-beacon-title">Production Installs</div>
-            <div class="hud-beacon-desc">Across Built Applications</div>
+            <div class="hud-beacon-title">App installs</div>
+            <div class="hud-beacon-desc">Across all the apps I've shipped</div>
           </div>
 
           <div class="hud-beacon hud-beacon--tr reveal-text">
-            <div class="hud-beacon-reticle"></div>
-            <span class="hud-beacon-idx">[02 // CREDENTIALS]</span>
             <div class="hud-beacon-val">BSc (Hons)</div>
             <div class="hud-beacon-title">Software Engineering</div>
             <div class="hud-beacon-desc">Birmingham City University, UK</div>
@@ -157,61 +115,31 @@
 
           <div class="hud-core-center">
             <div class="hud-frame">
-              <span class="hud-bracket hud-bracket--tl"></span>
-              <span class="hud-bracket hud-bracket--tr"></span>
-              <span class="hud-bracket hud-bracket--bl"></span>
-              <span class="hud-bracket hud-bracket--br"></span>
-
-              <div class="hud-frame-header">
-                <span class="hud-pill-tag">ENGINEERING PHILOSOPHY</span>
-                <span class="hud-mono-tag">LEVEL 04 // LEAD</span>
-              </div>
-
-              <h2 class="hud-statement reveal-text">
-                I DESIGN, DEVELOP, AND DEPLOY <span class="hud-glow-word">SCALABLE ENTERPRISE SOLUTIONS</span> —
-                COMBINING ROBUST ARCHITECTURE WITH <span class="hud-glow-word">RESPONSIVE CLIENT EXPERIENCES</span>
-                ACROSS MOBILE AND WEB.
+              <h2 class="hud-statement reveal-text" id="about-title">
+                I design, build and ship scalable backend systems, and the mobile and web apps people use on top
+                of them.
               </h2>
 
               <p class="hud-bio reveal-text">
-                Project Leader at <a href="https://linkedin.com/in/sandun09" class="hud-link" target="_blank"
-                  rel="noopener">Lakmini International (Pvt) Ltd</a>. Specializing in high-throughput enterprise
-                backends, mobile systems, and computer vision AI pipelines.
+                I'm Project Leader at <a href="https://linkedin.com/in/sandun09" class="hud-link" target="_blank"
+                  rel="noopener">Lakmini International (Pvt) Ltd</a>, where I run sprints, review architecture and
+                work on Java EE backends, React Native apps and computer-vision features.
               </p>
             </div>
           </div>
 
           <div class="hud-beacon hud-beacon--bl reveal-text">
-            <div class="hud-beacon-reticle"></div>
-            <span class="hud-beacon-idx">[03 // LEADERSHIP]</span>
-            <div class="hud-beacon-val">02+ Yrs</div>
-            <div class="hud-beacon-title">Engineering Leadership</div>
-            <div class="hud-beacon-desc">Sprint &amp; Architecture Delivery</div>
+            <div class="hud-beacon-val">Since 2024</div>
+            <div class="hud-beacon-title">Leading a team</div>
+            <div class="hud-beacon-desc">Sprint planning and architecture reviews</div>
           </div>
 
           <div class="hud-beacon hud-beacon--br reveal-text">
-            <div class="hud-beacon-reticle"></div>
-            <span class="hud-beacon-idx">[04 // TECH STACK]</span>
-            <div class="hud-beacon-val">ENTERPRISE</div>
-            <div class="hud-beacon-title">Distributed Core</div>
-            <div class="hud-beacon-desc">Java EE · React Native · WebGL</div>
+            <div class="hud-beacon-val">Full stack</div>
+            <div class="hud-beacon-title">Backend to mobile</div>
+            <div class="hud-beacon-desc">Java EE, React Native, Three.js</div>
           </div>
 
-        </div>
-
-        <div class="hud-bottom-rail reveal-text">
-          <div class="hud-spectrum-box">
-            <div class="hud-spectrum-meta">
-              <span class="hud-mono">QUANTUM FREQUENCY HARMONIC SCANNER</span>
-              <span class="hud-freq-val" id="hud-freq-display">1420.405 MHz</span>
-            </div>
-            <canvas id="hud-spectrum-canvas" class="hud-spectrum-canvas" width="460" height="36"
-              aria-hidden="true"></canvas>
-          </div>
-          <button class="hud-nav-cta" data-scroll-to="skills">
-            <span>Explore Technical Stack</span>
-            <span class="hud-cta-arrow">↓</span>
-          </button>
         </div>
 
       </div>
@@ -219,163 +147,151 @@
 
     <div class="hscroll-zone" id="hscroll-zone">
       <div class="hscroll-sticky">
-
-        <!-- Panel progress nav -->
-        <nav class="hscroll-nav" aria-label="Section navigation">
-          <div class="hscroll-pill-dock">
-            <button class="hscroll-pill active" data-panel="0">
-              <span class="hscroll-pill__num">01</span>
-              <span class="hscroll-pill__text">Stack</span>
-            </button>
-            <button class="hscroll-pill" data-panel="1">
-              <span class="hscroll-pill__num">02</span>
-              <span class="hscroll-pill__text">Experience</span>
-            </button>
-            <button class="hscroll-pill" data-panel="2">
-              <span class="hscroll-pill__num">03</span>
-              <span class="hscroll-pill__text">Education</span>
-            </button>
-            <button class="hscroll-pill" data-panel="3">
-              <span class="hscroll-pill__num">04</span>
-              <span class="hscroll-pill__text">Projects</span>
-            </button>
-          </div>
-        </nav>
-
         <div class="hscroll-track" id="hscroll-track">
 
-          <section id="skills" class="hscroll-panel section">
-            <div class="spatial-panel">
-
-              <header class="spatial-header">
-                <span class="spatial-eyebrow"><span class="spatial-dot"></span>01 / CAPABILITIES</span>
-                <h2 class="spatial-title">Core Engineering &amp; Architecture</h2>
-                <p class="spatial-sub">Engineered for extreme reliability, low latency, and distributed scale.</p>
+          <section id="work" class="hscroll-panel section" aria-labelledby="work-title">
+            <div class="spatial-panel spatial-panel--wide">
+              <header class="spatial-header spatial-header--split">
+                <div>
+                  <h2 class="spatial-title" id="work-title">Selected projects</h2>
+                  <p class="spatial-sub">Mobile apps, web platforms and real-time clients I've built.</p>
+                </div>
+                <p class="spatial-action-hint">Open a project to see what I built and how.</p>
               </header>
 
-              <div class="spatial-stack-grid">
-                <div class="spatial-card" data-tilt-3d>
-                  <div class="spatial-card__glow"></div>
-                  <div class="spatial-card__top">
-                    <span class="spatial-badge">01 · ENTERPRISE</span>
-                    <span class="spatial-pill-tag">High Throughput</span>
-                  </div>
-                  <h3 class="spatial-card__heading">Backend &amp; Distributed Systems</h3>
-                  <p class="spatial-card__text">Microservices, transaction-safe domain logic, robust API controllers,
-                    and relational persistence.</p>
-                  <div class="spatial-card__chips">
-                    <span>Java EE</span>
-                    <span>Jakarta</span>
-                    <span>Spring Boot</span>
-                    <span>Python</span>
-                    <span>C++</span>
-                    <span>Node.js</span>
-                    <span>Hibernate ORM</span>
-                    <span>REST APIs</span>
-                  </div>
-                </div>
+              <div class="spatial-work-grid">
+                <article class="work__item spatial-work-card" data-index="1">
+                  <a href="#project-writescan" class="work__link spatial-work-card__link">
+                    <div class="spatial-work-card__media">
+                      <div class="spatial-work-card__bg" role="img" aria-label="WriteScan app scanning a handwritten page"
+                        style="background-image: url('img/projects/writescan.jpg');"></div>
+                      <span class="spatial-pill-tag spatial-pill-tag--accent">100K+ installs</span>
+                    </div>
+                    <div class="spatial-work-card__body">
+                      <div class="spatial-work-card__meta">
+                        <span>Mobile app with AI</span>
+                        <span>2024</span>
+                      </div>
+                      <h3 class="spatial-work-card__title">WriteScan, an OCR and AI mobile app</h3>
+                      <p class="spatial-work-card__desc">Scan documents with the camera, extract the text and ask
+                        questions about it.</p>
+                      <div class="spatial-card__chips">
+                        <span>React Native</span>
+                        <span>OpenAI</span>
+                        <span>Java EE</span>
+                      </div>
+                      <span class="spatial-work-card__more">View project</span>
+                    </div>
+                  </a>
+                </article>
 
-                <div class="spatial-card" data-tilt-3d>
-                  <div class="spatial-card__glow"></div>
-                  <div class="spatial-card__top">
-                    <span class="spatial-badge">02 · CLIENT &amp; 3D</span>
-                    <span class="spatial-pill-tag">Interactive</span>
-                  </div>
-                  <h3 class="spatial-card__heading">Mobile &amp; WebGL Visual Systems</h3>
-                  <p class="spatial-card__text">State-driven mobile runtimes, native OS features, and GPU-accelerated 3D
-                    WebGL experiences.</p>
-                  <div class="spatial-card__chips">
-                    <span>React Native</span>
-                    <span>Android SDK</span>
-                    <span>TypeScript</span>
-                    <span>Three.js</span>
-                    <span>WebGL / GLSL</span>
-                    <span>React.js</span>
-                    <span>Modern CSS3</span>
-                  </div>
-                </div>
+                <article class="work__item spatial-work-card" data-index="2">
+                  <a href="#project-ecommerce" class="work__link spatial-work-card__link">
+                    <div class="spatial-work-card__media">
+                      <div class="spatial-work-card__bg" role="img" aria-label="E-commerce admin dashboard"
+                        style="background-image: url('img/projects/ecommerce.jpg');"></div>
+                    </div>
+                    <div class="spatial-work-card__body">
+                      <div class="spatial-work-card__meta">
+                        <span>Web platform</span>
+                        <span>2024</span>
+                      </div>
+                      <h3 class="spatial-work-card__title">E-commerce web platform</h3>
+                      <p class="spatial-work-card__desc">An online store with a product catalogue, cart and checkout,
+                        built on MVC.</p>
+                      <div class="spatial-card__chips">
+                        <span>Java EE</span>
+                        <span>Hibernate</span>
+                        <span>MySQL</span>
+                      </div>
+                      <span class="spatial-work-card__more">View project</span>
+                    </div>
+                  </a>
+                </article>
 
-                <div class="spatial-card" data-tilt-3d>
-                  <div class="spatial-card__glow"></div>
-                  <div class="spatial-card__top">
-                    <span class="spatial-badge">03 · PERSISTENCE</span>
-                    <span class="spatial-pill-tag">ACID Compliant</span>
-                  </div>
-                  <h3 class="spatial-card__heading">Data Infrastructure &amp; Scaling</h3>
-                  <p class="spatial-card__text">Optimized relational schemas, query plan tuning, connection pooling, and
-                    real-time synchronisation.</p>
-                  <div class="spatial-card__chips">
-                    <span>PostgreSQL</span>
-                    <span>MySQL</span>
-                    <span>SQLite</span>
-                    <span>Firebase</span>
-                    <span>Database Indexing</span>
-                    <span>Schema Optimization</span>
-                  </div>
-                </div>
+                <article class="work__item spatial-work-card" data-index="4">
+                  <a href="#project-messaging" class="work__link spatial-work-card__link">
+                    <div class="spatial-work-card__media">
+                      <div class="spatial-work-card__bg" role="img" aria-label="Chat app conversation screens"
+                        style="background-image: url('img/projects/chat.jpg');"></div>
+                    </div>
+                    <div class="spatial-work-card__body">
+                      <div class="spatial-work-card__meta">
+                        <span>Real-time messaging</span>
+                        <span>2024</span>
+                      </div>
+                      <h3 class="spatial-work-card__title">Real-time messaging app</h3>
+                      <p class="spatial-work-card__desc">A mobile chat app where messages arrive instantly over
+                        WebSockets.</p>
+                      <div class="spatial-card__chips">
+                        <span>React Native</span>
+                        <span>WebSocket</span>
+                        <span>TypeScript</span>
+                      </div>
+                      <span class="spatial-work-card__more">View project</span>
+                    </div>
+                  </a>
+                </article>
 
-                <div class="spatial-card" data-tilt-3d>
-                  <div class="spatial-card__glow"></div>
-                  <div class="spatial-card__top">
-                    <span class="spatial-badge">04 · INTELLIGENCE</span>
-                    <span class="spatial-pill-tag">Production AI</span>
-                  </div>
-                  <h3 class="spatial-card__heading">Applied AI &amp; Cloud DevOps</h3>
-                  <p class="spatial-card__text">Vision models, real-time computer vision OCR, WebSocket pipelines, and
-                    automated continuous delivery.</p>
-                  <div class="spatial-card__chips">
-                    <span>OpenAI API</span>
-                    <span>Camera OCR</span>
-                    <span>WebSockets</span>
-                    <span>Docker</span>
-                    <span>Git / GitHub</span>
-                    <span>CI/CD Pipelines</span>
-                  </div>
-                </div>
+                <article class="work__item spatial-work-card" data-index="3">
+                  <a href="#project-food-waste" class="work__link spatial-work-card__link">
+                    <div class="spatial-work-card__media">
+                      <div class="spatial-work-card__bg" role="img" aria-label="Food waste app showing discounted items"
+                        style="background-image: url('img/projects/foodwaste.jpg');"></div>
+                    </div>
+                    <div class="spatial-work-card__body">
+                      <div class="spatial-work-card__meta">
+                        <span>Android app</span>
+                        <span>2024</span>
+                      </div>
+                      <h3 class="spatial-work-card__title">Food waste reduction app</h3>
+                      <p class="spatial-work-card__desc">Helps shops sell near-expiry food at a discount instead of
+                        throwing it away.</p>
+                      <div class="spatial-card__chips">
+                        <span>Android SDK</span>
+                        <span>Java</span>
+                        <span>REST API</span>
+                      </div>
+                      <span class="spatial-work-card__more">View project</span>
+                    </div>
+                  </a>
+                </article>
               </div>
             </div>
           </section>
 
-          <section id="experience" class="hscroll-panel section">
+          <section id="experience" class="hscroll-panel section" aria-labelledby="experience-title">
             <div class="spatial-panel">
               <header class="spatial-header">
-                <span class="spatial-eyebrow"><span class="spatial-dot"></span>02 / TRACK RECORD</span>
-                <h2 class="spatial-title">Career &amp; Engineering Leadership</h2>
-                <p class="spatial-sub">Production impact across enterprise platforms and scaled mobile products.</p>
+                <h2 class="spatial-title" id="experience-title">Experience</h2>
               </header>
 
               <div class="spatial-dual-grid">
-                <div class="spatial-card spatial-card--featured" data-tilt-3d>
+                <div class="spatial-card spatial-card--featured">
                   <div class="spatial-card__glow"></div>
                   <div class="spatial-dossier-header">
                     <div>
-                      <span class="spatial-badge spatial-badge--pulse">CURRENT LEADERSHIP</span>
-                      <h3 class="spatial-card__heading spatial-card__heading--lg">Project Leader &amp; Full-Stack
+                      <span class="spatial-badge spatial-badge--pulse">Current role</span>
+                      <h3 class="spatial-card__heading spatial-card__heading--lg">Project Leader and Full-Stack
                         Engineer</h3>
-                      <p class="spatial-dossier-co">Lakmini International (Pvt) Ltd · Colombo, LK</p>
+                      <p class="spatial-dossier-co">Lakmini International (Pvt) Ltd, Colombo</p>
                     </div>
-                    <span class="spatial-date-pill">Sep 2024 — Present</span>
+                    <span class="spatial-date-pill">Sep 2024 – present</span>
                   </div>
 
-                  <div class="spatial-metric-strip">
+                  <dl class="spatial-metric-strip">
                     <div class="spatial-metric">
-                      <span class="spatial-metric__value">100K+</span>
-                      <span class="spatial-metric__label">Active Downloads</span>
+                      <dt class="spatial-metric__label">WriteScan installs</dt>
+                      <dd class="spatial-metric__value">100K+</dd>
                     </div>
                     <div class="spatial-metric">
-                      <span class="spatial-metric__value">&lt;350ms</span>
-                      <span class="spatial-metric__label">API Latency</span>
+                      <dt class="spatial-metric__label">API response time</dt>
+                      <dd class="spatial-metric__value">&lt;350ms</dd>
                     </div>
-                    <div class="spatial-metric">
-                      <span class="spatial-metric__value">Core</span>
-                      <span class="spatial-metric__label">Architecture Lead</span>
-                    </div>
-                  </div>
+                  </dl>
 
-                  <p class="spatial-card__text">Spearheading end-to-end engineering for <strong>WriteScan</strong>, an
-                    AI-powered document scanner and OCR mobile platform with over 100K+ production installs.
-                    Orchestrating sprint delivery, conducting architectural reviews, and hardening Java EE backend
-                    services.</p>
+                  <p class="spatial-card__text">I lead engineering on <strong>WriteScan</strong>, an AI document
+                    scanner and OCR app. I plan sprints, review architecture and harden the Java EE backend.</p>
 
                   <div class="spatial-card__chips">
                     <span>Java EE</span>
@@ -387,35 +303,18 @@
                   </div>
                 </div>
 
-                <div class="spatial-card" data-tilt-3d>
+                <div class="spatial-card">
                   <div class="spatial-card__glow"></div>
                   <div class="spatial-dossier-header">
                     <div>
-                      <span class="spatial-badge">FOUNDATIONAL ROLE</span>
                       <h3 class="spatial-card__heading spatial-card__heading--lg">Full-Stack Software Engineer</h3>
-                      <p class="spatial-dossier-co">JsoftLK · Sri Lanka</p>
+                      <p class="spatial-dossier-co">JsoftLK, Sri Lanka</p>
                     </div>
-                    <span class="spatial-date-pill">Jan 2021 — Jun 2022</span>
+                    <span class="spatial-date-pill">Jan 2021 – Jun 2022</span>
                   </div>
 
-                  <div class="spatial-metric-strip">
-                    <div class="spatial-metric">
-                      <span class="spatial-metric__value">100%</span>
-                      <span class="spatial-metric__label">On-Time Delivery</span>
-                    </div>
-                    <div class="spatial-metric">
-                      <span class="spatial-metric__value">RBAC</span>
-                      <span class="spatial-metric__label">Security Layer</span>
-                    </div>
-                    <div class="spatial-metric">
-                      <span class="spatial-metric__value">Live</span>
-                      <span class="spatial-metric__label">Firebase Sync</span>
-                    </div>
-                  </div>
-
-                  <p class="spatial-card__text">Engineered commercial client web portals and native Android apps.
-                    Designed role-based authentication hierarchies, real-time Firebase datastores, and responsive
-                    administrative dashboards under agile sprints.</p>
+                  <p class="spatial-card__text">Built client web portals and native Android apps: role-based access
+                    control, real-time Firebase data and admin dashboards, delivered in agile sprints.</p>
 
                   <div class="spatial-card__chips">
                     <span>Java</span>
@@ -430,31 +329,99 @@
             </div>
           </section>
 
-          <section id="education" class="hscroll-panel section">
+          <section id="skills" class="hscroll-panel section" aria-labelledby="skills-title">
+            <div class="spatial-panel">
+
+              <header class="spatial-header">
+                <h2 class="spatial-title" id="skills-title">Skills</h2>
+              </header>
+
+              <div class="spatial-stack-grid">
+                <div class="spatial-card">
+                  <div class="spatial-card__glow"></div>
+                  <h3 class="spatial-card__heading">Backend</h3>
+                  <p class="spatial-card__text">Microservices, transaction-safe business logic, REST APIs and
+                    relational data.</p>
+                  <div class="spatial-card__chips">
+                    <span>Java EE</span>
+                    <span>Jakarta</span>
+                    <span>Spring Boot</span>
+                    <span>Python</span>
+                    <span>C++</span>
+                    <span>Node.js</span>
+                    <span>Hibernate ORM</span>
+                    <span>REST APIs</span>
+                  </div>
+                </div>
+
+                <div class="spatial-card">
+                  <div class="spatial-card__glow"></div>
+                  <h3 class="spatial-card__heading">Mobile, web and 3D</h3>
+                  <p class="spatial-card__text">Mobile apps that use native device features, and GPU-accelerated 3D
+                    on the web.</p>
+                  <div class="spatial-card__chips">
+                    <span>React Native</span>
+                    <span>Android SDK</span>
+                    <span>TypeScript</span>
+                    <span>Three.js</span>
+                    <span>WebGL / GLSL</span>
+                    <span>React.js</span>
+                    <span>Modern CSS</span>
+                  </div>
+                </div>
+
+                <div class="spatial-card">
+                  <div class="spatial-card__glow"></div>
+                  <h3 class="spatial-card__heading">Databases</h3>
+                  <p class="spatial-card__text">Schema design, query tuning, connection pooling and real-time sync.
+                  </p>
+                  <div class="spatial-card__chips">
+                    <span>PostgreSQL</span>
+                    <span>MySQL</span>
+                    <span>SQLite</span>
+                    <span>Firebase</span>
+                    <span>Indexing</span>
+                  </div>
+                </div>
+
+                <div class="spatial-card">
+                  <div class="spatial-card__glow"></div>
+                  <h3 class="spatial-card__heading">AI and DevOps</h3>
+                  <p class="spatial-card__text">Vision models, camera OCR, WebSocket pipelines and automated
+                    deployment.</p>
+                  <div class="spatial-card__chips">
+                    <span>OpenAI API</span>
+                    <span>Camera OCR</span>
+                    <span>WebSockets</span>
+                    <span>Docker</span>
+                    <span>Git / GitHub</span>
+                    <span>CI/CD</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section id="education" class="hscroll-panel section" aria-labelledby="education-title">
             <div class="spatial-panel">
               <header class="spatial-header">
-                <span class="spatial-eyebrow"><span class="spatial-dot"></span>03 / QUALIFICATIONS</span>
-                <h2 class="spatial-title">Academic &amp; Professional Credentials</h2>
-                <p class="spatial-sub">British university degree in software engineering and enterprise systems
-                  specialization.</p>
+                <h2 class="spatial-title" id="education-title">Education</h2>
               </header>
 
               <div class="spatial-dual-grid">
-                <div class="spatial-card spatial-card--featured" data-tilt-3d>
+                <div class="spatial-card spatial-card--featured">
                   <div class="spatial-card__glow"></div>
                   <div class="spatial-dossier-header">
                     <div>
-                      <span class="spatial-badge spatial-badge--gold">UK HONOURS DEGREE</span>
                       <h3 class="spatial-card__heading spatial-card__heading--lg">BSc (Hons) in Software Engineering
                       </h3>
-                      <p class="spatial-dossier-co">Birmingham City University · United Kingdom</p>
+                      <p class="spatial-dossier-co">Birmingham City University, United Kingdom</p>
                     </div>
-                    <span class="spatial-date-pill">2023 — 2024</span>
+                    <span class="spatial-date-pill">2023 – 2024</span>
                   </div>
 
-                  <p class="spatial-card__text">Rigorous British university curriculum with deep theoretical and
-                    practical focus on high-reliability distributed systems, software engineering economics, complex
-                    algorithmic analysis, and cloud architectures.</p>
+                  <p class="spatial-card__text">Distributed systems, software architecture, algorithm analysis and
+                    cloud computing.</p>
 
                   <div class="spatial-card__chips">
                     <span>Distributed Systems</span>
@@ -465,27 +432,25 @@
                   </div>
                 </div>
 
-                <div class="spatial-card" data-tilt-3d>
+                <div class="spatial-card">
                   <div class="spatial-card__glow"></div>
                   <div class="spatial-dossier-header">
                     <div>
-                      <span class="spatial-badge spatial-badge--purple">ENTERPRISE DIPLOMA</span>
                       <h3 class="spatial-card__heading spatial-card__heading--lg">Diploma in Professional Software
                         Engineering</h3>
-                      <p class="spatial-dossier-co">Java Institute Sri Lanka</p>
+                      <p class="spatial-dossier-co">Java Institute, Sri Lanka</p>
                     </div>
-                    <span class="spatial-date-pill">2023 — 2024</span>
+                    <span class="spatial-date-pill">2023 – 2024</span>
                   </div>
 
-                  <p class="spatial-card__text">Intensive enterprise software engineering program focusing on Enterprise
-                    JavaBeans (EJB), Jakarta EE specifications, enterprise design patterns, ACID transactional
-                    isolation, and relational database modeling.</p>
+                  <p class="spatial-card__text">Enterprise Java: EJB, Jakarta EE, design patterns, transactions and
+                    relational database modelling.</p>
 
                   <div class="spatial-card__chips">
                     <span>Enterprise Java (EE)</span>
-                    <span>EJB Architecture</span>
+                    <span>EJB</span>
                     <span>Jakarta Persistence</span>
-                    <span>Relational Database Modeling</span>
+                    <span>Database Modelling</span>
                     <span>Design Patterns</span>
                   </div>
                 </div>
@@ -493,181 +458,68 @@
             </div>
           </section>
 
-          <section id="work" class="hscroll-panel section">
-            <div class="spatial-panel spatial-panel--wide">
-              <header class="spatial-header spatial-header--split">
-                <div>
-                  <span class="spatial-eyebrow"><span class="spatial-dot"></span>04 / PRODUCTION WORK</span>
-                  <h2 class="spatial-title">Selected Software Systems</h2>
-                  <p class="spatial-sub">High-traffic mobile applications, enterprise platforms, and real-time clients.
-                  </p>
-                </div>
-                <span class="spatial-action-hint">Click card to inspect telemetry &amp; architecture ↗</span>
-              </header>
-
-              <div class="spatial-work-grid">
-                <article class="work__item spatial-work-card" data-tilt-3d data-index="1">
-                  <a href="#" class="work__link spatial-work-card__link" aria-label="WriteScan — AI Document Scanner">
-                    <div class="spatial-work-card__media">
-                      <div class="spatial-work-card__bg" style="background-image: url('img/projects/writescan.jpg');">
-                      </div>
-                      <span class="spatial-pill-tag spatial-pill-tag--accent">100K+ DOWNLOADS</span>
-                    </div>
-                    <div class="spatial-work-card__body">
-                      <div class="spatial-work-card__meta">
-                        <span>Mobile · AI Platform</span>
-                        <span>2024</span>
-                      </div>
-                      <h3 class="spatial-work-card__title">WriteScan — OCR &amp; AI Mobile App</h3>
-                      <p class="spatial-work-card__desc">AI scanner with native camera OCR and OpenAI conversational
-                        intelligence.</p>
-                      <div class="spatial-card__chips">
-                        <span>React Native</span>
-                        <span>OpenAI</span>
-                        <span>Java EE</span>
-                      </div>
-                    </div>
-                  </a>
-                </article>
-
-                <article class="work__item spatial-work-card" data-tilt-3d data-index="2">
-                  <a href="#" class="work__link spatial-work-card__link" aria-label="E-Commerce Web Platform">
-                    <div class="spatial-work-card__media">
-                      <div class="spatial-work-card__bg" style="background-image: url('img/projects/ecommerce.jpg');">
-                      </div>
-                      <span class="spatial-pill-tag">ENTERPRISE MVC</span>
-                    </div>
-                    <div class="spatial-work-card__body">
-                      <div class="spatial-work-card__meta">
-                        <span>Web Platform</span>
-                        <span>2024</span>
-                      </div>
-                      <h3 class="spatial-work-card__title">E-Commerce Web Platform</h3>
-                      <p class="spatial-work-card__desc">Complete Model-View-Controller commercial storefront with
-                        catalog and payment gateway.</p>
-                      <div class="spatial-card__chips">
-                        <span>Java EE</span>
-                        <span>Hibernate</span>
-                        <span>MySQL</span>
-                      </div>
-                    </div>
-                  </a>
-                </article>
-
-                <article class="work__item spatial-work-card" data-tilt-3d data-index="4">
-                  <a href="#" class="work__link spatial-work-card__link" aria-label="Real-Time Messaging Client">
-                    <div class="spatial-work-card__media">
-                      <div class="spatial-work-card__bg" style="background-image: url('img/projects/chat.jpg');"></div>
-                      <span class="spatial-pill-tag">LOW LATENCY</span>
-                    </div>
-                    <div class="spatial-work-card__body">
-                      <div class="spatial-work-card__meta">
-                        <span>Real-Time Messaging</span>
-                        <span>2024</span>
-                      </div>
-                      <h3 class="spatial-work-card__title">Real-Time Messaging Client</h3>
-                      <p class="spatial-work-card__desc">High-speed mobile chat client with duplex WebSocket channels
-                        and instant sync.</p>
-                      <div class="spatial-card__chips">
-                        <span>React Native</span>
-                        <span>WebSocket</span>
-                        <span>TypeScript</span>
-                      </div>
-                    </div>
-                  </a>
-                </article>
-
-                <article class="work__item spatial-work-card" data-tilt-3d data-index="3">
-                  <a href="#" class="work__link spatial-work-card__link" aria-label="Food Waste Reduction App">
-                    <div class="spatial-work-card__media">
-                      <div class="spatial-work-card__bg" style="background-image: url('img/projects/foodwaste.jpg');">
-                      </div>
-                      <span class="spatial-pill-tag">SUSTAINABILITY</span>
-                    </div>
-                    <div class="spatial-work-card__body">
-                      <div class="spatial-work-card__meta">
-                        <span>Android App</span>
-                        <span>2024</span>
-                      </div>
-                      <h3 class="spatial-work-card__title">Food Waste Reduction System</h3>
-                      <p class="spatial-work-card__desc">Native Android commercial app reducing retail waste through
-                        dynamic pricing feeds.</p>
-                      <div class="spatial-card__chips">
-                        <span>Android SDK</span>
-                        <span>Java</span>
-                        <span>REST API</span>
-                      </div>
-                    </div>
-                  </a>
-                </article>
-              </div>
-            </div>
-          </section>
-
         </div>
       </div>
     </div>
 
-    <!-- ══ MANIFESTO SECTION ══════════════════════════════════ -->
-    <section id="manifesto" class="manifesto section">
-      <div class="manifesto__sticky">
-        <div class="manifesto__lines">
-          <span class="manifesto__word reveal-manifesto">Engineering</span>
-          <span class="manifesto__word reveal-manifesto">with</span>
-          <span class="manifesto__word reveal-manifesto">excellence.</span>
-        </div>
-      </div>
-    </section>
-
     <!-- ══ CONTACT / FOOTER ═══════════════════════════════════ -->
-    <footer id="contact" class="contact section">
+    <footer id="contact" class="contact section" aria-labelledby="contact-title">
       <div class="contact__cta">
-        <div class="contact__line reveal-line"><span>Get In</span></div>
-        <div class="contact__line reveal-line"><span>Touch.</span></div>
-        <p class="contact__sub reveal-text">Open to full-time roles, freelance projects &amp; collaborations.</p>
+        <h2 class="contact__title" id="contact-title">
+          <span class="contact__line reveal-line"><span>Get in</span></span>
+          <span class="contact__line reveal-line"><span>touch.</span></span>
+        </h2>
+        <p class="contact__sub reveal-text">I'm open to full-time roles, freelance projects and collaborations.
+          Email is the fastest way to reach me.</p>
       </div>
 
+      <div class="contact__actions">
+        <a href="mailto:sandunbuddika09@gmail.com" class="contact__primary" id="contact-email">
+          sandunbuddika09@gmail.com
+        </a>
+        <button type="button" class="contact__copy" id="contact-copy" data-email="sandunbuddika09@gmail.com">
+          Copy email
+        </button>
+        <span class="contact__copy-status" id="contact-copy-status" role="status" aria-live="polite"></span>
+      </div>
+
+      <ul class="contact__socials">
+        <li><a href="https://linkedin.com/in/sandun09" target="_blank" rel="noopener noreferrer"
+            class="contact__social">LinkedIn</a></li>
+        <li><a href="https://github.com/Sandun-Rathnayake" target="_blank" rel="noopener noreferrer"
+            class="contact__social">GitHub</a></li>
+        <li><a href="tel:+94781178102" class="contact__social">+94 78 117 8102</a></li>
+      </ul>
 
       <div class="contact__terminal-wrap reveal-text">
+        <p class="contact__terminal-hint">Prefer a command line? Type <code>help</code> below.</p>
         <div class="terminal" id="contact-terminal">
-          <div class="terminal__header">
+          <div class="terminal__header" aria-hidden="true">
             <div class="terminal__buttons">
               <span class="terminal__btn terminal__btn--close"></span>
               <span class="terminal__btn terminal__btn--minimize"></span>
               <span class="terminal__btn terminal__btn--maximize"></span>
             </div>
-            <span class="terminal__title">bash — sandun@piliyandala — 80×24</span>
+            <span class="terminal__title">sandun@dev: ~</span>
           </div>
-          <div class="terminal__body">
-            <div id="terminal-logs"></div>
+          <div class="terminal__body" data-lenis-prevent>
+            <div id="terminal-logs" aria-live="polite"></div>
             <div class="terminal__prompt-line">
               <span class="terminal__prompt" id="terminal-prompt">sandun@dev:~$</span>
               <div class="terminal__input-wrapper">
                 <span class="terminal__typed" id="terminal-typed"></span>
                 <span class="terminal__cursor"></span>
-                <input type="text" class="terminal__input" id="terminal-input" autocomplete="off" spellcheck="false" />
+                <input type="text" class="terminal__input" id="terminal-input" autocomplete="off" spellcheck="false"
+                  aria-label="Terminal command" />
               </div>
             </div>
           </div>
         </div>
       </div>
 
-      <div class="contact__links">
-        <a href="mailto:sandunbuddika09@gmail.com" class="contact__email dotted-border" id="contact-email">
-          sandunbuddika09@gmail.com
-        </a>
-        <div class="contact__socials">
-          <a href="https://github.com/Sandun-Rathnayake" target="_blank" rel="noopener noreferrer"
-            class="contact__social dotted-border">GitHub</a>
-          <a href="https://linkedin.com/in/sandun09" target="_blank" rel="noopener noreferrer"
-            class="contact__social dotted-border">LinkedIn</a>
-          <a href="tel:+94781178102" class="contact__social dotted-border">+94 78 117 8102</a>
-        </div>
-      </div>
-
       <div class="contact__footer-bar">
         <span>© 2026 Sandun Rathnayake</span>
-        <span>Crafted with Three.js + Vanilla JS</span>
+        <span>Built with Three.js and vanilla JavaScript</span>
       </div>
     </footer>
   </main>
@@ -675,23 +527,29 @@
   <!-- ─── PROJECT DETAIL DRAWER ────────────────────────── -->
   <div class="project-drawer" id="project-drawer" aria-hidden="true">
     <div class="project-drawer__backdrop" id="project-drawer-backdrop"></div>
-    <div class="project-drawer__content">
-      <button class="project-drawer__close" id="project-drawer-close" aria-label="Close project">
-        <span>[ESC] CLOSE ×</span>
+    <div class="project-drawer__content" role="dialog" aria-modal="true" aria-labelledby="project-detail-title">
+      <button type="button" class="project-drawer__close" id="project-drawer-close" aria-label="Close project">
+        <span>Close</span>
       </button>
-      <div class="project-drawer__scroll" id="project-drawer-scroll">
+      <div class="project-drawer__scroll" id="project-drawer-scroll" data-lenis-prevent>
       </div>
     </div>
   </div>
 
   <!-- ─── SCRIPTS ────────────────────────────────────────── -->
-  <script src="https://cdn.jsdelivr.net/npm/lil-gui@0.19"></script>
+  <script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js"></script>
+  <script src="js/smooth-scroll.js"></script>
   <script src="js/mouse-fluid.js"></script>
   <script src="js/three-scene.js"></script>
-  <!-- <script src="js/control-panel.js"></script> -->
+  <script>
+    // Scene tuning panel and fps counter: only load with ?debug in the URL
+    if (/[?&]debug\b/.test(location.search)) {
+      document.write('<script src="https://cdn.jsdelivr.net/npm/lil-gui@0.19"><\/script><script src="js/control-panel.js"><\/script>');
+    }
+  </script>
   <script src="js/animations.js"></script>
-  <script src="js/hscroll.js"></script>
   <script src="js/ui.js"></script>
+  <script src="js/webgl-media.js"></script>
   <script src="js/projects.js"></script>
   <script src="js/terminal.js"></script>
   <script src="js/main.js"></script>

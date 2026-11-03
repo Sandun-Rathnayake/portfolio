@@ -136,7 +136,7 @@
         printLine("SANDUN RATHNAYAKE — FULL-STACK SOFTWARE ENGINEER");
         printLine("------------------------------------------------");
         printLine(
-          "Full-Stack Software Engineer with 2 years of experience designing,",
+          "Full-Stack Software Engineer with 3+ years of experience designing,",
         );
         printLine(
           "developing, and deploying scalable web applications & mobile solutions.",

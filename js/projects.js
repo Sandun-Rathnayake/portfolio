@@ -159,6 +159,15 @@
 
   // ── Global Animation Frame Tracker ────────────────────────
   let activeAnimationId = null;
+  let lastFocused = null;
+
+  // URL slugs for the project cards' data-index values
+  const SLUGS = {
+    1: "writescan",
+    2: "ecommerce",
+    3: "food-waste",
+    4: "messaging",
+  };
 
   // ── Initialize Project Details Drawer ─────────────────────
   function initProjectDrawer() {
@@ -188,50 +197,53 @@
         <div class="project-detail">
           <div class="project-detail__header">
             <span class="project-detail__year">${data.year}</span>
-            <h1 class="project-detail__title">${data.title}</h1>
-            <p class="project-detail__type">${data.type} — <strong>${data.role}</strong></p>
+            <h2 class="project-detail__title" id="project-detail-title">${data.title}</h2>
+            <p class="project-detail__type">${data.type}. My role: <strong>${data.role}</strong></p>
           </div>
 
           <div class="project-detail__grid">
             <div class="project-detail__info">
               <div class="project-detail__section">
-                <h3 class="project-detail__sub">01 — System Overview</h3>
+                <h3 class="project-detail__sub">Overview</h3>
                 <p class="project-detail__p">${data.summary}</p>
               </div>
 
               <div class="project-detail__section">
-                <h3 class="project-detail__sub">02 — Engineering Challenges</h3>
+                <h3 class="project-detail__sub">The challenge</h3>
                 <p class="project-detail__p">${data.challenge}</p>
               </div>
 
               <div class="project-detail__section">
-                <h3 class="project-detail__sub">03 — Key Achievements & Solutions</h3>
+                <h3 class="project-detail__sub">What I did</h3>
                 <ul class="project-detail__list">
                   ${data.achievements.map((ach) => `<li>${ach}</li>`).join("")}
                 </ul>
               </div>
 
               <div class="project-detail__section">
-                <h3 class="project-detail__sub">04 — Technologies Deployed</h3>
+                <h3 class="project-detail__sub">Tech used</h3>
                 <div class="project-detail__tags">
                   ${data.tech.map((t) => `<span class="skills__badge">${t}</span>`).join("")}
                 </div>
               </div>
 
+              <div class="project-detail__links">
+                <a href="${data.githubUrl}" class="project-detail__link" target="_blank" rel="noopener noreferrer">View code on GitHub</a>
+              </div>
             </div>
 
-            <div class="project-detail__telemetry">
+            <div class="project-detail__telemetry" aria-hidden="true">
               <div class="telemetry-panel">
                 <div class="telemetry-panel__header">
                   <div class="telemetry-panel__status-dot"></div>
-                  <span class="telemetry-panel__title">Interactive Vector Architecture &amp; Telemetry</span>
+                  <span class="telemetry-panel__title">How it works (illustration, simulated data)</span>
                 </div>
                 <div class="telemetry-panel__canvas-wrap" id="telemetry-canvas-wrap">
                   <!-- Injected SVG telemetries -->
                 </div>
                 <div class="telemetry-panel__footer">
-                  <span class="telemetry-panel__metric" id="telemetry-metric-1">Status: Initializing...</span>
-                  <span class="telemetry-panel__metric" id="telemetry-metric-2">Metric: --</span>
+                  <span class="telemetry-panel__metric" id="telemetry-metric-1">Starting…</span>
+                  <span class="telemetry-panel__metric" id="telemetry-metric-2"></span>
                 </div>
               </div>
             </div>
@@ -240,12 +252,21 @@
       `;
 
       // Show Drawer
-      document.body.classList.add("cursor-hover");
+      lastFocused = document.activeElement;
       drawer.setAttribute("aria-hidden", "false");
       drawer.classList.add("active");
 
       // Prevent parent scroll
       document.body.style.overflow = "hidden";
+      setBackgroundInert(true);
+      if (window.__lenis) window.__lenis.stop();
+      // Wait a frame for the drawer's visibility transition to start, or focus is refused
+      requestAnimationFrame(() => setTimeout(() => closeBtn.focus({ preventScroll: true }), 60));
+
+      const slug = SLUGS[id];
+      if (slug && location.hash !== `#project-${slug}`) {
+        history.pushState(null, "", `#project-${slug}`);
+      }
 
       // Start Custom Telemetry Animation
       setTimeout(() => {
@@ -255,6 +276,7 @@
 
     // Close Drawer
     function closeProject() {
+      if (!drawer.classList.contains("active")) return;
       drawer.setAttribute("aria-hidden", "true");
       drawer.classList.remove("active");
       document.body.style.overflow = "";
@@ -263,6 +285,28 @@
         cancelAnimationFrame(activeAnimationId);
         activeAnimationId = null;
       }
+
+      setBackgroundInert(false);
+      if (window.__lenis) window.__lenis.start();
+      if (location.hash.startsWith("#project-")) {
+        history.pushState(null, "", "#work");
+      }
+      if (lastFocused && lastFocused.focus) lastFocused.focus({ preventScroll: true });
+    }
+
+    // Keep keyboard focus inside the drawer while it's open
+    function setBackgroundInert(on) {
+      ["scroll-container", "nav"].forEach((elId) => {
+        const el = document.getElementById(elId);
+        if (el) el.inert = on;
+      });
+    }
+
+    function openFromHash() {
+      const match = location.hash.match(/^#project-(.+)$/);
+      const id = match && Object.keys(SLUGS).find((key) => SLUGS[key] === match[1]);
+      if (id) openProject(id);
+      else closeProject();
     }
 
     // Intercept clicks on project cards
@@ -285,6 +329,10 @@
     document.addEventListener("keydown", (e) => {
       if (e.key === "Escape") closeProject();
     });
+
+    // Shareable links: #project-<slug> opens that project
+    window.addEventListener("popstate", openFromHash);
+    openFromHash();
   }
 
   // ── Custom Vector Animations for Project Telemetry ──────────────
